@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>kCal0</title>
+
+    <link rel="stylesheet" href="css/home.css">
+
+    <link type="image/x-icon" rel="icon" href="img/logo.png">
+
+</head>
+
+<body>
+
+    <header>
+
+        <div id="divLogo">
+
+            <img src="img/logo.png" alt="Logo" height="75" width="75" id="logo">
+
+        </div>
+
+        <nav>
+
+            <form action="/perfil" method="GET">
+    
+                <button type="submit" id="btProfile">Perfil</button>
+    
+            </form>
+    
+            <form action="/api/users/logout" method="POST">
+    
+                <button type="submit" id="btLogout">Logout</button>
+    
+            </form>
+
+        </nav>
+
+    </header>
+
+    <main>
+
+        <div id="calories">
+
+            <% if (dailyCalories) { %>
+
+                <div id="dailyCaloriesDiv">
+
+                    <h2>GEB</h2>
+
+                    <h3>
+                        
+                        <span id="dailyCalories">
+
+                            <%= dailyCalories %>
+
+                        </span> kCal
+                    
+                    </h3>
+
+                </div>
+
+                <div id="caloriesNeededsDiv">
+
+                    <h2>Calorias</h2>
+
+                    <h3><span id="caloriesNeeded">
+                            <%= dailyCalories - 500 %>
+                        </span> kCal</h3>
+
+                </div>
+
+                <div id="">
+
+                    <h2>IMC</h2>
+
+                    <h3>
+                        
+                        <span id="imc">
+
+                            <%= imc %>
+
+                        </span>
+                    
+                    </h3>
+
+                </div>
+
+                <div id="">
+
+                    <h2>Rotina</h2>
+
+                    <h3>
+                        
+                        <span id="activyLevelUser">
+
+                            <%= activyLevelUser %>
+
+                        </span>
+                    
+                    </h3>
+
+                </div>
+
+                <% } %>
+
+        </div>
+
+        <% if (menus && menus.length> 0) { %>
+
+            <% menus.forEach(menu=> { %>
+
+                <div id="menu">
+
+                    <h3 id="menu_name">
+
+                        <%= menu.menu_name %>
+
+                    </h3>
+
+                    <% if (menu.menu_foods && menu.menu_foods.length> 0) { %>
+
+                        <table id="menuTable" border="1" cellpadding="20" cellspacing="0">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Peso (g)</th>
+
+                                    <th>Alimento</th>
+
+                                    <th>Calorias</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <% menu.menu_foods.forEach(food=> { %>
+
+                                    <tr>
+
+                                        <td>
+                                            <%= food.food_quantity %>
+                                        </td>
+
+                                        <td>
+                                            <%= food.food_name %>
+                                        </td>
+
+                                        <td>
+                                            <%= food.food_calories %>
+                                        </td>
+
+                                    </tr>
+
+                                    <% }) %>
+
+                            </tbody>
+
+                        </table>
+
+                        <% } else { %>
+
+                            <p>Este menu ainda não contém alimentos.</p>
+
+                        <% } %>
+
+                        <button id="btAddFood" title="Adicionar alimento">
+                            
+                            +
+
+                        </button>
+
+                        <p>
+
+                            <strong>
+
+                                Total de Calorias:
+
+                            </strong> 
+
+                            <span id="totalCalories">
+
+                                <%= menu.menu_calories %>
+
+                            </span> 
+                            
+                            kCal 
+
+                        </p>
+
+                </div>
+
+                <% }) %>
+
+                <% } else { %>
+
+                    <p>Você não tem menus ainda.</p>
+
+                <% } %>
+
+    </main>
+
+    <div id="overlay">
+
+    </div>
+
+    <div id="popupContent">
+
+        <p id="closePopupFood">&times;</p>
+
+        <h2>Adicionar Alimento</h2>
+
+        <form id="foodForm">
+
+            <label for="nameFood">Nome do alimento: *</label>
+
+            <input id="nameFood" type="text">
+
+            <label for="caloriesFood">Calorias do alimento a cada 100g: *</label>
+
+            <input id="caloriesFood" type="number">
+
+            <label for="quantityFood">Peso (g) que será consumido: *</label>
+
+            <input id="quantityFood" type="number">
+
+            <button type="button" id="btConfirm">Confirmar</button>
+
+            <p>* Itens obrigatórios</p>
+
+        </form>
+
+    </div>
+
+    <button id="btGeneratePDF">Gerar PDF</button>
+
+    <div id="graphic">
+
+        <canvas id="caloriesChart" width="300" height="200"></canvas>
+
+    </div>
+
+    <footer>
+
+        <a href="#">About</a>
+
+        <a href="#">Contact</a>
+
+        <a href="#">Help</a>
+
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script type="module" src="js/home.mjs"></script>
+
+</body>
+
+</html>

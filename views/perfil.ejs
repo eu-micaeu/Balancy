@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>kCal0</title>
+
+    <link rel="stylesheet" href="css/perfil.css">
+
+    <link type="image/x-icon" rel="icon" href="img/logo.png">
+
+</head>
+
+<body>
+
+    <header>
+
+        <div id="divLogo">
+
+            <img src="img/logo.png" alt="Logo" height="75" width="75" id="logo">
+
+        </div>
+
+        <nav>
+
+            <form action="/home" method="GET">
+
+                <button type="submit" id="btHome">Home</button>
+
+            </form>
+
+            <form action="/api/users/logout" method="POST">
+
+                <button type="submit" id="btLogout">Logout</button>
+
+            </form>
+
+        </nav>
+
+    </header>
+
+    <main>
+
+        <h1>Informações do Perfil</h1>
+
+        <% if (user) { %>
+
+
+            <form action="/api/users/updateUser/<%= user.user_id %>" method="POST">
+
+                <label for="username">Nome de usuário:</label>
+                <input type="text" id="username" name="username" value="<%= user.username %>" required>
+
+                <label for="height">Altura (em metros):</label>
+                <input type="number" id="height" name="height" step="0.01" value="<%= user.height %>" required>
+
+                <label for="weight">Peso (em kg):</label>
+                <input type="number" id="weight" name="weight" step="0.1" value="<%= user.weight %>" required>
+
+                <label for="gender">Gênero:</label>
+                <select id="gender" name="gender" required>
+                    <option value="M" <%= user.gender == "M" ? "selected" : "" %>>Masculino</option>
+                    <option value="F" <%= user.gender == "F" ? "selected" : "" %>>Feminino</option>
+                </select>
+
+                <label for="age">Idade:</label>
+                <input type="number" id="age" name="age" min="0" value="<%= user.age %>" required>
+
+                <label for="activityLevel">Nível de atividade:</label>
+
+                <p>*Atualizar de acordo com sua mudança na rotina de atividade física</p>
+
+                <p>Lembrando:</p>
+
+                <p>Sedentário: Pouco ou nenhum exercício</p>
+                <p>Leve: Exercício leve de 1 a 3 dias por semana</p>
+                <p>Moderado: Exercício moderado de 3 a 5 dias por semana</p>
+                <p>Ativo: Exercício pesado de 6 a 7 dias por semana</p>
+                <p>Muito Ativo: Exercício pesado diariamente e trabalho físico</p>
+
+                <select id="activityLevel" name="activityLevel" required>
+                    <option value="sedentary" <%= user.activityLevel == "sedentary" ? "selected" : "" %>>Sedentário</option>
+                    <option value="light" <%= user.activityLevel == "light" ? "selected" : "" %>>Leve</option>
+                    <option value="moderate" <%= user.activityLevel == "moderate" ? "selected" : "" %>>Moderado</option>
+                    <option value="active" <%= user.activityLevel == "active" ? "selected" : "" %>>Ativo</option>
+                    <option value="very_active" <%= user.activityLevel == "very_active" ? "selected" : "" %>>Muito Ativo</option>
+                </select>                
+
+                <button type="submit" id="btUpdate">Atualizar Perfil</button>
+
+            </form>
+
+            <% } %>
+
+    </main>
+
+    <script type="module" src="js/perfil.mjs"></script>
+
+</body>
+
+</html>

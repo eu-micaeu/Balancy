@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap");
+
+body {
+
+    margin: 0;
+    font-family: 'Quicksand', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+header {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100px;
+    padding: 20px 0;
+    border-bottom: 5px solid #FF006F;
+
+}
+
+header #divLogo {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+header #divLogo #logo {
+
+    margin: 20px;
+
+}
+
+header nav{
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 20px;
+
+}
+
+header nav button{
+
+    border: none;
+    background-color: white;
+    color: #FF006F;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 0 10px;
+    padding: 10px;
+    border-radius: 5px;
+
+}
+
+header nav button:hover{
+
+    background-color: #FF006F;
+    color: white;
+    cursor: pointer;
+
+}
+
+
+footer {
+
+    display: flex;
+    width: 100%;
+    padding: 50px 0;
+    background-color: #FF006F;
+    color: white;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+    margin-top: 10vh;
+
+}
+
+footer a {
+
+    margin: 0 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: 500;
+
+}
+
+/* Overlay */
+#overlay {
+
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    display: none;
+
+}

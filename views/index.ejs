@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>kCal0</title>
+
+    <link type="image/x-icon" rel="icon" href="img/logo.png">
+
+    <link rel="stylesheet" href="css/index.css">
+
+</head>
+
+<body>
+
+    <main>
+
+        <div id="divLogo">
+
+            <img src="img/logo.png" alt="Logo" height=150 width=150 id="logo">
+
+            <h1>kCal0</h1>
+
+        </div>
+
+        <form action="/api/users/login" method="POST">
+
+            <h3>Login</h3>
+
+            <label for="username"> Username: </label>
+
+            <input type="text" id="username" name="username" required>
+
+            <label for="password"> Password: </label>
+
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit"> Enter </button>
+
+            <a href="/register">Register</a>
+
+            <a href="/forgot">Forgot Password</a>
+
+        </form>
+
+    </main>
+
+</body>
+
+</html>
