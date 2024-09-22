@@ -16,10 +16,6 @@ func UserRoutes(r *gin.Engine, db *sql.DB) {
 
 	r.POST("/register", userHandler.Registrar(db))
 
-	r.PUT("/update", userHandler.Atualizar(db))
-
 	r.DELETE("/delete", userHandler.Deletar(db))
-
-	r.POST("/exit", userHandler.Sair(db))
 
 }

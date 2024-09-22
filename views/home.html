@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>kCal0</title>
+
+    <link rel="stylesheet" href="../static/css/home.css">
+
+    <link rel="icon" href="../static/img/logo.png">
+
+</head>
+
+<body>
+
+    <header>
+
+        <img src="../static/img/logo.png" alt="logo" id="logo" width=100 height=100>
+
+    </header>
+
+    <!-- Overlay -->
+
+    <div id="divOverlay"></div>
+
+    <!-- Pop-Up para a criação do menu -->
+
+    <div id="popUpCreateMenu">
+
+        <form>
+
+            <label for="menuName">Menu Name:</label>
+
+            <input type="text" id="menuName" name="menuName" required>
+
+            <button type="button" id="btCreateMenuConfirm">Create</button>
+
+        </form>
+
+    </div>
+
+    <main>
+
+        <div id="divBtCreateMenu">
+
+            <button id="btCreateMenu" type="button">+</button>
+
+            <p>Create Menu</p>
+
+        </div>
+
+    </main>
+
+    <footer>
+
+        <p>&copy; 2024 kCal0</p>
+
+    </footer>
+
+    <script type="module" src="../static/mjs/home.mjs"></script>
+
+</body>
+
+</html>

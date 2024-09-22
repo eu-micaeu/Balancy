@@ -1,34 +1,25 @@
 package handlers
 
 import (
-
 	"database/sql"
-
 	"net/http"
-
 	"time"
 
 	"github.com/gin-gonic/gin"
-
 )
 
 type User struct {
 
 	User_ID   int       `json:"user_id"`
-
 	Username  string    `json:"username"`
-
 	Email     string    `json:"email"`
-
 	Password  string    `json:"password"`
-
 	FullName  string    `json:"full_name"`
-	
 	CreatedAt time.Time `json:"created_at"`
-	
+
 }
 
-// Função com finalidade de login do usuário.
+// Função para logar o usuário
 func (u *User) Entrar(db *sql.DB) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
@@ -43,9 +34,9 @@ func (u *User) Entrar(db *sql.DB) gin.HandlerFunc {
 
 		}
 
-		row := db.QueryRow("SELECT username, password FROM users WHERE username = $1 AND password = $2", user.Username, user.Password)
+		row := db.QueryRow("SELECT user_id, username, password FROM users WHERE username = $1 AND password = $2", user.Username, user.Password)
 
-		err := row.Scan(&user.Username, &user.Password)
+		err := row.Scan(&user.User_ID, &user.Username, &user.Password)
 
 		if err != nil {
 
@@ -55,30 +46,40 @@ func (u *User) Entrar(db *sql.DB) gin.HandlerFunc {
 
 		}
 
-		token, _ := GerarOToken(user)
+		// Gere o token genérico
+        token, err := GerarOToken(user)
 
-		http.SetCookie(c.Writer, &http.Cookie{
+        if err != nil {
+            c.JSON(500, gin.H{"message": "Erro ao gerar token"})
+            return
+        }
+
+		cookie := &http.Cookie{
 
 			Name: "token",
 
 			Value: token,
 
-			Expires: time.Now().Add(24 * time.Hour),
+			Expires:  time.Now().Add(72 * time.Hour),
 
-			HttpOnly: true,
+			HttpOnly: false,
 
-			Secure: true,
+			Secure: false,
 
 			SameSite: http.SameSiteStrictMode,
-		})
 
-		c.JSON(200, gin.H{"message": "Login efetuado com sucesso!", "token": token, "usuario": user})
+			Path: "/",
+		}
+
+		http.SetCookie(c.Writer, cookie)
+
+		c.JSON(200, gin.H{"message": "Login efetuado com sucesso!", "token": token})
 
 	}
 
 }
 
-// Função com finalidade de registrar um usuário no sistema.
+// Função para registrar o usuário
 func (u *User) Registrar(db *sql.DB) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
@@ -93,7 +94,7 @@ func (u *User) Registrar(db *sql.DB) gin.HandlerFunc {
 
 		}
 
-		_, err := db.Exec("INSERT INTO users (username, email, password, full_name, created_at) VALUES ($1, $2, $3, $4, $5, $6)", newUser.Username, newUser.Email, newUser.Password, newUser.FullName, time.Now())
+		_, err := db.Exec("INSERT INTO users (username, email, password, full_name, created_at) VALUES ($1, $2, $3, $4, $5)", newUser.Username, newUser.Email, newUser.Password, newUser.FullName, time.Now())
 
 		if err != nil {
 
@@ -109,96 +110,67 @@ func (u *User) Registrar(db *sql.DB) gin.HandlerFunc {
 
 }
 
-// Função com finalidade de atualizar um usuário no sistema.
-func (u *User) Atualizar(db *sql.DB) gin.HandlerFunc {
+// Função para resgatar informações do usuário
+func (u *User) Resgatar(db *sql.DB) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		var user User
+		token := c.Request.Header.Get("Authorization")
 
-		token, err := c.Cookie("token")
-
-		if err != nil {
-
-			c.JSON(400, gin.H{"message": "Erro ao atualizar usuario"})
-
-			return
-
-		}
-
-		user_id, _ := u.ValidarOToken(token)
-
-		if err := c.BindJSON(&user); err != nil {
-
-			c.JSON(400, gin.H{"message": "Erro ao atualizar usuario"})
-
-			return
-
-		}
-
-		_, err = db.Exec("UPDATE users SET username = $1, email = $2, password = $3, full_name = $4 WHERE user_id = $5", user.Username, user.Email, user.Password, user.FullName, user_id)
+		userID, err := ValidarOToken(token)
 
 		if err != nil {
 
-			c.JSON(500, gin.H{"message": "Erro ao atualizar usuário"})
+			c.JSON(401, gin.H{"message": "Token inválido"})
 
 			return
 
 		}
 
-		c.JSON(200, gin.H{"message": "Usuário atualizado com sucesso!"})
+		row := db.QueryRow("SELECT user_id, username, email, full_name, created_at FROM users WHERE user_id = $1", userID)
+
+		err = row.Scan(&u.User_ID, &u.Username, &u.Email, &u.FullName, &u.CreatedAt)
+
+		if err != nil {
+
+			c.JSON(404, gin.H{"message": "Usuário não encontrado"})
+
+			return
+
+		}
+
+		c.JSON(200, u)
 
 	}
 
 }
 
-// Função com finalidade de deletar um usuário no sistema.
+// Função para deletar o usuário
 func (u *User) Deletar(db *sql.DB) gin.HandlerFunc {
-
+	
 	return func(c *gin.Context) {
 
-		var user User
+		token := c.Request.Header.Get("Authorization")
 
-		token, err := c.Cookie("token")
+		userID, err := ValidarOToken(token)
 
 		if err != nil {
 
-			c.JSON(400, gin.H{"message": "Erro ao deletar usuario"})
+			c.JSON(401, gin.H{"message": "Token inválido"})
 
 			return
 
 		}
 
-		user_id, _ := u.ValidarOToken(token)
-
-		if err := c.BindJSON(&user); err != nil {
-
-			c.JSON(400, gin.H{"message": "Erro ao deletar usuario"})
-
-			return
-
-		}
-
-		_, err = db.Exec("DELETE FROM users WHERE user_id = $1", user_id)
+		_, err = db.Exec("DELETE FROM users WHERE user_id = $1", userID)
 
 		if err != nil {
 
-			c.JSON(500, gin.H{"message": "Erro ao deletar usuário"})
+			c.JSON(404, gin.H{"message": "Usuário não encontrado"})
 
 			return
 
 		}
-
-		c.JSON(200, gin.H{"message": "Usuário deletado com sucesso!"})
-
-	}
-
-}
-
-// Função com finalidade de login do usuário.
-func (u *User) Sair(db *sql.DB) gin.HandlerFunc {
-
-	return func(c *gin.Context) {
 
 		cookie := &http.Cookie{
 
@@ -214,12 +186,11 @@ func (u *User) Sair(db *sql.DB) gin.HandlerFunc {
 
 			SameSite: http.SameSiteStrictMode,
 
-			Path: "/",
 		}
 
 		http.SetCookie(c.Writer, cookie)
 
-		c.JSON(200, gin.H{"message": "Saiu com sucesso!"})
+		c.JSON(200, gin.H{"message": "Usuário deletado com sucesso!"})
 
 	}
 
