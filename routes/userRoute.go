@@ -7,11 +7,12 @@ import (
 	"github.com/eu-micaeu/API-GerenciamentoDeUsuarios-GoLang/handlers"
 )
 
+// FUnção com finalidade de criar as rotas de usuário
 func UserRoutes(r *gin.Engine, db *sql.DB) {
 	
 	userHandler := handlers.User{}
 
-	r.GET("/login", userHandler.Entrar(db))
+	r.POST("/login", userHandler.Entrar(db))
 
 	r.POST("/register", userHandler.Registrar(db))
 

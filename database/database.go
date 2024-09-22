@@ -22,7 +22,7 @@ func NewDB() (*sql.DB, error) {
 
 	dbPort := "5432"
 
-	dbName := "postgres"
+	dbName := "kCal0"
 
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPassword, dbHost, dbPort, dbName)
 

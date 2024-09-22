@@ -1,0 +1,90 @@
+@import url('global.css');
+
+main{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+form{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    border: 5px solid #FF006F;
+    border-radius: 20px;
+    width: 400px;
+    height: 700px;
+    padding: 20px;
+    color: #FF006F;
+    user-select: none;
+
+}
+
+form label{
+
+    margin-top: 10px;
+    font-size: 1.2rem;
+    width: 300px;
+
+}
+
+form input{
+
+    margin-top: 10px;
+    padding: 10px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Karla', sans-serif;
+    font-size: 18px;
+
+}
+
+form button{
+
+    margin: 30px;
+    padding: 10px;
+    width: 300px;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Karla', sans-serif;
+    font-size: 18px;
+    background-color: #FF006F;
+    border: 2px solid #FF006F;
+    color: #fff;
+    cursor: pointer;
+
+}
+
+form button:hover{
+
+    background-color: #fff;
+    color: #FF006F;
+
+}
+
+form a{
+
+    margin-top: 10px;
+    padding: 10px;
+    width: 400px;
+    border-radius: 5px;
+    font-family: 'Karla', sans-serif;
+    font-size: 18px;
+    text-align: center;
+    text-decoration: none;
+    color: #FF006F;
+
+}
+
+form a:hover{
+
+    background-color: #FF006F;
+    color: #fff;
+
+}

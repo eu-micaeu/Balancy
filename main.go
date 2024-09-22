@@ -1,7 +1,9 @@
 package main
 
 import (
-	
+
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/eu-micaeu/API-GerenciamentoDeUsuarios-GoLang/database"
@@ -14,19 +16,32 @@ import (
 
 func main() {
 
-	r := gin.Default()
+	r := gin.Default() // Creates a gin route handle
 
-	r.Use(middlewares.CorsMiddleware())
+	r.Use(middlewares.CorsMiddleware())        // Middleware CORS
 
-	db, err := database.NewDB()
+    r.Use(middlewares.CacheCleanerMiddleware()) // Middleware de limpeza de cache
 
-	if err != nil {
+	db, err := database.NewDB() // Connects to the database
 
-		panic(err)
+	if err != nil { // If there is an error connecting to the database, the program will stop
+
+		panic(err) 
 
 	}
 
-	routes.UserRoutes(r, db)
+	routes.UserRoutes(r, db) // Calls the UserRoutes function and passes the route handle and the database connection
 
-	r.Run()
+	r.LoadHTMLGlob("./views/*.html") // Load the HTML files
+
+	r.GET("/", func(c *gin.Context) { // When accessing the root route, the index.html file will be rendered
+
+		c.HTML(http.StatusOK, "index.html", nil)
+
+	})
+
+	r.Static("/static", "./static") // Load the static files
+
+	r.Run() // Run the server
+
 }

@@ -25,6 +25,7 @@ type User struct {
 	FullName  string    `json:"full_name"`
 	
 	CreatedAt time.Time `json:"created_at"`
+	
 }
 
 // Função com finalidade de login do usuário.
