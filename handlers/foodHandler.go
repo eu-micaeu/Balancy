@@ -118,3 +118,38 @@ func (f *Food) ListarAlimentosDeUmaRefeicao(db *sql.DB) gin.HandlerFunc {
 	}
 
 }
+
+// Função para deletar um alimento
+func (f *Food) DeletarAlimento(db *sql.DB) gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+
+		token := c.Request.Header.Get("Authorization")
+
+		_, err := ValidarOToken(token)
+
+		if err != nil {
+
+			c.JSON(401, gin.H{"message": "Token inválido"})
+
+			return
+
+		}
+
+		_, err = db.Exec("DELETE FROM foods WHERE food_id = $1", c.Param("food_id"))
+
+		if err != nil {
+
+			c.JSON(400, gin.H{"message": "Erro ao deletar alimento"})
+
+			fmt.Println(err)
+
+			return
+
+		}
+
+		c.JSON(200, gin.H{"message": "Alimento deletado com sucesso"})
+
+	}
+
+}

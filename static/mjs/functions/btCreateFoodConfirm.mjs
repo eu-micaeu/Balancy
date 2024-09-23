@@ -1,6 +1,9 @@
 import { getCookie } from './getCookie.mjs';
+import { attFoods } from './attFoods.mjs';
 
-function btCreateFoodConfirm(path) {
+function btCreateFoodConfirm() {
+
+    var path = parseInt(window.location.pathname.split('/meal/')[1]);
 
     document.getElementById('btCreateFoodConfirm').addEventListener('click', function () {
 
@@ -22,7 +25,7 @@ function btCreateFoodConfirm(path) {
 
             },
 
-            body: JSON.stringify({ 
+            body: JSON.stringify({
 
                 meal_id: path,
                 food_name: foodName,
@@ -37,10 +40,11 @@ function btCreateFoodConfirm(path) {
 
                 document.getElementById('divOverlay').click();
 
+                attFoods(); 
+
             }
 
-        });
-
+        })
 
     });
 

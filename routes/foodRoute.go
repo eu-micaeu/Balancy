@@ -16,4 +16,6 @@ func FoodRoutes(r *gin.Engine, db *sql.DB) {
 
 	r.GET("/listMealFoods/:meal_id", foodHandler.ListarAlimentosDeUmaRefeicao(db))
 
+	r.DELETE("/deleteFood/:food_id", foodHandler.DeletarAlimento(db))
+
 }

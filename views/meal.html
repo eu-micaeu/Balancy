@@ -56,23 +56,31 @@
 
     <main>
 
-        <div id="divListFoods">
+        <h1>Meal: {{.meal.MealName}}</h1>
 
-            <h1>Meal: {{.meal.MealName}}</h1>
+        <div id="divListFoods">
 
             <table id="tableFoods"></table>
 
-            <span id="totalCalories"></span>
+            <br>
 
-            <span id="totalQuantity"></span>
+            <div class="divResult">
+
+                <p id="totalCalories"></p>
+
+            </div>
+
+            <div class="divResult">
+
+                <p id="totalQuantity"></p>
+
+            </div>
             
         </div>
 
         <div id="divBtCreateFood">
 
-            <button id="btCreate" type="button">+</button>
-
-            <p>Create Food</p>
+            <button id="btCreate" type="button">+ Create Food</button>
 
         </div>
 

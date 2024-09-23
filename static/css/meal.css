@@ -1,6 +1,6 @@
 @import url('global.css');
 
-main #divListFoods h1 {
+main h1 {
 
     color: #FF006F;
 
@@ -18,10 +18,9 @@ main #divListFoods{
 
 main #divListFoods table {
 
-    width: 60%;
+    width: 50%;
     border-collapse: collapse;
     table-layout: fixed;
-    margin: 20px 0; 
     background-color: #f9f9f9; 
     font-family: Arial, sans-serif; 
     border: 1px solid #ddd; 
@@ -55,10 +54,29 @@ main #divListFoods table tr:hover {
     background-color: #f1f1f1; 
 }
 
-main #divListFoods span {
+main #divListFoods .divResult{
+
+    display: flex;
+    flex-direction: row;
+    color: #ffffff;
+    background-color: #FF006F;
+    border-radius: 5px;
+    padding: 0 10px;
+    margin: 10px;
+    width: 250px;
+
+}
+
+main #divListFoods .divResult p{
 
     font-size: 20px;
-    color: #FF006F;
+    font-weight: bold;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
 
 }
 
@@ -68,7 +86,6 @@ main #divBtCreateFood {
     justify-content: space-between;
     align-items: center;
     margin: 25px;
-    width: 180px;
 
 }
 
@@ -82,8 +99,7 @@ main #divBtCreateFood button {
     color: #fff;
     cursor: pointer;
     font-size: 20px;
-    width: 50px;
-    height: 50px;
+    font-weight: bold;
 
 }
 
