@@ -1,5 +1,11 @@
 @import url('global.css');
 
+main h1{
+
+    color: #FF006F;
+
+}
+
 main #divListMeals{
 
     display: flex;
@@ -8,12 +14,6 @@ main #divListMeals{
     justify-content: center;
     align-items: center;
     margin: 25px;
-
-}
-
-main #divListMeals h1{
-
-    color: #FF006F;
 
 }
 
@@ -39,6 +39,7 @@ main #divListMeals ul li{
     border-radius: 5px;
     margin: 10px;
     color: #FF006F;
+    font-weight: bold;
 
 }
 
@@ -50,13 +51,58 @@ main #divListMeals ul li:hover{
 
 }
 
+main #divListMeals ul li button{
+
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: #FF006F;
+    border: 2px solid #FF006F;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+
+}
+
+main #divListMeals ul li button:hover{
+
+    background-color: #ffffff;
+    color: #FF006F;
+
+}
+
+main #divListMeals .divResult{
+
+    display: flex;
+    flex-direction: row;
+    color: #ffffff;
+    background-color: #FF006F;
+    border-radius: 5px;
+    padding: 0 10px;
+    margin: 10px;
+    width: 250px;
+
+}
+
+main #divListMeals .divResult p{
+
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+
+}
+
 main #divBtCreateMeal{
 
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 25px;
-    width: 180px;
 
 }
 
@@ -70,8 +116,7 @@ main #divBtCreateMeal button{
     color: #fff;
     cursor: pointer;
     font-size: 20px;
-    width: 50px;
-    height: 50px;
+    font-weight: bold;
 
 }
 

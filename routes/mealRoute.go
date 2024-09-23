@@ -20,4 +20,6 @@ func MealRoutes(r *gin.Engine, db *sql.DB) {
 
 	r.GET("/calculateMealCaloriesAndQuantity/:meal_id", mealHandler.CalcularTotalDeCaloriasEQuantidadeDaRefeicao(db))
 
+	r.DELETE("/deleteMeal/:meal_id", mealHandler.DeletarRefeicao(db))
+
 }

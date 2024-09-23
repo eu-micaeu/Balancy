@@ -228,3 +228,38 @@ func (m *Meal) CalcularTotalDeCaloriasEQuantidadeDaRefeicao(db *sql.DB) gin.Hand
 	}
 
 }
+
+// Função com finalidade de deletar uma refeição.
+func (m *Meal) DeletarRefeicao(db *sql.DB) gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+
+		token := c.Request.Header.Get("Authorization")
+
+		_, err := ValidarOToken(token)
+
+		if err != nil {
+
+			c.JSON(401, gin.H{"message": "Token inválido"})
+
+			return
+
+		}
+
+		_, err = db.Exec("DELETE FROM meals WHERE meal_id = $1", c.Param("meal_id"))
+
+		if err != nil {
+
+			c.JSON(400, gin.H{"message": "Erro ao deletar refeição"})
+
+			fmt.Println(err)
+
+			return
+
+		}
+
+		c.JSON(200, gin.H{"message": "Refeição deletada com sucesso"})
+
+	}
+
+}

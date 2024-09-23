@@ -121,7 +121,7 @@ body #popUpCreate form button:hover{
 
 body header{
 
-    width: 100vw;
+    width: 100%;
     color: #fff;
     text-align: center;
     display: flex;
@@ -153,13 +153,20 @@ body footer{
     justify-content: center;
     align-items: center;
     text-align: center;
-    user-select: none;
+    user-select: none;  
+    border-top: 2px solid #FF006F;
+    width: 100%;
+
+}
+
+body footer p{
+
+    color: #FF006F;
 
 }
 
 h1, h2, h3{
 
-    margin: 5px;
     text-align: center;
 
 }

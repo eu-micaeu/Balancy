@@ -91,12 +91,24 @@ function attFoods() {
                 'Content-Type': 'application/json',
                 'Authorization': getCookie()
             }
-        }).then(response => response.ok ? response.json() : null)
-        .then(data => {
+        }).then(response => {
+
+            if (response.ok) {
+    
+                return response.json();
+    
+            }
+
+        }).then(data => {
+
             document.getElementById('totalCalories').innerHTML = data.total_calories + " kCal's";
+
             document.getElementById('totalQuantity').innerHTML = data.total_quantity + " g's";
+
         });
+
     });
+    
 }
 
 export { attFoods };

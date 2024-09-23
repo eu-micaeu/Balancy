@@ -1,6 +1,10 @@
 import { getCookie } from './getCookie.mjs';
+import { attMeals } from './attMeals.mjs';
 
-function btCreateMealConfirm(path) {
+function btCreateMealConfirm() {
+
+    // Resgatar o que tiver depois de /menu/ e transformar em inteiro
+    var path = parseInt(window.location.pathname.split('/menu/')[1]);
 
     document.getElementById('btCreateMealConfirm').addEventListener('click', function () {
 
@@ -30,6 +34,8 @@ function btCreateMealConfirm(path) {
             if (response.ok) {
 
                 document.getElementById('divOverlay').click();
+
+                attMeals();
 
             }
 

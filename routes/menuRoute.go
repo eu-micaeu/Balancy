@@ -18,4 +18,6 @@ func MenuRoutes(r *gin.Engine, db *sql.DB) {
 
 	r.GET("/menu/:menu_id", menuHandler.CarregarMenu(db))
 
+	r.GET("/calculateMenuCaloriesAndQuantity/:menu_id", menuHandler.CalcularTotalDeCaloriasEQuantidadeDoMenu(db))
+
 }

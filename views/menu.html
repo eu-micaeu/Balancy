@@ -20,7 +20,7 @@
 
     <header>
 
-        <img src="../static/img/logo.png" alt="logo" id="logo" width=100 height=100>
+        <img src="../static/img/logo.png" alt="logo" id="logo" width=75 height=75>
 
     </header>
 
@@ -48,9 +48,9 @@
 
     <main>
 
-        <div id="divListMeals">
+        <h1>Menu: {{.menu.MenuName}}</h1>
 
-            <h1>Menu: {{.menu.MenuName}}</h1>
+        <div id="divListMeals">
 
             <ul id="listMeals">
 
@@ -58,13 +58,23 @@
 
             </ul>
 
+            <div class="divResult">
+
+                <p id="totalCalories"></p>
+
+            </div>
+
+            <div class="divResult">
+
+                <p id="totalQuantity"></p>
+
+            </div>
+
         </div>
 
         <div id="divBtCreateMeal">
 
-            <button id="btCreate" type="button">+</button>
-
-            <p>Create Meal</p>
+            <button id="btCreate" type="button">+ Create Meal</button>
 
         </div>
 

@@ -157,3 +157,69 @@ func (m *Menu) CarregarMenu(db *sql.DB) gin.HandlerFunc {
 		c.HTML(200, "menu.html", gin.H{"menu": menu})
 
 }}
+
+// Função para calcular as calorias e quantidade de um menu.
+func (m *Menu) CalcularTotalDeCaloriasEQuantidadeDoMenu(db *sql.DB) gin.HandlerFunc {
+
+    return func(c *gin.Context) {
+
+        token, err := c.Cookie("token")
+        if err != nil {
+            c.JSON(401, gin.H{"message": "Token inválido"})
+            return
+        }
+
+        _, err = ValidarOToken(token)
+        if err != nil {
+            c.JSON(401, gin.H{"message": "Token inválido"})
+            return
+        }
+
+        menuID := c.Param("menu_id")
+
+        var totalCalorias int
+        var quantidadeTotal int
+
+        // Busca todas as refeições do menu
+        rows, err := db.Query("SELECT meal_id FROM meals WHERE menu_id = $1", menuID)
+        if err != nil {
+            c.JSON(400, gin.H{"message": "Erro ao buscar refeições no menu"})
+            fmt.Println(err)
+            return
+        }
+        defer rows.Close()
+
+        // Calcula calorias e quantidade somando os valores de todas as refeições associadas ao menu
+        for rows.Next() {
+            var mealID int
+            err := rows.Scan(&mealID)
+            if err != nil {
+                c.JSON(400, gin.H{"message": "Erro ao processar refeições"})
+                fmt.Println(err)
+                return
+            }
+
+            // Busca as calorias e a quantidade de cada refeição
+            var mealCalories sql.NullInt64
+            var mealQuantity sql.NullInt64
+            err = db.QueryRow("SELECT COALESCE(SUM(calories), 0), COALESCE(SUM(quantity), 0) FROM foods WHERE meal_id = $1", mealID).Scan(&mealCalories, &mealQuantity)
+            if err != nil {
+                c.JSON(400, gin.H{"message": "Erro ao calcular calorias e quantidade da refeição"})
+                fmt.Println(err)
+                return
+            }
+
+            totalCalorias += int(mealCalories.Int64)
+            quantidadeTotal += int(mealQuantity.Int64)
+        }
+
+        // Caso ocorra erro durante o processo de iteração
+        if err = rows.Err(); err != nil {
+            c.JSON(500, gin.H{"message": "Erro ao processar refeições no menu"})
+            fmt.Println(err)
+            return
+        }
+
+        c.JSON(200, gin.H{"total_calories": totalCalorias, "total_quantity": quantidadeTotal})
+    }
+}
