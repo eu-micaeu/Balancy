@@ -2,9 +2,10 @@ import { getCookie } from './functions/getCookie.mjs';
 import { divOverlay } from './functions/divOverlay.mjs';
 import { btBack } from './functions/btBack.mjs';
 import { btCreate } from './functions/btCreate.mjs';
+import { btCreateMealConfirm } from './functions/btCreateMealConfirm.mjs';
 
-// Resgatar o que tiver depois de /menu/
-var path = window.location.pathname.split('/menu/')[1];
+// Resgatar o que tiver depois de /menu/ e transformar em inteiro
+var path = parseInt(window.location.pathname.split('/menu/')[1]);
 
 // Função DOMContentLoaded
 document.addEventListener("DOMContentLoaded", function () {
@@ -63,3 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Botão de criar refeição
 btCreate();
+
+// Botão de criar refeição confirmar
+btCreateMealConfirm(path);

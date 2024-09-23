@@ -2,18 +2,13 @@ import { getCookie } from './functions/getCookie.mjs';
 import { divOverlay } from './functions/divOverlay.mjs';
 import { btBack } from './functions/btBack.mjs';
 import { btCreate } from './functions/btCreate.mjs';
+import { btCreateFoodConfirm } from './functions/btCreateFoodConfirm.mjs';
 
-// Resgatar o que tiver depois de /menu/
-var path = window.location.pathname.split('/meal/')[1];
+// Resgatar o que tiver depois de /meal/
+var path = parseInt(window.location.pathname.split('/meal/')[1]);
 
 // Função DOMContentLoaded
 document.addEventListener("DOMContentLoaded", function () {
-
-    // Div Overlay
-    divOverlay();
-
-    // Botão de voltar
-    btBack();
 
     fetch('/listMealFoods/' + path, {
 
@@ -53,13 +48,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         var th = document.createElement('th');
 
-        th.innerHTML = 'Quantidade';
+        th.innerHTML = 'Quantidade (g)';
 
         tr.appendChild(th);
 
         var th = document.createElement('th');
 
-        th.innerHTML = 'Calorias';
+        th.innerHTML = 'Calorias (kCal)';
 
         tr.appendChild(th);
 
@@ -133,5 +128,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+// Div Overlay
+divOverlay();
+
+// Botão de voltar
+btBack();
+
 // Botão de criar comida
 btCreate();
+
+// Botão de criar comida confirmar
+btCreateFoodConfirm(path);

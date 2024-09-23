@@ -1,11 +1,9 @@
 import { getCookie } from './functions/getCookie.mjs';
 import { divOverlay } from './functions/divOverlay.mjs';
 import { btCreate } from './functions/btCreate.mjs';
+import { btCreateMenuConfirm } from './functions/btCreateMenuConfirm.mjs';
 
 document.addEventListener("DOMContentLoaded", function () {
-
-    // Div Overlay
-    divOverlay();
 
     fetch('/listUserMenus', {
 
@@ -53,37 +51,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+
+// Div Overlay
+divOverlay();
+
 // Botão de criar menu
 btCreate();
 
-document.getElementById('btCreateMenuConfirm').addEventListener('click', function () {
-
-    var menuName = document.getElementById('menuName').value;
-
-    fetch('/createMenu', {
-
-        method: 'POST',
-
-        headers: {
-
-            'Content-Type': 'application/json',
-
-            'Authorization': getCookie()
-
-        },
-
-        body: JSON.stringify({ meun_name: menuName })
-
-    }).then(response => {
-
-        if (response.ok) {
-
-            document.getElementById('divOverlay').click();
-
-        }
-
-    });
-
-
-});
-
+// Botão de confirmar criação de menu
+btCreateMenuConfirm();
