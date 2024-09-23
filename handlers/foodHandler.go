@@ -10,6 +10,7 @@ import (
 )
 
 type Food struct {
+
 	Food_ID int `json:"food_id"`
 
 	Meal_ID int `json:"meal_id"`
@@ -21,6 +22,7 @@ type Food struct {
 	Quantity int `json:"quantity"`
 
 	CreatedAt time.Time `json:"created_at"`
+	
 }
 
 // Função para criar um novo alimento

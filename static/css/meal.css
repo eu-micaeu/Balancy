@@ -6,34 +6,59 @@ main #divListFoods h1 {
 
 }
 
-main #divListFoods ul {
+main #divListFoods{
 
     display: flex;
-    flex-wrap: wrap;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    margin: 25px;
-    padding: 0;
-}
-
-main #divListFoods ul li {
-
-    width: 500px;
-    padding: 10px;
-    border: 1px solid #FF006F;
-    border-radius: 5px;
-    margin: 10px;
-    text-align: center;
-    list-style-type: none;
+    justify-content: center;
+    margin: 20px 0;
 
 }
 
-main #divListFoods ul li:hover {
+main #divListFoods table {
 
-    background-color: #FF006F;
-    color: #fff;
-    cursor: pointer;
+    width: 60%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: 20px 0; 
+    background-color: #f9f9f9; 
+    font-family: Arial, sans-serif; 
+    border: 1px solid #ddd; 
+
+}
+
+main #divListFoods table th, 
+main #divListFoods table td {
+
+    padding: 12px 15px; 
+    border: 1px solid #ddd; 
+    text-align: center; 
+    vertical-align: middle; 
+
+}
+
+main #divListFoods table th {
+
+    background-color: #f2f2f2; 
+    font-weight: bold; 
+
+}
+
+main #divListFoods table tr:nth-child(even) {
+
+    background-color: #f9f9f9; 
+
+}
+
+main #divListFoods table tr:hover {
+    background-color: #f1f1f1; 
+}
+
+main #divListFoods span {
+
+    font-size: 20px;
+    color: #FF006F;
 
 }
 

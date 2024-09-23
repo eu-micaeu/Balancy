@@ -159,3 +159,72 @@ func (m *Meal) CarregarRefeicao(db *sql.DB) gin.HandlerFunc {
 	}
 
 }
+
+// Função com finalidade de calcular o total de calorias e quantidade de uma refeição.
+func (m *Meal) CalcularTotalDeCaloriasEQuantidadeDaRefeicao(db *sql.DB) gin.HandlerFunc {
+	
+	return func(c *gin.Context) {
+
+		token := c.Request.Header.Get("Authorization")
+
+		_, err := ValidarOToken(token)
+
+		if err != nil {
+
+			c.JSON(401, gin.H{"message": "Token inválido"})
+
+			return
+
+		}
+
+		var meal Meal
+
+		row := db.QueryRow("SELECT meal_id, menu_id, meal_name, created_at FROM meals WHERE meal_id = $1", c.Param("meal_id"))
+
+		err = row.Scan(&meal.Meal_ID, &meal.Menu_ID, &meal.MealName, &meal.CreatedAt)
+
+		if err != nil {
+
+			c.JSON(400, gin.H{"message": "Erro ao calcular total de calorias e quantidade de refeições"})
+
+			fmt.Println(err)
+
+			return
+
+		}
+
+		var totalCalories int
+
+		var totalQuantity int
+
+		rows, err := db.Query("SELECT calories, quantity FROM foods WHERE meal_id = $1", c.Param("meal_id"))
+
+		if err != nil {
+
+			c.JSON(400, gin.H{"message": "Erro ao calcular total de calorias e quantidade de refeições"})
+
+			fmt.Println(err)
+
+			return
+
+		}
+
+		for rows.Next() {
+
+			var calories int
+
+			var quantity int
+
+			rows.Scan(&calories, &quantity)
+
+			totalCalories += calories
+
+			totalQuantity += quantity
+
+		}
+
+		c.JSON(200, gin.H{"total_calories": totalCalories, "total_quantity": totalQuantity})
+
+	}
+
+}

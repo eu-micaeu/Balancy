@@ -37,21 +37,97 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }).then(data => {
 
-        console.log(data);
-
         var foods = data.foods;
 
-        var listFoods = document.getElementById('listFoods');
+        var tableFoods = document.getElementById('tableFoods');
 
-        foods.forEach(food => {
+        // Cabeçalho da tabela
 
-            var li = document.createElement('li');
+        var tr = document.createElement('tr');
 
-            li.innerHTML = food.food_name + ' - ' + food.quantity + 'g' + ' - ' + food.calories + ' cal';
+        var th = document.createElement('th');
 
-            listFoods.appendChild(li);
+        th.innerHTML = 'Comida';
 
-        });
+        tr.appendChild(th);
+
+        var th = document.createElement('th');
+
+        th.innerHTML = 'Quantidade';
+
+        tr.appendChild(th);
+
+        var th = document.createElement('th');
+
+        th.innerHTML = 'Calorias';
+
+        tr.appendChild(th);
+
+        tableFoods.appendChild(tr);
+
+        for (var i = 0; i < foods.length; i++) {
+
+            var tr = document.createElement('tr');
+
+            var td = document.createElement('td');
+
+            td.innerHTML = foods[i].food_name;
+
+            tr.appendChild(td);
+
+            var td = document.createElement('td');
+
+            td.innerHTML = foods[i].quantity;
+
+            tr.appendChild(td);
+
+            var td = document.createElement('td');
+
+            td.innerHTML = foods[i].calories;
+
+            tr.appendChild(td);
+
+            tableFoods.appendChild(tr);
+
+        }
+
+        fetch('/calculateMealCaloriesAndQuantity/' + path, {
+
+            method: 'GET',
+
+            headers: {
+
+                'Content-Type': 'application/json',
+
+                'Authorization': getCookie()
+
+            }
+
+        }).then(response => {
+
+            if (response.ok) {
+
+                return response.json();
+
+            }
+
+        }
+
+        ).then(data => {
+
+            // Adicionar o resultado da quantidade e calorias
+
+            var totalCalories = document.getElementById('totalCalories');
+
+            totalCalories.innerHTML = 'Total de calorias: ' + data.total_calories;
+
+            var totalQuantity = document.getElementById('totalQuantity');
+
+            totalQuantity.innerHTML = 'Total de quantidade: ' + data.total_quantity;
+
+        }
+
+        )
 
     });
 
