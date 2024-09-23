@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             var li = document.createElement('li');
 
-            li.innerHTML = food.food_name;
+            li.innerHTML = food.food_name + ' - ' + food.quantity + 'g' + ' - ' + food.calories + ' cal';
 
             listFoods.appendChild(li);
 

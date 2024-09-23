@@ -1,6 +1,43 @@
 @import url('global.css');
 
-main #divBtCreateFood{
+main #divListFoods h1 {
+
+    color: #FF006F;
+
+}
+
+main #divListFoods ul {
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 25px;
+    padding: 0;
+}
+
+main #divListFoods ul li {
+
+    width: 500px;
+    padding: 10px;
+    border: 1px solid #FF006F;
+    border-radius: 5px;
+    margin: 10px;
+    text-align: center;
+    list-style-type: none;
+
+}
+
+main #divListFoods ul li:hover {
+
+    background-color: #FF006F;
+    color: #fff;
+    cursor: pointer;
+
+}
+
+main #divBtCreateFood {
 
     display: flex;
     justify-content: space-between;
@@ -10,7 +47,7 @@ main #divBtCreateFood{
 
 }
 
-main #divBtCreateFood button{
+main #divBtCreateFood button {
 
     padding: 10px;
     border: none;
@@ -25,14 +62,14 @@ main #divBtCreateFood button{
 
 }
 
-main #divBtCreateFood button:hover{
+main #divBtCreateFood button:hover {
 
     background-color: #ffffff;
     color: #FF006F;
 
 }
 
-main #divBtCreateFood p{
+main #divBtCreateFood p {
 
     font-size: 20px;
     color: #FF006F;

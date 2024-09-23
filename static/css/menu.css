@@ -1,14 +1,5 @@
 @import url('global.css');
 
-main{
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-
-}   
-
 main #divListMeals{
 
     display: flex;
@@ -26,7 +17,18 @@ main #divListMeals h1{
 
 }
 
-main #divListMeals ul#listMeals li{
+main #divListMeals ul {
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 25px;
+    padding: 0;
+}
+
+main #divListMeals ul li{
 
     display: flex;
     justify-content: space-between;
@@ -39,7 +41,7 @@ main #divListMeals ul#listMeals li{
 
 }
 
-main #divListMeals ul#listMeals li:hover{
+main #divListMeals ul li:hover{
 
     background-color: #FF006F;
     color: #fff;
