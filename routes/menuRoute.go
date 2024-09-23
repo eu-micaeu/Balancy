@@ -7,7 +7,7 @@ import (
 	"github.com/eu-micaeu/API-GerenciamentoDeUsuarios-GoLang/handlers"
 )
 
-// FUnção com finalidade de criar as rotas de usuário
+// Função para criar as rotas de menu
 func MenuRoutes(r *gin.Engine, db *sql.DB) {
 	
 	menuHandler := handlers.Menu{}

@@ -16,6 +16,109 @@ body{
 
 }
 
+body #btBack{
+
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    border: none;
+    border-radius: 5px;
+    background-color: #FF006F;
+    color: #fff;
+    cursor: pointer;
+    font-size: 30px;
+    width: 50px;
+    height: 50px;
+    border: 2px solid #FF006F;
+
+}
+
+body #btBack:hover{
+
+    background-color: #fff;
+    color: #FF006F;
+
+}
+
+body #divOverlay{
+
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+
+}
+
+body #popUpCreate{
+
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    background-color: #fff;
+    padding: 50px;
+    z-index: 2;
+    border-radius: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+body #popUpCreate form{
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+}
+
+body #popUpCreate form label{
+
+    color: #FF006F;
+
+}
+
+body #popUpCreate form input{
+
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #FF006F;
+    border-radius: 5px;
+    width: 80%;
+
+}
+
+body #popUpCreate form button{
+
+    margin: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #FF006F;
+    color: #fff;
+    cursor: pointer;
+    width: 80%;
+    border: 2px solid #FF006F;
+
+}
+
+body #popUpCreate form button:hover{
+
+    background-color: #fff;
+    color: #FF006F;
+
+}
+
 header{
 
     width: 100vw;

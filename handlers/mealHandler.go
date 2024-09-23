@@ -113,3 +113,49 @@ func (m *Meal) ListarRefeicoesDeUmMenu(db *sql.DB) gin.HandlerFunc {
     }
 	
 }
+
+// Função com finalidade de carregar uma refeição.
+func (m *Meal) CarregarRefeicao(db *sql.DB) gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+
+		token, err := c.Cookie("token")
+
+		if err != nil {
+
+			c.JSON(401, gin.H{"message": "Token inválido"})
+
+			return
+			
+		}
+		_, err = ValidarOToken(token)
+
+		if err != nil {
+
+			c.JSON(401, gin.H{"message": "Token inválido"})
+
+			return
+
+		}
+
+		var meal Meal
+
+		row := db.QueryRow("SELECT meal_id, menu_id, meal_name, created_at FROM meals WHERE meal_id = $1", c.Param("meal_id"))
+
+		err = row.Scan(&meal.Meal_ID, &meal.Menu_ID, &meal.MealName, &meal.CreatedAt)
+
+		if err != nil {
+
+			c.JSON(400, gin.H{"message": "Erro ao carregar refeição"})
+
+			fmt.Println(err)
+
+			return
+
+		}
+
+		c.HTML(200, "meal.html", gin.H{"meal": meal})
+
+	}
+
+}

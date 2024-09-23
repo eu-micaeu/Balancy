@@ -36,6 +36,8 @@ func main() {
 
 	routes.MealRoutes(r, db) // Calls the MealRoutes function and passes the route handle and the database connection
 
+	routes.FoodRoutes(r, db) // Calls the FoodRoutes function and passes the route handle and the database connection
+
 	r.LoadHTMLGlob("./views/*.html") // Load the HTML files
 
 	r.GET("/", func(c *gin.Context) { // When accessing the root route, the index.html file will be rendered

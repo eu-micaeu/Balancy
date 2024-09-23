@@ -1,7 +1,12 @@
-import { getCookie } from './getCookie.mjs';
+import { getCookie } from './functions/getCookie.mjs';
+import { divOverlay } from './functions/divOverlay.mjs';
+import { btCreateMenu } from './functions/btCreateMenu.mjs';
 
 // Função DOMContentLoaded
 document.addEventListener("DOMContentLoaded", function () {
+
+    // Div Overlay
+    divOverlay();
 
     fetch('/listUserMenus', {
 
@@ -24,8 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
     }).then(data => {
-
-        console.log(data);
 
         var menus = data.menus;
 
@@ -51,30 +54,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-
-document.getElementById("divOverlay").addEventListener("click", function () {
-
-    var divOverlay = document.getElementById("divOverlay");
-
-    divOverlay.style.display = "none";
-
-    var popUpCreateMenu = document.getElementById("popUpCreateMenu");
-
-    popUpCreateMenu.style.display = "none";
-
-});
-
-document.getElementById("btCreateMenu").addEventListener("click", function () {
-
-    var divOverlay = document.getElementById("divOverlay");
-
-    divOverlay.style.display = "block";
-
-    var popUpCreateMenu = document.getElementById("popUpCreateMenu");
-
-    popUpCreateMenu.style.display = "flex";
-
-});
+// Botão de criar menu
+btCreateMenu();
 
 document.getElementById('btCreateMenuConfirm').addEventListener('click', function () {
 

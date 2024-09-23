@@ -1,10 +1,19 @@
-import { getCookie } from './getCookie.mjs';
+import { getCookie } from './functions/getCookie.mjs';
+import { divOverlay } from './functions/divOverlay.mjs';
+import { btBack } from './functions/btBack.mjs';
+import { btCreateMeal } from './functions/btCreateMeal.mjs';
 
 // Resgatar o que tiver depois de /menu/
 var path = window.location.pathname.split('/menu/')[1];
 
 // Função DOMContentLoaded
 document.addEventListener("DOMContentLoaded", function () {
+
+    // Div Overlay
+    divOverlay();
+
+    // Botão de voltar
+    btBack();
 
     fetch('/listMenuMeals/' + path, {
 
@@ -38,6 +47,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
             li.innerHTML = meal.meal_name;
 
+            li.addEventListener('click', function () {
+
+                window.location.href = '/meal/' + meal.meal_id;
+
+            });
+
             listMeals.appendChild(li);
 
         });
@@ -46,34 +61,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-document.getElementById("divOverlay").addEventListener("click", function () {
-
-    var divOverlay = document.getElementById("divOverlay");
-
-    divOverlay.style.display = "none";
-
-    var popUpCreateMeal = document.getElementById("popUpCreateMeal");
-
-    popUpCreateMeal.style.display = "none";
-
-});
-
-document.getElementById("btCreateMeal").addEventListener("click", function () {
-
-    var divOverlay = document.getElementById("divOverlay");
-
-    divOverlay.style.display = "block";
-
-    var popUpCreateMeal = document.getElementById("popUpCreateMeal");
-
-    popUpCreateMeal.style.display = "flex";
-
-});
-
-document.getElementById('btBack').addEventListener('click', function () {
-
-    // Redirecionar para a página anterior
-
-    window.history.back();
-
-});
+// Botão de criar refeição
+btCreateMeal();
