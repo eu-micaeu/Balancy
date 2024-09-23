@@ -28,8 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }).then(data => {
 
-        console.log(data);
-
         var meals = data.meals;
 
         var listMeals = document.getElementById('listMeals');
@@ -45,5 +43,37 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
     });
+
+});
+
+document.getElementById("divOverlay").addEventListener("click", function () {
+
+    var divOverlay = document.getElementById("divOverlay");
+
+    divOverlay.style.display = "none";
+
+    var popUpCreateMeal = document.getElementById("popUpCreateMeal");
+
+    popUpCreateMeal.style.display = "none";
+
+});
+
+document.getElementById("btCreateMeal").addEventListener("click", function () {
+
+    var divOverlay = document.getElementById("divOverlay");
+
+    divOverlay.style.display = "block";
+
+    var popUpCreateMeal = document.getElementById("popUpCreateMeal");
+
+    popUpCreateMeal.style.display = "flex";
+
+});
+
+document.getElementById('btBack').addEventListener('click', function () {
+
+    // Redirecionar para a página anterior
+
+    window.history.back();
 
 });
