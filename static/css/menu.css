@@ -1,11 +1,5 @@
 @import url('global.css');
 
-header #logo{
-
-    margin: 25px;
-
-}
-
 main{
 
     display: flex;

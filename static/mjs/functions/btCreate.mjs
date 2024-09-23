@@ -1,6 +1,6 @@
-function btCreateMeal(){
+function btCreate(){
 
-    document.getElementById("btCreateMeal").addEventListener("click", function () {
+    document.getElementById("btCreate").addEventListener("click", function () {
 
         var divOverlay = document.getElementById("divOverlay");
     
@@ -14,4 +14,4 @@ function btCreateMeal(){
 
 }
 
-export { btCreateMeal };
+export { btCreate };

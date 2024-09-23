@@ -10,7 +10,7 @@
 
     <title>kCal0</title>
 
-    <link rel="stylesheet" href="../static/css/menu.css">
+    <link rel="stylesheet" href="../static/css/meal.css">
 
     <link rel="icon" href="../static/img/logo.png">
 
@@ -36,11 +36,19 @@
 
         <form>
 
-            <label for="mealName">Meal Name:</label>
+            <label for="foodName">Food Name:</label>
 
-            <input type="text" id="mealName" name="mealName" required>
+            <input type="text" id="foodName" name="foodName" required>
 
-            <button type="button" id="btCreateMealConfirm">Create</button>
+            <label for="foodCalories">Calories:</label>
+
+            <input type="number" id="foodCalories" name="foodCalories" required>
+
+            <label for="foodQuantity">Quantity:</label>
+
+            <input type="number" id="foodQuantity" name="foodQuantity" required>
+
+            <button type="button" id="btCreateFoodConfirm">Create</button>
 
         </form>
 
@@ -48,15 +56,23 @@
 
     <main>
 
-        <div id="divListMeals">
+        <div id="divListFoods">
 
             <h1>{{.meal.MealName}}</h1>
 
-            <ul id="listMeals">
+            <ul id="listFoods">
 
-                <!-- <li>Meal 1</li> -->
+                <!-- <li>Food 1</li> -->
 
             </ul>
+
+        </div>
+
+        <div id="divBtCreateFood">
+
+            <button id="btCreate" type="button">+</button>
+
+            <p>Create Food</p>
 
         </div>
 

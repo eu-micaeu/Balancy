@@ -1,8 +1,7 @@
 import { getCookie } from './functions/getCookie.mjs';
 import { divOverlay } from './functions/divOverlay.mjs';
-import { btCreateMenu } from './functions/btCreateMenu.mjs';
+import { btCreate } from './functions/btCreate.mjs';
 
-// Função DOMContentLoaded
 document.addEventListener("DOMContentLoaded", function () {
 
     // Div Overlay
@@ -55,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Botão de criar menu
-btCreateMenu();
+btCreate();
 
 document.getElementById('btCreateMenuConfirm').addEventListener('click', function () {
 

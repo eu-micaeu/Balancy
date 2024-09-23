@@ -1,7 +1,7 @@
 import { getCookie } from './functions/getCookie.mjs';
 import { divOverlay } from './functions/divOverlay.mjs';
 import { btBack } from './functions/btBack.mjs';
-import { btCreateMeal } from './functions/btCreateMeal.mjs';
+import { btCreate } from './functions/btCreate.mjs';
 
 // Resgatar o que tiver depois de /menu/
 var path = window.location.pathname.split('/menu/')[1];
@@ -62,4 +62,4 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Botão de criar refeição
-btCreateMeal();
+btCreate();

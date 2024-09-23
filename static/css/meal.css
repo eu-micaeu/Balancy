@@ -1,0 +1,40 @@
+@import url('global.css');
+
+main #divBtCreateFood{
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 25px;
+    width: 180px;
+
+}
+
+main #divBtCreateFood button{
+
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #FF006F;
+    border: 2px solid #FF006F;
+    color: #fff;
+    cursor: pointer;
+    font-size: 20px;
+    width: 50px;
+    height: 50px;
+
+}
+
+main #divBtCreateFood button:hover{
+
+    background-color: #ffffff;
+    color: #FF006F;
+
+}
+
+main #divBtCreateFood p{
+
+    font-size: 20px;
+    color: #FF006F;
+
+}

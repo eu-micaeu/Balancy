@@ -1,14 +1,5 @@
 @import url('global.css');
 
-main{
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-}
-
 form{
 
     display: flex;

@@ -1,20 +1,5 @@
 @import url('global.css');
 
-header #logo{
-
-    margin: 25px;
-
-}
-
-main{
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-
-}   
-
 main #divListMenus{
 
     display: flex;
