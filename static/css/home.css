@@ -85,6 +85,53 @@ body #popUpCreateMenu form button:hover{
 
 }
 
+main{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+}   
+
+main #divListMenus{
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 25px;
+
+}
+
+main #divListMenus h1{
+
+    color: #FF006F;
+
+}
+
+main #divListMenus ul#listMenus li{
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 500px;
+    padding: 10px;
+    border: 1px solid #FF006F;
+    border-radius: 5px;
+    margin: 10px;
+
+}
+
+main #divListMenus ul#listMenus li:hover{
+
+    background-color: #FF006F;
+    color: #fff;
+    cursor: pointer;
+
+}
+
 main #divBtCreateMenu{
 
     display: flex;

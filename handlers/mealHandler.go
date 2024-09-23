@@ -1,0 +1,115 @@
+package handlers
+
+import (
+	"database/sql"
+	"fmt"
+
+	"time"
+
+	"github.com/gin-gonic/gin"
+)
+
+type Meal struct {
+
+	Meal_ID   int       `json:"meal_id"`
+
+	Menu_ID   int       `json:"menu_id"`
+
+	MealName  string    `json:"meal_name"`
+
+	CreatedAt time.Time `json:"created_at"`
+	
+}
+
+// Função com finalidade de criar uma refeição em um menu de um usuário.
+func (m *Meal) CriarRefeicao(db *sql.DB) gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+
+		token := c.Request.Header.Get("Authorization")
+
+		_, err := ValidarOToken(token)
+
+		if err != nil {
+
+			c.JSON(401, gin.H{"message": "Token inválido"})
+
+			return
+
+		}
+
+		var meal Meal
+
+		if err := c.BindJSON(&meal); err != nil {
+
+			c.JSON(400, gin.H{"message": "Erro ao criar refeição"})
+
+			fmt.Println(err)
+
+			return
+
+		}
+
+		_, err = db.Exec("INSERT INTO meals (menu_id, meal_name, created_at) VALUES ($1, $2, $3)", meal.Menu_ID, meal.MealName, time.Now())
+
+		if err != nil {
+
+			c.JSON(400, gin.H{"message": "Erro ao criar refeição"})
+
+			fmt.Println(err)
+
+			return
+
+		}
+
+		c.JSON(200, gin.H{"message": "Refeição criada com sucesso"})
+
+	}
+
+}
+
+// Função com finalidade de listar todas as refeições de um menu.
+func (m *Meal) ListarRefeicoesDeUmMenu(db *sql.DB) gin.HandlerFunc {
+
+    return func(c *gin.Context) {
+
+        token := c.Request.Header.Get("Authorization")
+
+        _, err := ValidarOToken(token)
+
+        if err != nil {
+            c.JSON(401, gin.H{"message": "Token inválido"})
+            return
+        }
+
+        menuID := c.Param("menu_id")
+
+        rows, err := db.Query("SELECT meal_id, menu_id, meal_name, created_at FROM meals WHERE menu_id = $1", menuID)
+
+        if err != nil {
+
+            c.JSON(400, gin.H{"message": "Erro ao listar refeições"})
+
+            fmt.Println(err)
+
+            return
+
+        }
+
+        var meals []Meal
+
+        for rows.Next() {
+
+            var meal Meal
+
+            rows.Scan(&meal.Meal_ID, &meal.Menu_ID, &meal.MealName, &meal.CreatedAt)
+
+            meals = append(meals, meal)
+
+        }
+
+        c.JSON(200, gin.H{"meals": meals})
+
+    }
+	
+}

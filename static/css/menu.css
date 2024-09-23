@@ -1,0 +1,93 @@
+@import url('global.css');
+
+header #logo{
+
+    margin: 25px;
+
+}
+
+main{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+}   
+
+main #divListMeals{
+
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 25px;
+
+}
+
+main #divListMeals h1{
+
+    color: #FF006F;
+
+}
+
+main #divListMeals ul#listMeals li{
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 500px;
+    padding: 10px;
+    border: 1px solid #FF006F;
+    border-radius: 5px;
+    margin: 10px;
+
+}
+
+main #divListMeals ul#listMeals li:hover{
+
+    background-color: #FF006F;
+    color: #fff;
+    cursor: pointer;
+
+}
+
+main #divBtCreateMeal{
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 25px;
+    width: 180px;
+
+}
+
+main #divBtCreateMeal button{
+
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #FF006F;
+    border: 2px solid #FF006F;
+    color: #fff;
+    cursor: pointer;
+    font-size: 20px;
+    width: 50px;
+    height: 50px;
+
+}
+
+main #divBtCreateMeal button:hover{
+
+    background-color: #ffffff;
+    color: #FF006F;
+
+}
+
+main #divBtCreateMeal p{
+
+    font-size: 20px;
+    color: #FF006F;
+
+}

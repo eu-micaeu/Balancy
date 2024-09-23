@@ -1,6 +1,58 @@
 import { getCookie } from './getCookie.mjs';
 
-document.getElementById("divOverlay").addEventListener("click", function() {
+// Função DOMContentLoaded
+document.addEventListener("DOMContentLoaded", function () {
+
+    fetch('/listUserMenus', {
+
+        method: 'GET',
+
+        headers: {
+
+            'Content-Type': 'application/json',
+
+            'Authorization': getCookie()
+
+        }
+
+    }).then(response => {
+
+        if (response.ok) {
+
+            return response.json();
+
+        }
+
+    }).then(data => {
+
+        console.log(data);
+
+        var menus = data.menus;
+
+        var listMenus = document.getElementById('listMenus');
+
+        menus.forEach(menu => {
+
+            var li = document.createElement('li');
+
+            li.innerHTML = menu.menu_name;
+
+            li.addEventListener('click', function () {
+
+                window.location.href = '/menu/' + menu.menu_id;
+
+            });
+
+            listMenus.appendChild(li);
+
+        });
+
+    });
+
+});
+
+
+document.getElementById("divOverlay").addEventListener("click", function () {
 
     var divOverlay = document.getElementById("divOverlay");
 
@@ -12,10 +64,10 @@ document.getElementById("divOverlay").addEventListener("click", function() {
 
 });
 
-document.getElementById("btCreateMenu").addEventListener("click", function() {
+document.getElementById("btCreateMenu").addEventListener("click", function () {
 
     var divOverlay = document.getElementById("divOverlay");
-    
+
     divOverlay.style.display = "block";
 
     var popUpCreateMenu = document.getElementById("popUpCreateMenu");
@@ -24,7 +76,7 @@ document.getElementById("btCreateMenu").addEventListener("click", function() {
 
 });
 
-document.getElementById('btCreateMenuConfirm').addEventListener('click', function() {
+document.getElementById('btCreateMenuConfirm').addEventListener('click', function () {
 
     var menuName = document.getElementById('menuName').value;
 
@@ -40,7 +92,7 @@ document.getElementById('btCreateMenuConfirm').addEventListener('click', functio
 
         },
 
-        body: JSON.stringify({meun_name: menuName})
+        body: JSON.stringify({ meun_name: menuName })
 
     }).then(response => {
 
@@ -54,3 +106,4 @@ document.getElementById('btCreateMenuConfirm').addEventListener('click', functio
 
 
 });
+
