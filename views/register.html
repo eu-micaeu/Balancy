@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>kCal0</title>
+
+    <link rel="stylesheet" href="../static/css/register.css">
+
+    <link rel="icon" href="../static/img/logo.png">
+
+</head>
+
+<body>
+
+    <main>
+
+        <form>
+
+            <h2>Register</h2>
+
+            <div class="divDouble">
+
+                <div class="boxInput">
+
+                    <label for="username">Username</label>
+
+                    <input type="text" name="username" id="username" placeholder="Username" required>
+
+                </div>
+
+                <div class="boxInput">
+
+                    <label for="fullName">Name</label>
+
+                    <input type="text" name="fullName" id="fullName" placeholder="Name" required>
+
+                </div>
+
+            </div>
+
+            <div class="divDouble">
+
+                <div class="boxInput">
+
+                    <label for="email">Email</label>
+
+                    <input type="text" name="email" id="email" placeholder="Email" required>
+
+                </div>
+
+                <div class="boxInput">
+
+                    <label for="confirmEmail">Confirm Email</label>
+
+                    <input type="text" name="confirmEmail" id="confirmEmail" placeholder="Confirm Email" required>
+
+                </div>
+
+            </div>
+
+            <div class="divDouble">
+
+                <div class="boxInput">
+
+                    <label for="password">Password</label>
+
+                    <input type="password" name="password" id="password" placeholder="Password" required>
+
+                </div>
+
+                <div class="boxInput">
+
+                    <label for="confirmPassword">Confirm Password</label>
+
+                    <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password"
+                        required>
+
+                </div>
+
+            </div>
+
+            <div class="divDouble">
+
+                <div class="boxInput">
+
+                    <label for="height">Height</label>
+
+                    <input type="number" name="height" id="height" placeholder="Height" required>
+
+                </div>
+
+                <div class="boxInput">
+
+                    <label for="age">Age</label>
+
+                    <input type="number" name="age" id="age" placeholder="Age" required>
+
+                </div>
+
+            </div>
+
+            <div class="divDouble">
+
+                <div class="boxInput">
+
+                    <label for="weight">Weight</label>
+
+                    <input type="number" name="weight" id="weight" placeholder="Weight" required>
+
+                </div>
+
+                <div class="boxInput">
+
+                    <label for="activityLevel">Activity Level</label>
+
+                    <select name="activityLevel" id="activityLevel">
+
+                        <option value="1.2">Sedentary</option>
+
+                        <option value="1.375">Lightly Active</option>
+
+                        <option value="1.55">Moderately Active</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <button type="button" id="btEnter">Enter</button>
+
+            <a href="/">Already have an account? Login here!</a>
+
+        </form>
+
+    </main>
+
+    <footer>
+
+        <p>&copy; 2024 kCal0</p>
+
+    </footer>
+
+    <script type="module" src="../static/mjs/index.mjs"></script>
+
+</body>
+
+</html>

@@ -20,7 +20,7 @@ function btCreateMenuConfirm(){
     
             body: JSON.stringify({ 
 
-                menuName_name: menuName 
+                menu_name: menuName 
 
             })
     

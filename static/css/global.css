@@ -16,9 +16,10 @@ body{
 
 }
 
-body #btBack{
+body #btBack, body #btLogout{
 
     position: fixed;
+    font-family: 'Karla', sans-serif;
     top: 25px;
     left: 25px;
     border: none;
@@ -26,14 +27,13 @@ body #btBack{
     background-color: #FF006F;
     color: #fff;
     cursor: pointer;
-    font-size: 30px;
-    width: 50px;
+    font-size: 20px;
     height: 50px;
     border: 2px solid #FF006F;
 
 }
 
-body #btBack:hover{
+body #btBack:hover, body #btLogout:hover{
 
     background-color: #fff;
     color: #FF006F;

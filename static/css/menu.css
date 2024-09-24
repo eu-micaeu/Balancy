@@ -9,11 +9,9 @@ main h1{
 main #divListMeals{
 
     display: flex;
-    flex-wrap: wrap;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 25px;
 
 }
 

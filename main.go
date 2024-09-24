@@ -46,6 +46,12 @@ func main() {
 
 	})
 
+	r.GET("/register", func(c *gin.Context) { // When accessing the /register route, the register.html file will be rendered
+
+		c.HTML(http.StatusOK, "register.html", nil)
+
+	})
+
 	r.GET("/home", func(c *gin.Context) { // When accessing the /home route, the home.html file will be rendered
 
 		c.HTML(http.StatusOK, "home.html", nil)

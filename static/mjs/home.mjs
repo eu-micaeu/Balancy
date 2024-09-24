@@ -29,6 +29,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         var menus = data.menus;
 
+        console.log(menus);
+
         var listMenus = document.getElementById('listMenus');
 
         menus.forEach(menu => {
@@ -51,6 +53,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+document.getElementById('btLogout').addEventListener('click', function () {
+
+    window.location.href = '/';
+
+    // Deletar cookie
+    document.cookie = 'token' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+});
 
 // Div Overlay
 divOverlay();
