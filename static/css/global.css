@@ -114,7 +114,7 @@ body header #logo{
 
 }
 
-header #btBack, header #btLogout{
+header #btBack, header #btLogout, header #btPerfil{
 
     font-family: 'Karla', sans-serif;
     border: none;
@@ -126,9 +126,11 @@ header #btBack, header #btLogout{
     height: 50px;
     border: 2px solid #FF006F;
     margin: 25px;
+    width: 100px;
+
 }
 
-header #btBack:hover, header #btLogout:hover{
+header #btBack:hover, header #btLogout:hover, header #btPerfil:hover{
 
     background-color: #fff;
     color: #FF006F;
@@ -166,11 +168,27 @@ body footer p{
 h1, h2, h3{
 
     text-align: center;
+    margin: 0;
 
 }
 
 button{
 
     font-family: 'Karla', sans-serif;
+
+}
+
+.divDouble{
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+}
+
+.divDouble .boxInput{
+
+    display: flex;
+    flex-direction: column;
 
 }

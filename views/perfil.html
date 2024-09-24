@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>kCal0</title>
+
+    <link rel="stylesheet" href="../static/css/perfil.css">
+
+    <link rel="icon" href="../static/img/logo.png">
+
+</head>
+
+<body>
+
+    <header>
+
+        <img src="../static/img/logo.png" alt="logo" id="logo" width=75 height=75>
+
+        <nav>
+
+            <button id="btBack" type="button">Return</button>
+
+            <button id="btLogout" type="button">Logout</button>
+
+        </nav>
+
+    </header>
+
+    <main>
+
+        <div id="divInfos">
+
+            <h1>Profile</h1>
+
+            <div class="divDouble">
+
+                <div class="boxInput">
+
+                    <label for="username">Username</label>
+
+                    <input type="text" id="username" name="username" readonly>
+
+                </div>
+
+                <div class="boxInput">
+
+                    <label for="email">Email</label>
+
+                    <input type="text" id="email" name="email" readonly>
+
+                </div>
+
+            </div>
+
+            <div class="divDouble">
+
+                <div class="boxInput">
+
+                    <label for="fullName">FullName:</label>
+
+                    <input type="text" id="fullName" name="fullName" readonly>
+
+                </div>
+
+                <div class="boxInput">
+        
+                    <label for="gender">Gender:</label>
+        
+                    <input type="text" id="gender" name="gender" readonly>
+
+                </div>
+
+            </div>
+
+            <div class="divDouble">
+
+                <div class="boxInput">
+
+                    <label for="age">Age:</label>
+
+                    <input type="text" id="age" name="age" readonly>
+
+                </div>
+
+                <div class="boxInput">
+
+                    <label for="weight">Weight:</label>
+
+                    <input type="text" id="weight" name="weight" readonly>
+
+                </div>
+
+            </div>
+
+            <div class="divDouble">
+
+                <div class="boxInput">
+
+                    <label for="height">Height:</label>
+
+                    <input type="text" id="height" name="height" readonly>
+
+                </div>
+
+                <div class="boxInput">
+
+                    <label for="activityLevel">Activity Level:</label>
+
+                    <input type="text" id="activityLevel" name="activityLevel" readonly>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="divCalculate">
+
+            <p id="imc"></p>
+
+            <p id="tmr"></p>
+
+        </div>
+
+    </main>
+
+    <footer>
+
+        <p>&copy; 2024 kCal0</p>
+
+    </footer>
+
+    <script type="module" src="../static/mjs/perfil.mjs"></script>
+
+</body>
+
+</html>

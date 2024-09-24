@@ -58,6 +58,12 @@ func main() {
 
 	})
 
+	r.GET("/perfil", func(c *gin.Context) { // When accessing the /perfil route, the perfil.html file will be rendered
+
+		c.HTML(http.StatusOK, "perfil.html", nil)
+
+	})
+
 	r.Static("/static", "./static") // Load the static files
 
 	r.Run() // Run the server

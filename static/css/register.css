@@ -47,21 +47,6 @@ form select{
 
 }
 
-form .divDouble{
-
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-
-}
-
-form .divDouble .boxInput{
-
-    display: flex;
-    flex-direction: column;
-
-}
-
 form button{
 
     margin-top: 10px;

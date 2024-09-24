@@ -1,0 +1,56 @@
+@import url('global.css');	
+
+main {
+
+    display: flex;
+    flex-direction: column;
+    align-items: normal;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+
+}
+
+main h1 {
+
+    color: #FF006F; 
+    font-size: 36px;
+    margin-bottom: 20px;
+
+}
+
+main label {
+
+    color: #FF006F; 
+    font-size: 18px;
+    margin-bottom: 5px;
+    display: block;
+
+}
+
+main input {
+
+    width: 300px;
+    padding: 10px;
+    border: 2px solid #FF006F;
+    border-radius: 5px;
+    margin: 15px;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 16px;
+    pointer-events: none; 
+    cursor: default; 
+
+}
+
+main input:focus {
+
+    outline: none;
+
+}
+
+#imc, #tmr{
+
+    width: 100%;
+    text-align: center;
+
+}
