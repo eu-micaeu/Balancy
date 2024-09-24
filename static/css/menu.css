@@ -1,5 +1,12 @@
 @import url('global.css');
 
+main{
+
+    border-left: 2px solid #FF006F;
+    border-right: 2px solid #FF006F;
+
+}
+
 main h1{
 
     color: #FF006F;

@@ -17,30 +17,29 @@ main #divListFoods{
 
 main #divListFoods table {
 
-    width: 50%;
+    width: 60%; 
     border-collapse: collapse;
     table-layout: fixed;
-    background-color: #f9f9f9; 
-    font-family: Arial, sans-serif; 
-    border: 1px solid #ddd; 
+    background-color: #f9f9f9;
+    font-family: inherit;
+    border: 1px solid #FF006F; 
 
 }
 
 main #divListFoods table th, 
 main #divListFoods table td {
 
-    padding: 12px 15px; 
-    border: 1px solid #ddd; 
-    text-align: center; 
-    vertical-align: middle; 
+    padding: 15px 20px; 
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
 
 }
 
 main #divListFoods table th {
-
-    background-color: #f2f2f2; 
-    font-weight: bold; 
-
+    background-color: #FF006F; 
+    color: #ffffff; 
+    font-weight: bold;
 }
 
 main #divListFoods table tr:nth-child(even) {

@@ -57,7 +57,6 @@ main #divBtCreateMenu{
     justify-content: space-between;
     align-items: center;
     margin: 25px;
-    width: 180px;
 
 }
 
@@ -71,8 +70,7 @@ main #divBtCreateMenu button{
     color: #fff;
     cursor: pointer;
     font-size: 20px;
-    width: 50px;
-    height: 50px;
+    font-weight: bold;
 
 }
 

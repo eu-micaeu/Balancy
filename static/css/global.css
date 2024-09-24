@@ -16,30 +16,6 @@ body{
 
 }
 
-body #btBack, body #btLogout{
-
-    position: fixed;
-    font-family: 'Karla', sans-serif;
-    top: 25px;
-    left: 25px;
-    border: none;
-    border-radius: 5px;
-    background-color: #FF006F;
-    color: #fff;
-    cursor: pointer;
-    font-size: 20px;
-    height: 50px;
-    border: 2px solid #FF006F;
-
-}
-
-body #btBack:hover, body #btLogout:hover{
-
-    background-color: #fff;
-    color: #FF006F;
-
-}
-
 body #divOverlay{
 
     display: none;
@@ -125,7 +101,7 @@ body header{
     color: #fff;
     text-align: center;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     user-select: none;
     border-bottom: 5px solid #FF006F;
@@ -138,12 +114,34 @@ body header #logo{
 
 }
 
-body main{
+header #btBack, header #btLogout{
+
+    font-family: 'Karla', sans-serif;
+    border: none;
+    border-radius: 5px;
+    background-color: #FF006F;
+    color: #fff;
+    cursor: pointer;
+    font-size: 20px;
+    height: 50px;
+    border: 2px solid #FF006F;
+    margin: 25px;
+}
+
+header #btBack:hover, header #btLogout:hover{
+
+    background-color: #fff;
+    color: #FF006F;
+
+}
+
+main{
 
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    height: 100%;
 
 }
 
@@ -168,5 +166,11 @@ body footer p{
 h1, h2, h3{
 
     text-align: center;
+
+}
+
+button{
+
+    font-family: 'Karla', sans-serif;
 
 }
