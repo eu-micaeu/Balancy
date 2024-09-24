@@ -168,11 +168,17 @@ body footer p{
 h1, h2, h3{
 
     text-align: center;
-    margin: 0;
+    margin: 20px;
 
 }
 
 button{
+
+    font-family: 'Karla', sans-serif;
+
+}
+
+input{
 
     font-family: 'Karla', sans-serif;
 
