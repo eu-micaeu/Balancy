@@ -68,8 +68,8 @@ func (m *Menu) CriarMenu(db *sql.DB) gin.HandlerFunc {
 
 }
 
-// Função para listar menus de um usuário.
-func (m *Menu) ListarMenusDeUmUsuario(db *sql.DB) gin.HandlerFunc {
+// Finção para resgatar o menu do usuário.
+func (m *Menu) ResgatarMenu(db *sql.DB) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
@@ -89,7 +89,9 @@ func (m *Menu) ListarMenusDeUmUsuario(db *sql.DB) gin.HandlerFunc {
 
 		if err != nil {
 
-			c.JSON(400, gin.H{"message": "Erro ao listar menus"})
+			c.JSON(400, gin.H{"message": "Erro ao buscar menus"})
+
+			fmt.Println(err)
 
 			return
 
@@ -101,7 +103,17 @@ func (m *Menu) ListarMenusDeUmUsuario(db *sql.DB) gin.HandlerFunc {
 
 			var menu Menu
 
-			rows.Scan(&menu.Menu_ID, &menu.User_ID, &menu.MenuName, &menu.CreatedAt)
+			err := rows.Scan(&menu.Menu_ID, &menu.User_ID, &menu.MenuName, &menu.CreatedAt)
+
+			if err != nil {
+
+				c.JSON(400, gin.H{"message": "Erro ao buscar menus"})
+
+				fmt.Println(err)
+
+				return
+
+			}
 
 			menus = append(menus, menu)
 
