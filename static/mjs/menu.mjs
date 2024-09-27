@@ -1,5 +1,4 @@
 import { divOverlay } from './functions/divOverlay.mjs';
-import { btBack } from './functions/btBack.mjs';
 import { btCreate } from './functions/btCreate.mjs';
 import { btCreateMealConfirm } from './functions/btCreateMealConfirm.mjs';
 import { attMeals } from './functions/attMeals.mjs';
@@ -14,9 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Div Overlay
 divOverlay();
-
-// Botão de voltar
-btBack();
 
 // Botão de criar refeição
 btCreate();

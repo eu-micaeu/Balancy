@@ -1,5 +1,3 @@
-import { btBack } from './functions/btBack.mjs';
-
 document.addEventListener('DOMContentLoaded', function () {
 
     fetch('/getUser', {
@@ -16,7 +14,17 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('username').value = data.username;
             document.getElementById('email').value = data.email;
             document.getElementById('fullName').value = data.full_name;
-            document.getElementById('gender').value = data.gender;
+            
+            if(data.gender === 'M'){
+
+                document.getElementById('gender').value = 'Masculino';
+
+            } else if(data.gender === 'F'){
+
+                document.getElementById
+
+            }
+
             document.getElementById('age').value = data.age;
             document.getElementById('weight').value = data.weight;
             document.getElementById('height').value = data.height;
@@ -121,8 +129,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 });
-
-btBack();
 
 document.getElementById('btLogout').addEventListener('click', function () {
 
