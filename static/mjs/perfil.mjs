@@ -1,4 +1,8 @@
+import { btLogout } from './functions/btLogout.mjs';
+
 document.addEventListener('DOMContentLoaded', function () {
+
+    btLogout();
 
     fetch('/getUser', {
 
@@ -127,14 +131,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
         .catch(error => console.error('Error:', error));
 
-
-});
-
-document.getElementById('btLogout').addEventListener('click', function () {
-
-    window.location.href = '/';
-
-    // Deletar cookie
-    document.cookie = 'token' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 
 });

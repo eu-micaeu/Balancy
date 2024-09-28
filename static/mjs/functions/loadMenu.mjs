@@ -2,24 +2,43 @@ import { getCookie } from './getCookie.mjs';
 import { openOverlay } from './openOverlay.mjs';
 
 // Função para buscar o menu
+
 function fetchMenu() {
+
     return fetch('/menu', {
+
         method: 'GET',
+
         headers: {
+
             'Content-Type': 'application/json',
+
             'Authorization': getCookie('token')
+
         }
+
     })
+
     .then(response => {
+
         if (response.status === 200) {
+
             document.getElementById('noMenu').style.display = 'none';
+
         }
+
         return response.json();
+
     })
+    
     .then(data => {
+        
         localStorage.setItem('menu_id', data.menu.menu_id);
+
         return data.menu;
+
     });
+
 }
 
 // Função para buscar refeições do menu
