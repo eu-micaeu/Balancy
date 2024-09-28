@@ -1,5 +1,11 @@
 @import url('global.css');
 
+main{
+
+    justify-content: center;
+
+}
+
 form{
 
     display: flex;
@@ -76,5 +82,20 @@ form a:hover{
 
     background-color: #FF006F;
     color: #fff;
+
+}
+
+.divDouble {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+}
+
+.divDouble .boxInput {
+
+    display: flex;
+    flex-direction: column;
 
 }

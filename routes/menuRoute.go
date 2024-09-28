@@ -14,9 +14,9 @@ func MenuRoutes(r *gin.Engine, db *sql.DB) {
 
 	r.POST("/createMenu", menuHandler.CriarMenu(db))
 
-	r.GET("/verifyMenu/:menu_id", menuHandler.VerificarSeUsuarioEhDonoDoMenu(db))
-
 	r.GET("/menu/:menu_id", menuHandler.CarregarMenu(db))
+
+	r.GET("/menu", menuHandler.ResgatarMenu(db))
 
 	r.GET("/calculateMenuCaloriesAndQuantity/:menu_id", menuHandler.CalcularTotalDeCaloriasEQuantidadeDoMenu(db))
 

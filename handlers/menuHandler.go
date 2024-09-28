@@ -68,62 +68,40 @@ func (m *Menu) CriarMenu(db *sql.DB) gin.HandlerFunc {
 
 }
 
-// Finção para resgatar o menu do usuário.
+// Função para resgatar o único menu do usuário.
 func (m *Menu) ResgatarMenu(db *sql.DB) gin.HandlerFunc {
-
 	return func(c *gin.Context) {
-
+		// Resgata o token do header de autorização
 		token := c.Request.Header.Get("Authorization")
 
+		// Valida o token para obter o userID
 		userID, err := ValidarOToken(token)
-
 		if err != nil {
-
 			c.JSON(401, gin.H{"message": "Token inválido"})
-
 			return
-
 		}
 
-		rows, err := db.Query("SELECT menu_id, user_id, menu_name, created_at FROM menus WHERE user_id = $1", userID)
+		// Query para resgatar o único menu do usuário
+		var menu Menu
+		err = db.QueryRow("SELECT menu_id, user_id, menu_name, created_at FROM menus WHERE user_id = $1", userID).
+			Scan(&menu.Menu_ID, &menu.User_ID, &menu.MenuName, &menu.CreatedAt)
 
+		// Verifica erros na consulta
 		if err != nil {
-
-			c.JSON(400, gin.H{"message": "Erro ao buscar menus"})
-
-			fmt.Println(err)
-
-			return
-
-		}
-
-		var menus []Menu
-
-		for rows.Next() {
-
-			var menu Menu
-
-			err := rows.Scan(&menu.Menu_ID, &menu.User_ID, &menu.MenuName, &menu.CreatedAt)
-
-			if err != nil {
-
-				c.JSON(400, gin.H{"message": "Erro ao buscar menus"})
-
+			if err == sql.ErrNoRows {
+				c.JSON(404, gin.H{"message": "Menu não encontrado"})
+			} else {
+				c.JSON(400, gin.H{"message": "Erro ao buscar menu"})
 				fmt.Println(err)
-
-				return
-
 			}
-
-			menus = append(menus, menu)
-
+			return
 		}
 
-		c.JSON(200, gin.H{"menus": menus})
-
+		// Retorna o menu encontrado
+		c.JSON(200, gin.H{"menu": menu})
 	}
-
 }
+
 
 // Função para carregar um menu que seja de um usuário.
 func (m *Menu) CarregarMenu(db *sql.DB) gin.HandlerFunc {

@@ -1,27 +1,25 @@
-import { divOverlay } from './functions/divOverlay.mjs';
-import { btCreate } from './functions/btCreate.mjs';
-import { btCreateMenuConfirm } from './functions/btCreateMenuConfirm.mjs';
+import { openOverlay } from './functions/openOverlay.mjs';
+import { closeOverlay } from './functions/closeOverlay.mjs';
+import { loadMenu } from './functions/loadMenu.mjs';
 
 document.addEventListener("DOMContentLoaded", function () {
 
+    loadMenu();
+
+});
+
+// Lógica de adicionar refeição
+document.getElementById('btAddMeal').addEventListener('click', function () {
     
+    openOverlay('popUpCreateMeal');
 
 });
 
-document.getElementById('btLogout').addEventListener('click', function () {
 
-    window.location.href = '/';
+document.getElementById('divOverlay').addEventListener('click', function () {
 
-    // Deletar cookie
-    document.cookie = 'token' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    closeOverlay('popUpCreateMeal');
+
+    closeOverlay('popUpCreateFood');
 
 });
-
-// Div Overlay
-divOverlay();
-
-// Botão de criar menu
-btCreate();
-
-// Botão de confirmar criação de menu
-btCreateMenuConfirm();

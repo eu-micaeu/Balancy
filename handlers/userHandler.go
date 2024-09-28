@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -148,6 +149,8 @@ func (u *User) Resgatar(db *sql.DB) gin.HandlerFunc {
 		err = row.Scan(&u.User_ID, &u.Username, &u.Email, &u.FullName, &u.Gender, &u.Age, &u.Weight, &u.Height, &u.ActivityLevel, &u.CreatedAt)
 
 		if err != nil {
+
+			fmt.Println(err)
 
 			c.JSON(404, gin.H{"message": "Usuário não encontrado"})
 
