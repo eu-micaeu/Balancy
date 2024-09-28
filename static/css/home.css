@@ -137,13 +137,20 @@
 
 #yesMenu table {
     width: 60vw;
+    font-size: 20px;
     border-collapse: collapse;
     margin-top: 20px;
     table-layout: fixed; 
 }
 
+#yesMenu table th {
+    background-color: #FF006F;
+    color: #fff;
+    font-weight: bold;
+}
+
 #yesMenu table th, td {
-    border: 1px solid #FF006F;
+    border: 2px solid #FF006F;
     padding: 10px;
     text-align: center;
     width: 33.33%; 

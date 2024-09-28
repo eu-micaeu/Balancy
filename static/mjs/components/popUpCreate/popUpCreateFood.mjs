@@ -18,11 +18,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             <input type="text" id="foodName" name="foodName" required>
 
-            <label for="foodCal">Calories:</label>
+            <label for="foodCal">Calories ( kCal's ):</label>
 
             <input type="number" id="calories" name="calories" required>
 
-            <label for="foodQuantity">Quantity:</label>
+            <label for="foodQuantity">Quantity ( g's ):</label>
 
             <input type="number" id="quantity" name="quantity" required>
 

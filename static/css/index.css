@@ -85,18 +85,3 @@ form a:hover{
     color: #fff;
 
 }
-
-.divDouble {
-
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-
-}
-
-.divDouble .boxInput {
-
-    display: flex;
-    flex-direction: column;
-
-}

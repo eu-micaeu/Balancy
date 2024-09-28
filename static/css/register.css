@@ -10,6 +10,7 @@ form{
     color: #FF006F;
     user-select: none;
     width: 700px;
+    margin: 40px;
     align-items: center;
 
 }
@@ -86,5 +87,20 @@ form a:hover{
 
     background-color: #FF006F;
     color: #fff;
+
+}
+
+.divDouble {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+}
+
+.divDouble .boxInput {
+
+    display: flex;
+    flex-direction: column;
 
 }

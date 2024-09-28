@@ -123,7 +123,7 @@ function createFoodTable() {
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
 
-    ['Alimento', 'Calorias', 'Quantidade'].forEach(text => {
+    ['Alimento', "Calorias ( kCal's )", "Quantidade ( g's )"].forEach(text => {
         const th = document.createElement('th');
         th.textContent = text;
         headerRow.appendChild(th);
