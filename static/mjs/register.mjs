@@ -6,7 +6,7 @@ document.getElementById('btRegister').addEventListener('click', function () {
 
     var password = document.getElementById('password').value;
 
-    var passwordConfirm = document.getElementById('passwordConfirm').value;
+    var confirmPassword = document.getElementById('confirmPassword').value;
 
     var gender = document.getElementById('gender').value;
 
@@ -18,7 +18,15 @@ document.getElementById('btRegister').addEventListener('click', function () {
 
     var activityLevel = document.getElementById('activityLevel').value;
 
-    if (password !== passwordConfirm) {
+    if (!fullName || !email || !password || !confirmPassword || !gender || !age || !weight || !height || !activityLevel) {
+
+        alert('Preencha todos os campos.');
+
+        return;
+
+    }
+
+    if (password !== confirmPassword) {
 
         alert('As senhas não coincidem.');
 

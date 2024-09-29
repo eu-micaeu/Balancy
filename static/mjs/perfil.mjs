@@ -21,9 +21,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById('gender').value = 'Feminino';
             }
 
-            document.getElementById('age').value = data.age;
-            document.getElementById('weight').value = data.weight;
-            document.getElementById('height').value = data.height;
+            document.getElementById('age').value = data.age + ' anos';
+            document.getElementById('weight').value = data.weight + ' kg';
+            document.getElementById('height').value = data.height + ' m';
             document.getElementById('activityLevel').value = data.activity_level;
 
             // Cálculo do IMC (Índice de Massa Corporal)

@@ -12,14 +12,13 @@ main {
 main #divInfos{
 
     height: 100%;
+    padding: 20px 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 50px;
-    border: 2px solid #FF006F;
     border-radius: 8px;
-    margin: 50px;
+    margin: 0 0 50px 0;
 
 }
 
@@ -45,7 +44,7 @@ main label {
 main input {
 
     width: 400px;
-    padding: 10px;
+    padding: 30px 15px;
     border: 2px solid #FF006F;
     border-radius: 5px;
     margin: 0 15px;

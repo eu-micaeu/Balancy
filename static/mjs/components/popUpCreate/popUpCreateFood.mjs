@@ -12,23 +12,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
     popUpCreateFood.innerHTML = `
 
-        <form>
+            <form>
 
-            <label for="foodName">Food Name:</label>
+                <h1>Create Food</h1>
+    
+                <div class="form-group">
+                    <label for="foodName">* Food Name:</label>
+                    <input type="text" id="foodName" name="foodName" placeholder="Enter food name" required>
+                </div>
 
-            <input type="text" id="foodName" name="foodName" required>
+                <div class="form-group">
+                    <label for="calories">* Calories (kCal):</label>
+                    <input type="number" id="calories" name="calories" placeholder="Enter calories" min="0" required>
+                </div>
 
-            <label for="foodCal">Calories ( kCal's ):</label>
+                <div class="form-group">
+                    <label for="quantity">* Quantity (g):</label>
+                    <input type="number" id="quantity" name="quantity" placeholder="Enter quantity in grams" min="0" required>
+                </div>
 
-            <input type="number" id="calories" name="calories" required>
+                <div class="form-actions">
+                    <button type="submit" id="btCreateFoodConfirm">Create Food</button>
+                </div>
 
-            <label for="foodQuantity">Quantity ( g's ):</label>
+                <p class="form-note">Fields with * are required.</p>
 
-            <input type="number" id="quantity" name="quantity" required>
-
-            <button type="button" id="btCreateFoodConfirm">Create</button>
-
-        </form>
+            </form>
 
     `;
 
