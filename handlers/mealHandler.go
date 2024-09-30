@@ -68,7 +68,7 @@ func (m *Meal) CriarRefeicao(db *sql.DB) gin.HandlerFunc {
 
 }
 
-// Função com finalidade de listar todas as refeições de um menu.
+// Função com finalidade de listar todas as refeições de um menu pela data.
 func (m *Meal) ListarRefeicoesDeUmMenu(db *sql.DB) gin.HandlerFunc {
 
     return func(c *gin.Context) {
@@ -84,7 +84,7 @@ func (m *Meal) ListarRefeicoesDeUmMenu(db *sql.DB) gin.HandlerFunc {
 
         menuID := c.Param("menu_id")
 
-        rows, err := db.Query("SELECT meal_id, menu_id, meal_name, created_at FROM meals WHERE menu_id = $1", menuID)
+		rows, err := db.Query("SELECT meal_id, menu_id, meal_name, created_at FROM meals WHERE menu_id = $1 ORDER BY created_at", menuID)
 
         if err != nil {
 

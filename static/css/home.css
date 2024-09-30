@@ -1,5 +1,11 @@
 @import url('global.css');
 
+h1{
+
+    margin-bottom: 0;
+
+}
+
 #divOverlay{
 
     display: none;
@@ -90,7 +96,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     flex-direction: column;
     color: #FF006F;
 
@@ -129,12 +134,6 @@
 
 }
 
-#yesMenu h2{
-
-    width: 60vw;
-
-}
-
 #yesMenu table {
     width: 60vw;
     font-size: 20px;
@@ -159,6 +158,25 @@
 hr{
 
     width: 60vw;
-    border: 1px solid #FF006F;
+    border: 5px solid #FF006F;
 
+}
+
+.deleteButton {
+    background-color: #ffffff;
+    color: #FF006F;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0;
+    margin-left: 10px;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition:  ease .3s;
+}
+
+.deleteButton:hover {
+    transform: scale(1.1);
 }

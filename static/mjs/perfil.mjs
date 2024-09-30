@@ -47,14 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             document.getElementById('imcValue').textContent = 'IMC: ' + imc.toFixed(2) + ' - ' + mensagem;
 
-            // Movendo a barra conforme o valor do IMC
-            var imcBarIndicator = document.getElementById('imcBarIndicator');
-            var imcPercentage = (imc / 50) * 100; // Convertendo o IMC para uma porcentagem dentro da faixa 0-50
-            if (imcPercentage > 100) imcPercentage = 100; // Limitando a barra a 100% no máximo
-
-            imcBarIndicator.style.width = imcPercentage + '%';
-
-
             // Cálculo da TMB (Taxa de Metabolismo Basal)
             // TMB é a quantidade de calorias que o corpo queima em repouso total (sem considerar atividades físicas).
             var tmb;
@@ -69,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 tmb = 447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age);
             }
 
-            document.getElementById('tmb').textContent = 'TMB (Taxa de Metabolismo Basal): ' + tmb.toFixed(2) + ' kcal';
+            document.getElementById('tmb').textContent = 'TMB (Taxa de Metabolismo Basal): ' + tmb.toFixed(2) + ' kCal';
 
             // Cálculo do TMR (Taxa Metabólica de Repouso)
             // TMR é a quantidade de calorias que o corpo queima considerando o nível de atividade física.
@@ -94,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     alert('Erro ao calcular TMR');
             }
 
-            document.getElementById('tmr').textContent = 'TMR (Taxa Metabólica de Repouso): ' + tmr.toFixed(2) + ' kcal';
+            document.getElementById('tmr').textContent = 'TMR (Taxa Metabólica de Repouso): ' + tmr.toFixed(2) + ' kCal';
 
         })
         .catch(error => console.error('Error:', error));

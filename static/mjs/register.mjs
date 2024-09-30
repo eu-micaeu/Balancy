@@ -36,7 +36,9 @@ document.getElementById('btRegister').addEventListener('click', function () {
 
     var data = {
 
-        fullName: fullName,
+        username: username,
+
+        full_name: fullName,
 
         email: email,
 
@@ -50,7 +52,7 @@ document.getElementById('btRegister').addEventListener('click', function () {
 
         height: height,
 
-        activityLevel: activityLevel
+        activity_level: activityLevel
 
     };
 

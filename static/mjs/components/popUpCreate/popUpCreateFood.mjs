@@ -37,6 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 <p class="form-note">Fields with * are required.</p>
 
+                <p class="form-note">To reinforce! The number of calories must be in accordance with the amount added!</p>
+
             </form>
 
     `;

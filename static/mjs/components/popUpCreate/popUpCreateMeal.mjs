@@ -14,11 +14,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         <form>
 
-            <label for="mealName">Meal Name:</label>
+            <h1>Create Meal</h1>
 
-            <input type="text" id="mealName" name="mealName" required>
+            <div class="form-group">
+                <label for="mealName">* Meal Name:</label>
+                <input type="text" id="mealName" name="mealName" placeholder="Enter meal name" required>
+            </div>
 
-            <button type="button" id="btCreateMealConfirm">Create</button>
+            <div class="form-actions">
+                <button type="button" id="btCreateMealConfirm">Create Meal</button>
+            </div>
+
+            <p class="form-note">Fields with * are required.</p>
 
         </form>
 

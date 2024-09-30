@@ -1,5 +1,4 @@
-import { getCookie } from "../../functions/getCookie.mjs";
-import { closeOverlay } from "../../functions/closeOverlay.mjs";
+import { createMenu } from "../../functions/createMenu.mjs";
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -13,11 +12,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         <form>
 
-            <label for="menuName">Menu Name:</label>
+            <h1>Create Menu</h1>
 
-            <input type="text" id="menuName" name="menuName" required>
+            <div class="form-group">
+                <label for="menuName">* Menu Name:</label>
+                <input type="text" id="menuName" name="menuName" placeholder="Enter menu name" required>
+            </div>
 
-            <button type="button" id="btCreateMenuConfirm">Create</button>
+            <div class="form-actions">
+                <button type="button" id="btCreateMenuConfirm">Create Menu</button>
+            </div>
+
+            <p class="form-note">Fields with * are required.</p>
 
         </form>
 
@@ -27,37 +33,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('btCreateMenuConfirm').addEventListener('click', function () {
 
-        var menuName = document.getElementById('menuName').value;
+        const menuName = document.getElementById('menuName').value;
 
-        fetch('/createMenu', {
-
-            method: 'POST',
-
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': getCookie('token')
-            },
-
-            body: JSON.stringify({ menu_name: menuName })
-
-        }).then(response => {
-
-            if (response.ok) {
-
-                response.json().then(data => {
-
-                    console.log(data);
-
-                    closeOverlay('popUpCreateMenu');
-
-                    loadMenu();
-
-                });
-
-            }
+        createMenu(menuName).then(() => {
+            
+            document.getElementById('menuName').value = ''; 
 
         });
 
     });
+   
 
 });
