@@ -1,4 +1,5 @@
 import { createMenu } from "../../functions/createMenu.mjs";
+import { loadMenu } from "../../functions/loadMenu.mjs";
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -38,6 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
         createMenu(menuName).then(() => {
             
             document.getElementById('menuName').value = ''; 
+
+            loadMenu();
 
         });
 

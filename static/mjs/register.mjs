@@ -1,5 +1,7 @@
 document.getElementById('btRegister').addEventListener('click', function () {
 
+    var username = document.getElementById('username').value;
+
     var fullName = document.getElementById('fullName').value;
 
     var email = document.getElementById('email').value;
@@ -18,7 +20,7 @@ document.getElementById('btRegister').addEventListener('click', function () {
 
     var activityLevel = document.getElementById('activityLevel').value;
 
-    if (!fullName || !email || !password || !confirmPassword || !gender || !age || !weight || !height || !activityLevel) {
+    if (!fullName || !email || !password || !confirmPassword || !gender || !age || !weight || !height || !activityLevel || !username) {
 
         alert('Preencha todos os campos.');
 

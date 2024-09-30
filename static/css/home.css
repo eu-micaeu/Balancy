@@ -1,11 +1,5 @@
 @import url('global.css');
 
-h1{
-
-    margin-bottom: 0;
-
-}
-
 #divOverlay{
 
     display: none;
@@ -149,34 +143,38 @@ h1{
 }
 
 #yesMenu table th, td {
+
     border: 2px solid #FF006F;
     padding: 10px;
     text-align: center;
     width: 33.33%; 
+
 }
 
-hr{
+#yesMenu button {
 
-    width: 60vw;
-    border: 5px solid #FF006F;
-
+    margin: 25px 25px 25px 0;
+    
 }
 
 .deleteButton {
-    background-color: #ffffff;
+
+    background-color: transparent;
     color: #FF006F;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin: 0;
-    margin-left: 10px;
+    margin: 10px;
     width: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     transition:  ease .3s;
+    
 }
 
 .deleteButton:hover {
+
     transform: scale(1.1);
+
 }

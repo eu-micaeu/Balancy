@@ -1,69 +1,6 @@
 import { getCookie } from './getCookie.mjs';
 import { openOverlay } from './openOverlay.mjs';
-
-// Função para buscar o menu
-function fetchMenu() {
-
-    return fetch('/menu', {
-
-        method: 'GET',
-
-        headers: {
-
-            'Content-Type': 'application/json',
-
-            'Authorization': getCookie('token')
-
-        }
-
-    })
-
-    .then(response => {
-
-        if (response.status === 404) {
-
-            var btAddMeal = document.getElementById('btAddMeal');
-
-            btAddMeal.style.display = 'none';
-
-            throw new Error("Menu not found (404)");
-
-        } else if (response.status === 200) {
-
-            document.getElementById('noMenu').style.display = 'none';
-
-            return response.json();
-
-        } else {
-
-            throw new Error("Unexpected response status: " + response.status);
-
-        }
-    })
-
-    .then(data => {
-
-        if (data && data.menu) {
-
-            localStorage.setItem('menu_id', data.menu.menu_id);
-
-            return data.menu;
-
-        } else {
-
-            throw new Error("No menu available");
-
-        }
-
-    })
-
-    .catch(error => {
-
-        console.error("Error fetching menu:", error);
-
-    });
-    
-}
+import { fetchMenu } from './fetchMenu.mjs';
 
 // Função para buscar refeições do menu
 function fetchMenuMeals(menuId) {
@@ -82,23 +19,23 @@ function fetchMenuMeals(menuId) {
 
     })
 
-    .then(response => response.json())
+        .then(response => response.json())
 
-    .then(data => {
+        .then(data => {
 
-        if (Array.isArray(data.meals)) {
+            if (Array.isArray(data.meals)) {
 
-            return data.meals;
+                return data.meals;
 
-        } else {
+            } else {
 
-            console.error("No meals found in the response");
+                console.error("No meals found in the response");
 
-            return [];
+                return [];
 
-        }
+            }
 
-    });
+        });
 
 }
 
@@ -119,19 +56,52 @@ function fetchMenuTotals(menuId) {
 
     })
 
-    .then(response => response.json())
+        .then(response => response.json())
 
-    .then(data => {
+        .then(data => {
 
-        return {
+            return {
 
-            totalCalories: data.total_calories,
+                totalCalories: data.total_calories,
 
-            totalQuantity: data.total_quantity
+                totalQuantity: data.total_quantity
 
-        };
+            };
 
-    });
+        });
+
+}
+
+// Função para buscar o total de calorias e quantidade de uma refeição
+function fetchMealTotals(mealId) {
+
+    return fetch(`/calculateMealCaloriesAndQuantity/${mealId}`, {
+
+        method: 'GET',
+
+        headers: {
+
+            'Content-Type': 'application/json',
+
+            'Authorization': getCookie('token')
+
+        }
+
+    })
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            return {
+
+                totalCalories: data.total_calories,
+
+                totalQuantity: data.total_quantity
+
+            };
+
+        });
 
 }
 
@@ -155,6 +125,16 @@ function renderMeal(meal) {
 
     const yesMenu = document.getElementById('yesMenu');
 
+    if (!yesMenu) {
+
+        console.error('Element with id "yesMenu" not found.');
+
+        return;
+
+    }
+
+    const mealContainer = document.createElement('div');
+
     const mealHeader = document.createElement('div');
 
     mealHeader.style.width = '60vw';
@@ -167,7 +147,7 @@ function renderMeal(meal) {
 
     h2.style.width = 'auto';
 
-    h2.style.margin = '0';
+    h2.style.margin = '10px 0';
 
     h2.style.display = 'flex';
 
@@ -186,68 +166,96 @@ function renderMeal(meal) {
     deleteButton.className = 'deleteButton';
 
     deleteButton.addEventListener('click', () => {
-        
+
         fetch('/deleteMeal/' + meal.meal_id, {
-                
-                method: 'DELETE',
-    
-                headers: {
-    
-                    'Content-Type': 'application/json',
-    
-                    'Authorization': getCookie('token')
-    
-                }
-    
-            })
 
-            .then(response => {
+            method: 'DELETE',
 
-                if (response.ok) {
+            headers: {
 
-                    console.log('Meal deleted successfully');
+                'Content-Type': 'application/json',
 
-                    loadMenu();
-
-                } else {
-
-                    console.error('Error deleting meal:', response.status);
-
-                }
+                'Authorization': getCookie('token')
 
             }
-        )
+
+        })
+
+        .then(response => {
+
+            if (response.ok) {
+
+                console.log('Meal deleted successfully');
+
+                loadMenu();
+
+            } else {
+
+                console.error('Error deleting meal:', response.status);
+
+            }
+
+        })
+
+        .catch(error => console.error('Error deleting meal:', error));
 
     });
 
     mealHeader.appendChild(deleteButton);
 
-    yesMenu.appendChild(mealHeader);
+    mealContainer.appendChild(mealHeader);
 
     const table = createFoodTable();
-    yesMenu.appendChild(table);
+
+    mealContainer.appendChild(table);
 
     fetchMealFoods(meal.meal_id)
 
-        .then(foods => {
+    .then(foods => {
 
-            foods.forEach(food => {
+        foods.forEach(food => {
 
-                const row = createFoodRow(food);
+            const row = createFoodRow(food);
 
-                table.querySelector('tbody').appendChild(row);
+            table.querySelector('tbody').appendChild(row);
 
-            });
+        });
 
-        })
+    })
 
-        .catch(error => console.error('Error fetching foods:', error));
+    .catch(error => console.error('Error fetching foods:', error));
 
     const btAddFood = createAddFoodButton(meal.meal_id);
 
-    yesMenu.appendChild(btAddFood);
+    mealContainer.appendChild(btAddFood);
+
+    fetchMealTotals(meal.meal_id)
+
+    .then(totals => {
+
+        const totalsDiv = document.createElement('div');
+
+        totalsDiv.innerHTML = `
+
+            <h3>Total Meal Calories: ${totals.totalCalories} kCal's</h3>
+
+            <h3>Total Meal Quantity: ${totals.totalQuantity} g's</h3>
+        `;
+
+        mealContainer.appendChild(totalsDiv);
+
+    })
+
+    .catch(error => console.error('Error fetching meal totals:', error));
+
+    mealContainer.style.borderTop = '5px solid #FF006F';
+
+
+
+    yesMenu.appendChild(mealContainer);
 
 }
+
 
 // Função para buscar alimentos de uma refeição
 function fetchMealFoods(mealId) {
@@ -266,23 +274,23 @@ function fetchMealFoods(mealId) {
 
     })
 
-    .then(response => response.json())
+        .then(response => response.json())
 
-    .then(data => {
+        .then(data => {
 
-        if (Array.isArray(data.foods)) {
+            if (Array.isArray(data.foods)) {
 
-            return data.foods;
+                return data.foods;
 
-        } else {
+            } else {
 
-            console.error("No foods found in the response for meal:", mealId);
+                console.error("No foods found in the response for meal:", mealId);
 
-            return [];
+                return [];
 
-        }
+            }
 
-    });
+        });
 
 }
 
@@ -368,26 +376,26 @@ function createFoodRow(food) {
 
         })
 
-        .then(response => {
+            .then(response => {
 
-            if (response.ok) {
+                if (response.ok) {
 
-                console.log('Food deleted successfully');
+                    console.log('Food deleted successfully');
 
-                loadMenu();
+                    loadMenu();
 
-            } else {
+                } else {
 
-                console.error('Error deleting food:', response.status);
+                    console.error('Error deleting food:', response.status);
 
-            }
+                }
 
-        });
+            });
 
     });
 
     row.appendChild(deleteButton);
-    
+
     return row;
 
 }
@@ -401,9 +409,9 @@ function createAddFoodButton(mealId) {
 
     btAddFood.className = 'btAddFood';
 
-    btAddFood.addEventListener('click', function() {
+    btAddFood.addEventListener('click', function () {
 
-        localStorage.setItem('meal_id', mealId);  
+        localStorage.setItem('meal_id', mealId);
 
         openOverlay('popUpCreateFood');
 
@@ -420,7 +428,8 @@ function loadMenu() {
 
         .then(menu => {
 
-            if (menu) {  
+            if (menu) {
+                
                 renderMenu(menu);
 
                 return fetchMenuMeals(menu.menu_id);
@@ -445,7 +454,7 @@ function loadMenu() {
 
                 document.getElementById('yesMenu').innerHTML += '<p>No meals found for this menu.</p>';
 
-                return null; 
+                return null;
 
             }
 
@@ -453,7 +462,7 @@ function loadMenu() {
 
         .then(totals => {
 
-            if (totals) { 
+            if (totals) {
 
                 displayMenuTotals(totals);
 
@@ -472,14 +481,34 @@ function displayMenuTotals(totals) {
 
     const totalsDiv = document.createElement('div');
 
+    totalsDiv.style.width = '60vw';
+
+    totalsDiv.style.display = 'flex';
+
+    totalsDiv.style.justifyContent = 'center';
+
+    totalsDiv.style.alignItems = 'center';
+
+    totalsDiv.style.flexDirection = 'column';
+
+    totalsDiv.style.color = 'white';
+
+    totalsDiv.style.backgroundColor = '#FF006F';
+
+    totalsDiv.style.borderRadius = '10px';
+    
+    totalsDiv.style.margin = '0';
+
     totalsDiv.innerHTML = `
 
-        <h3>Total de Calorias do Menu: ${totals.totalCalories} kCal's</h3>
+        <h2>Menu Totals</h2>
+
+        <h3>Total Menu Calories: ${totals.totalCalories} kCal's</h3>
         
-        <h3>Total de Quantidade do Menu: ${totals.totalQuantity} g's</h3>
+        <h3>Total Menu Quantity: ${totals.totalQuantity} g's</h3>
 
     `;
-    
+
     yesMenu.appendChild(totalsDiv);
 
 }
