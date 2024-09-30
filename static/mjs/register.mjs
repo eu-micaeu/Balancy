@@ -10,11 +10,11 @@ document.getElementById('btRegister').addEventListener('click', function () {
 
     var gender = document.getElementById('gender').value;
 
-    var age = document.getElementById('age').value;
+    var age = parseInt(document.getElementById('age').value);
 
-    var weight = document.getElementById('weight').value;
+    var weight = parseFloat(document.getElementById('weight').value);
 
-    var height = document.getElementById('height').value;
+    var height = parseFloat(document.getElementById('height').value);
 
     var activityLevel = document.getElementById('activityLevel').value;
 

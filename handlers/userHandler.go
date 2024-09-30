@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -89,6 +90,8 @@ func (u *User) Registrar(db *sql.DB) gin.HandlerFunc {
 		var newUser User
 
 		if err := c.BindJSON(&newUser); err != nil {
+
+			fmt.Println(err)
 
 			c.JSON(400, gin.H{"message": "Erro ao criar usuário"})
 

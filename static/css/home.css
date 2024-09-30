@@ -77,22 +77,6 @@
     margin-top: 1.5rem;
 }
 
-.popUpCreate form button {
-    background-color: #FF006F;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.popUpCreate form button:hover {
-
-    background-color: #b4004e;
-
-}
-
 .popUpCreate form .form-note {
     text-align: center;
     font-size: 0.9rem;

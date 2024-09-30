@@ -23,8 +23,7 @@ header{
     padding: 20px 0;
     align-items: center;
     user-select: none;
-    border-bottom: 5px solid #FF006F;
-    border-radius: 15px;
+    border-bottom: 10px solid #FF006F;
 
 }
 
@@ -48,13 +47,6 @@ footer {
     color: #fff;
     position: absolute;
     bottom: 0;
-
-}
-
-input,
-p {
-
-    font-family: 'Karla', sans-serif;
 
 }
 
