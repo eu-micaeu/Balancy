@@ -107,6 +107,8 @@ func (u *User) Registrar(db *sql.DB) gin.HandlerFunc {
 
 		if err != nil {
 
+			fmt.Println(err)
+
 			c.JSON(500, gin.H{"message": "Erro ao criar usuário"})
 
 			return
