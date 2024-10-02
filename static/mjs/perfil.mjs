@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 case 'sedentary':
                     tmr = tmb * 1.2;
                     break;
-                case 'moderate':
+                case 'lightly_active':
                     tmr = tmb * 1.55;
                     break;
                 case 'moderately_active':

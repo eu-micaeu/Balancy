@@ -129,7 +129,7 @@
 }
 
 #yesMenu table {
-    width: 60vw;
+    width: 70vw;
     font-size: 20px;
     border-collapse: collapse;
     margin-top: 20px;
@@ -151,10 +151,10 @@
 
 }
 
-#yesMenu button {
+.btAddFood{
 
-    margin: 25px 25px 25px 0;
-    
+    margin-left: 0;
+
 }
 
 .deleteButton {
@@ -164,8 +164,8 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin: 10px;
-    width: 30px;
+    width: 70px;
+    margin: 10px 0 0 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -175,6 +175,6 @@
 
 .deleteButton:hover {
 
-    transform: scale(1.1);
+    transform: scale(1.05);
 
 }

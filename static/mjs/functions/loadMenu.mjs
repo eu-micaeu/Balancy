@@ -147,7 +147,7 @@ function renderMeal(meal) {
 
     h2.style.width = 'auto';
 
-    h2.style.margin = '10px 0';
+    h2.style.margin = '15px 0';
 
     h2.style.display = 'flex';
 
@@ -481,7 +481,7 @@ function displayMenuTotals(totals) {
 
     const totalsDiv = document.createElement('div');
 
-    totalsDiv.style.width = '60vw';
+    totalsDiv.style.width = '70vw';
 
     totalsDiv.style.display = 'flex';
 
