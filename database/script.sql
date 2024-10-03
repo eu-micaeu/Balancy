@@ -21,7 +21,7 @@ CREATE TABLE users (
     weight FLOAT NOT NULL,
     height FLOAT NOT NULL,
     gender VARCHAR(50) NOT NULL,
-    activity_level INT NOT NULL,
+    activity_level VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
