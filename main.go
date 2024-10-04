@@ -6,11 +6,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/eu-micaeu/API-GerenciamentoDeUsuarios-GoLang/database"
+	"github.com/eu-micaeu/kCal0/database"
 
-	"github.com/eu-micaeu/API-GerenciamentoDeUsuarios-GoLang/middlewares"
+	"github.com/eu-micaeu/kCal0/middlewares"
 
-	"github.com/eu-micaeu/API-GerenciamentoDeUsuarios-GoLang/routes"
+	"github.com/eu-micaeu/kCal0/routes"
 
 )
 

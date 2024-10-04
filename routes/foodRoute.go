@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
-	"github.com/eu-micaeu/API-GerenciamentoDeUsuarios-GoLang/handlers"
+	"github.com/eu-micaeu/kCal0/handlers"
 )
 
 // Função para criar as rotas de refeição
