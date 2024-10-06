@@ -10,11 +10,16 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+    justify-content: center;
+    height: 100vh;
+    background-color: #FBDA61;
+    background-image: linear-gradient(45deg, #FBDA61 0%, #FF5ACD 100%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
-header{
-    
+header {
+
     width: 70vw;
     color: #fff;
     text-align: center;
@@ -50,14 +55,14 @@ footer {
 
 }
 
-footer a{
+footer a {
 
     color: #fff;
     text-decoration: none;
 
 }
 
-footer a:hover{
+footer a:hover {
 
     text-decoration: underline;
 

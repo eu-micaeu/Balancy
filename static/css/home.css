@@ -1,5 +1,11 @@
 @import url('global.css');
 
+body{
+
+    height: auto;
+
+}
+
 #divOverlay{
 
     display: none;

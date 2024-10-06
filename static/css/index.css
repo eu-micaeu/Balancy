@@ -1,8 +1,29 @@
 @import url('global.css');
 
-main{
-
+main {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
     justify-content: center;
+    width: 100%;
+    height: 80vh;
+}
+
+#divLogo{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    flex-direction: column;
+
+}
+
+#divLogo h1{
+
+    font-size: 30px;
+    color: #FF006F;
+    font-family: 'Karla', sans-serif;
 
 }
 
@@ -10,24 +31,23 @@ form{
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    border: 5px solid #FF006F;
-    border-radius: 20px;
-    width: 400px;
-    height: 500px;
+    border-radius: 5px;
     padding: 20px;
-    color: #FF006F;
+    color: #ffffff;
     user-select: none;
-    margin: 100px;
+    width: 400px;
 
 }
 
 form label{
 
-    margin: 10px 0 0 0;
-    font-size: 1.2rem;
-    width: 322px;
+    font-size: 20px;
+    margin: 10px;
+    font-family: 'Karla', sans-serif;
+    width: 300px;
+    text-align: left;
 
 }
 
@@ -35,11 +55,19 @@ form input{
 
     margin-top: 10px;
     padding: 10px;
-    width: 300px;
-    border: 1px solid #ccc;
+    border: 3px solid #FF006F;
     border-radius: 5px;
     font-family: 'Karla', sans-serif;
     font-size: 18px;
+    background-color: transparent;
+    width: 300px;
+    color: #ffffff;
+
+}
+
+form input:focus{
+
+    outline: none;
 
 }
 
@@ -47,8 +75,6 @@ form button{
 
     margin: 30px;
     padding: 10px;
-    width: 300px;
-    border: none;
     border-radius: 5px;
     font-family: 'Karla', sans-serif;
     font-size: 18px;
@@ -69,7 +95,6 @@ form button:hover{
 form a{
 
     margin-top: 10px;
-    padding: 10px;
     width: 400px;
     border-radius: 5px;
     font-family: 'Karla', sans-serif;
@@ -82,7 +107,13 @@ form a{
 
 form a:hover{
 
-    background-color: #FF006F;
     color: #fff;
+    cursor: pointer;
+
+}
+
+form a:last-child{
+
+    font-size: 14px;
 
 }

@@ -1,97 +1,52 @@
 @import url('global.css');	
 
-main #divInfos{
+body{
 
-    height: 100%;
-    padding: 20px 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    margin: 0 0 50px 0;
+    height: auto;
 
 }
 
-main h1 {
+main {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 70vw;
+    padding: 20px;
+}
 
+#divInfos{
+
+    width: 50%;
+
+}
+
+#divInfos h1 {
     color: #FF006F;
     font-size: 36px;
-    width: 100%;
-    text-align: center;
-
+    margin-bottom: 20px;
 }
 
-main label {
-
+#divInfos label {
     color: #FF006F;
-    font-size: 22px;
+    font-size: 16px;
+    margin-bottom: 8px;
     display: block;
-    margin-left: 17px;
-    padding: 5px;
-
 }
 
-main input {
-
-    width: 300px;
-    padding: 15px;
+#divInfos input {
+    width: 100%;
+    padding: 10px;
+    font-family: 'Karla', sans-serif;
     border: 2px solid #FF006F;
     border-radius: 5px;
-    margin: 15px;
-    background-color: #f9f9f9;
-    color: #333;
-    font-size: 20px;
-    pointer-events: none; 
-    cursor: default;
-    font-family: 'Karla', sans-serif;
-
-}
-
-main input:focus {
-
+    background-color: transparent;
+    color: #ffffff;
+    font-size: 16px;
+    margin-bottom: 20px;
     outline: none;
-
 }
 
-#divCalculations {
-    display: flex;
-    flex-direction: column;
-    width: 40vw;
-    margin-top: 20px;
-}
-
-#divIMC, #divTMB, #divTMR {
-    border: 2px solid #FF006F;
-    border-radius: 8px;
-    padding: 50px 25px;
-    margin: 30px;
-    text-align: center;
-}
-
-#divIMC h2, #divTMB h2, #divTMR h2 {
-    color: #FF006F;
-    font-size: 28px;
-    margin-bottom: 10px;
-}
-
-#divIMC p, #divTMB p, #divTMR p {
-    color: #333;
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-.divDouble {
-
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-
-}
-
-.divDouble .boxInput {
-
-    display: flex;
-    flex-direction: column;
-
+#divInfos input:focus {
+    border-color: #ff3380;
 }
