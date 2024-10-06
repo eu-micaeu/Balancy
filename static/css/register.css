@@ -4,8 +4,6 @@ form{
 
     display: flex;
     flex-direction: column;
-    border: 5px solid #FF006F;
-    border-radius: 20px;
     padding: 20px;
     color: #FF006F;
     user-select: none;
@@ -19,7 +17,7 @@ form label{
 
     margin-top: 10px;
     font-size: 1.2rem;
-    width: 300px;
+    width: 280px;
 
 }
 
@@ -27,11 +25,13 @@ form input{
 
     margin: 10px;
     padding: 10px;
-    width: 300px;
-    border: 1px solid #ccc;
+    border: 3px solid #FF006F;
     border-radius: 5px;
     font-family: 'Karla', sans-serif;
     font-size: 18px;
+    background-color: transparent;
+    width: 300px;
+    color: #ffffff;
 
 }
 
@@ -39,11 +39,20 @@ form select{
 
     margin: 10px;
     padding: 10px;
-    width: 322px;
-    border: 1px solid #ccc;
+    border: 3px solid #FF006F;
     border-radius: 5px;
     font-family: 'Karla', sans-serif;
     font-size: 18px;
+    background-color: transparent;
+    width: 322px;
+    color: #ffffff;
+
+}
+
+form select:optional{
+
+    color: #ffffff;
+    background-color: transparent;
 
 }
 
@@ -73,7 +82,6 @@ form button:hover{
 form a{
 
     margin-top: 10px;
-    padding: 10px;
     border-radius: 5px;
     font-family: 'Karla', sans-serif;
     font-size: 16px;
@@ -85,7 +93,6 @@ form a{
 
 form a:hover{
 
-    background-color: #FF006F;
     color: #fff;
 
 }

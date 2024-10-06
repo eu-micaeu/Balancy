@@ -16,6 +16,8 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spinkit/2.0.1/spinkit.min.css" />
+
 </head>
 
 <body>
@@ -24,11 +26,16 @@
 
     <script src="../static/mjs/components/header.mjs" type="module"></script> <!-- Header -->
 
-    <script src="../static/mjs/components/popUpCreate/popUpCreateMenu.mjs" type="module"></script> <!-- Pop-Up para a criação do menu -->
+    <script src="../static/mjs/components/popUpCreate/popUpCreateMenu.mjs" type="module"></script>
+    <!-- Pop-Up para a criação do menu -->
 
-    <script src="../static/mjs/components/popUpCreate/popUpCreateMeal.mjs" type="module"></script> <!-- Pop-Up para a criação de uma refeição -->
+    <script src="../static/mjs/components/popUpCreate/popUpCreateMeal.mjs" type="module"></script>
+    <!-- Pop-Up para a criação de uma refeição -->
 
-    <script src="../static/mjs/components/popUpCreate/popUpCreateFood.mjs" type="module"></script> <!-- Pop-Up para a criação de um alimento -->
+    <script src="../static/mjs/components/popUpCreate/popUpCreateFood.mjs" type="module"></script>
+    <!-- Pop-Up para a criação de um alimento -->
+
+    <div id="spin"></div>
 
     <main>
 
@@ -38,19 +45,20 @@
 
             <p>Click on the button below to create a new menu</p>
 
-            <p>First, create a menu, within the menu, you will have the meals, and within the meals, you will be able to add the food with your information!</p>
+            <p>First, create a menu, within the menu, you will have the meals, and within the meals, you will be able to
+                add the food with your information!</p>
 
             <button id="btCreate" type="button">+ Create Menu</button>
 
         </div>
 
         <div id="yesMenu">
-            
+
         </div>
 
-    </main>
+        <button id="btAddMeal">+ Add Meal</button>
 
-    <button id="btAddMeal">+ Add Meal</button>
+    </main>
 
     <script type="module" src="../static/mjs/home.mjs" defer></script>
 

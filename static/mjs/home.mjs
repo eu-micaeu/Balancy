@@ -12,11 +12,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
     loadMenu();
 
+    var spin = document.getElementById('spin');
+
+    var main = document.getElementsByTagName('main')[0];
+
+    setTimeout(function () {
+
+        main.style.display = 'flex'; 
+
+        spin.style.display = 'none';
+          
+    }, 2000); 
+
 });
 
 // Lógica de adicionar refeição
 document.getElementById('btAddMeal').addEventListener('click', function () {
-    
+
     openOverlay('popUpCreateMeal');
 
 });

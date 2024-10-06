@@ -137,9 +137,9 @@ function renderMeal(meal) {
 
     const mealHeader = document.createElement('div');
 
-    mealHeader.style.width = '60vw';
-
     mealHeader.style.display = 'flex';
+
+    mealHeader.style.justifyContent = 'space-between';
 
     const h2 = document.createElement('h2');
 

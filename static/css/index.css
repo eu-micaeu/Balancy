@@ -19,6 +19,14 @@ main {
 
 }
 
+#divLogo #logo{
+
+    padding: 50px;
+    background-color: white;
+    border-radius: 50px;
+
+}
+
 #divLogo h1{
 
     font-size: 30px;
