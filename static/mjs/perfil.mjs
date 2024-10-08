@@ -24,8 +24,20 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('age').value = ' ' + data.age + ' anos';
             document.getElementById('weight').value = ' ' + data.weight + ' kg';
             document.getElementById('height').value = ' ' + data.height + ' m';
-            document.getElementById('activityLevel').value = ' ' + data.activity_level;
 
+            if (data.activity_level === 'sedentary') {
+
+                document.getElementById('activityLevel').value = ' ' + 'Sedentário';
+
+            } else if (data.activity_level === 'lightly_active') {
+
+                document.getElementById('activityLevel').value = ' ' + 'Levemente Ativo';
+
+            } else if (data.activity_level === 'moderately_active') {
+
+                document.getElementById('activityLevel').value = ' ' + 'Moderadamente Ativo';
+
+            } 
 
 
         })

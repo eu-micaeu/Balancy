@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         <p>GitHub - <a href="https://github.com/eu-micaeu" target="_blank">eumicaeu</a></p>
 
-        <p>Number - (21)96740-6436</p>
+        <p>Number - (21) 96740-6436 </p>
 
     `;
 

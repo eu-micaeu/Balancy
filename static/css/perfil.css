@@ -21,10 +21,51 @@ main {
 
 }
 
+#divInfos #divUser{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+
+}
+
+#divInfos #divUser #user{
+
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 50%;
+
+}
+
 #divInfos h1 {
-    color: #FF006F;
+    color: #ffffff;
     font-size: 36px;
     margin-bottom: 20px;
+}
+
+#divInfos .doubleInfo{
+
+    display: flex;
+    flex-direction: row;
+
+}
+
+#divInfos .doubleInfo .boxInfo{
+
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 49%;
+    
+
+}
+
+#divInfos .doubleInfo .boxInfo:last-child{
+
+    margin-left: auto;
+
 }
 
 #divInfos label {
@@ -35,7 +76,7 @@ main {
 }
 
 #divInfos input {
-    width: 70vw;
+    width: 100%;
     padding: 10px 0;
     font-family: 'Karla', sans-serif;
     border: 2px solid #FF006F;
