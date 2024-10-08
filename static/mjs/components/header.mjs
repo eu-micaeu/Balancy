@@ -1,20 +1,52 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    var header = document.createElement('header');
+    // Se a página for /home
 
-    header.innerHTML = `
+    if (window.location.pathname === '/home') {
 
-        <img src="../static/img/logo.png" alt="logo" id="logo" width="75" height="75">
+        var header = document.createElement('header');
 
-        <nav>
+        header.innerHTML = `
+    
+                <img src="../static/img/logo.png" alt="logo" id="logo" width="50" height="50">
+    
+                <nav>
+    
+                    <button id="btPerfil" type="button" onclick="window.location.href='/perfil'">Perfil</button>
+    
+                    <button id="btLogout" type="button">Logout</button>
+    
+                </nav>
+    
+            `;
 
-            <button id="btPerfil" type="button" onclick="window.location.href='/perfil'">Perfil</button>
+        document.body.prepend(header);
 
-            <button id="btLogout" type="button">Logout</button>
+        return;
 
-        </nav>
+    }
 
-    `;
+    // Se a página for /perfil
+
+    if (window.location.pathname === '/perfil') {
+
+        var header = document.createElement('header');
+
+        header.innerHTML = `
+
+            <img src="../static/img/logo.png" alt="logo" id="logo" width="50" height="50">  
+
+            <nav>
+
+                <button id="btHome" type="button" onclick="window.location.href='/home'">Home</button>
+
+                <button id="btLogout" type="button">Logout</button>
+
+            </nav>
+
+        `;
+
+    }
 
     document.body.prepend(header);
 

@@ -11,20 +11,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }).then(response => response.json())
         .then(data => {
-            document.getElementById('username').value = data.username;
-            document.getElementById('email').value = data.email;
-            document.getElementById('fullName').value = data.full_name;
+            document.getElementById('username').value = ' ' + data.username;
+            document.getElementById('email').value = ' ' + data.email;
+            document.getElementById('fullName').value = ' ' + data.full_name;
 
             if (data.gender === 'M') {
-                document.getElementById('gender').value = 'Masculino';
+                document.getElementById('gender').value = ' ' + 'Masculino';
             } else if (data.gender === 'F') {
-                document.getElementById('gender').value = 'Feminino';
+                document.getElementById('gender').value = ' ' + 'Feminino';
             }
 
-            document.getElementById('age').value = data.age + ' anos';
-            document.getElementById('weight').value = data.weight + ' kg';
-            document.getElementById('height').value = data.height + ' m';
-            document.getElementById('activityLevel').value = data.activity_level;
+            document.getElementById('age').value = ' ' + data.age + ' anos';
+            document.getElementById('weight').value = ' ' + data.weight + ' kg';
+            document.getElementById('height').value = ' ' + data.height + ' m';
+            document.getElementById('activityLevel').value = ' ' + data.activity_level;
 
 
 

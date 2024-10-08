@@ -65,7 +65,7 @@ header {
     text-align: center;
     display: flex;
     justify-content: space-between;
-    padding: 20px 0;
+    padding: 15px 0;
     align-items: center;
     user-select: none;
     border-bottom: 10px solid #FF006F;
@@ -116,11 +116,10 @@ button {
     background-color: #FF006F;
     color: #fff;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 16 px;
     height: 50px;
     border: 2px solid #FF006F;
-    margin: 25px;
-    width: 200px;
+    width: 150px;
     font-weight: bold;
 
 }
@@ -129,5 +128,11 @@ button:hover {
 
     background-color: #fff;
     color: #FF006F;
+
+}
+
+input {
+
+    font-family: 'Karla', sans-serif;
 
 }

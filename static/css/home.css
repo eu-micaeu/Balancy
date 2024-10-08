@@ -25,51 +25,54 @@ main{
 
 }
 
-.popUpCreate{
+.popUps{
 
     display: none;
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 500px;
+    width: 50vw;
+    height: 60vh;
+    padding: 50px 75px;
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transform: translate(-50%, -50%);
     z-index: 2;
     border-radius: 10px;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: space-between;
 
 }
 
-.popUpCreate form {
+.popUps form {
+
     width: 100%;
-    padding: 40px;
-    max-width: 400px;
-    background-color: #f8f9fa;
+    height: 100%;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
 }
 
-.popUpCreate h1 {
+.popUps h1 {
     text-align: center;
     font-size: 1.75rem;
     margin-bottom: 1.5rem;
     color: #FF006F;
 }
 
-.popUpCreate .form-group {
+.popUps .form-group {
     margin-bottom: 1.5rem;
 }
 
-.popUpCreate form label {
+.popUps form label {
     display: block;
     font-size: 1rem;
     margin-bottom: 0.5rem;
     color: #FF006F;
 }
 
-.popUpCreate form input[type="text"],
-.popUpCreate form input[type="number"] {
+.popUps form input[type="text"],
+.popUps form input[type="number"] {
     width: 100%;
     padding: 0.75rem;
     font-size: 1rem;
@@ -78,21 +81,48 @@ main{
     box-sizing: border-box;
 }
 
-.popUpCreate form input[type="text"]:focus,
-.popUpCreate form input[type="number"]:focus {
+.popUps form input[type="text"]:focus,
+.popUps form input[type="number"]:focus {
     border-color: #FF006F;
     outline: none;
 }
 
-.popUpCreate form .form-actions {
+.popUps form .form-actions {
     text-align: center;
     margin-top: 1.5rem;
 }
 
-.popUpCreate form .form-note {
+.popUps form .form-note {
     text-align: center;
     font-size: 0.9rem;
     color: #6c757d;
+}
+
+.popUps table {
+    width: 100%;
+    font-size: 20px;
+    border-collapse: collapse; /* Mescla bordas adjacentes para uma aparência mais limpa */
+    margin-top: 20px;
+    table-layout: fixed; 
+}
+
+.popUps table th, 
+.popUps table td {
+    border: 2px solid #FF006F;
+    padding: 10px;
+    text-align: center;
+    width: 33.33%; 
+    color: #FF006F;
+}
+
+.popUps table th {
+    background-color: #ffe5f1; /* Leve cor de fundo para destacar o cabeçalho */
+    font-weight: bold;
+    color: #FF006F;
+}
+
+.popUps table td {
+    background-color: #fff; /* Fundo branco para contrastar com o texto */
 }
 
 /* #noMenu */
@@ -107,28 +137,6 @@ main{
 
 }
 
-#noMenu #btCreate {
-
-    margin-top: 20px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #FF006F;
-    color: #fff;
-    font-size: 20px;
-    cursor: pointer;
-    border: 2px solid #FF006F;
-    font-weight: bold;
-
-}
-
-#noMenu #btCreate:hover {
-
-    background-color: #fff;
-    color: #FF006F;
-
-}
-
 /* #yesMenu */
 
 #yesMenu {
@@ -140,26 +148,35 @@ main{
 
 }
 
-#yesMenu table {
+.mealHeader{
+
+    display: flex;
+    justify-content: space-between;
     width: 70vw;
-    font-size: 20px;
-    border-collapse: collapse;
-    margin-top: 20px;
-    table-layout: fixed; 
+    color: #FF006F;
+    background-color: #ffffff;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    transition:  ease 0.8s;
+
 }
 
-#yesMenu table th {
+.mealHeader:hover{
+
     background-color: #FF006F;
-    color: #fff;
-    font-weight: bold;
+    color: #ffffff;
+    transform: scale(1.01);
+    cursor: pointer;
+
 }
 
-#yesMenu table th, td {
+.mealHeader h2{
 
-    border: 2px solid #FF006F;
-    padding: 10px;
-    text-align: center;
-    width: 33.33%; 
+    margin: 5px 10px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
 }
 
@@ -172,24 +189,23 @@ main{
 .deleteButton {
 
     background-color: transparent;
-    color: #FF006F;
+    color: #ff0000;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     width: 50px;
     height: 50px;
-    margin: 10px 0 0 10px;
+    margin: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition:  ease .3s;
+    transition:  ease 0.3s;
     
 }
 
 .deleteButton:hover {
 
-    color: #ff0000;
+    color: #770034;
     background-color: transparent;
-    transform: scale(1.05);
 
 }

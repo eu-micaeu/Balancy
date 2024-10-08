@@ -1,516 +1,194 @@
 import { getCookie } from './getCookie.mjs';
 import { openOverlay } from './openOverlay.mjs';
+import { closeOverlay } from './closeOverlay.mjs';
 import { fetchMenu } from './fetchMenu.mjs';
 
-// Função para buscar refeições do menu
-function fetchMenuMeals(menuId) {
+const fetchData = async (url, method = 'GET', body = null) => {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': getCookie('token'),
+    };
 
-    return fetch(`/listMenuMeals/${menuId}`, {
+    const options = {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : null,
+    };
 
-        method: 'GET',
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) throw new Error(`Error: ${response.status}`);
+        return await response.json();
+    } catch (error) {
+        console.error('Fetch error:', error);
+        throw error;
+    }
+};
 
-        headers: {
+const renderElement = (tag, content = '', parent = null, className = '') => {
+    const element = document.createElement(tag);
+    element.textContent = content;
+    if (className) element.className = className;
+    if (parent) parent.appendChild(element);
+    return element;
+};
 
-            'Content-Type': 'application/json',
+const fetchMenuMeals = async (menuId) => {
+    const data = await fetchData(`/listMenuMeals/${menuId}`);
+    return data.meals || [];
+};
 
-            'Authorization': getCookie('token')
-
-        }
-
-    })
-
-        .then(response => response.json())
-
-        .then(data => {
-
-            if (Array.isArray(data.meals)) {
-
-                return data.meals;
-
-            } else {
-
-                console.error("No meals found in the response");
-
-                return [];
-
-            }
-
-        });
-
-}
-
-// Função para buscar o total de calorias e quantidade de um menu
-function fetchMenuTotals(menuId) {
-
-    return fetch(`/calculateMenuCaloriesAndQuantity/${menuId}`, {
-
-        method: 'GET',
-
-        headers: {
-
-            'Content-Type': 'application/json',
-
-            'Authorization': getCookie('token')
-
-        }
-
-    })
-
-        .then(response => response.json())
-
-        .then(data => {
-
-            return {
-
-                totalCalories: data.total_calories,
-
-                totalQuantity: data.total_quantity
-
-            };
-
-        });
-
-}
-
-// Função para buscar o total de calorias e quantidade de uma refeição
-function fetchMealTotals(mealId) {
-
-    return fetch(`/calculateMealCaloriesAndQuantity/${mealId}`, {
-
-        method: 'GET',
-
-        headers: {
-
-            'Content-Type': 'application/json',
-
-            'Authorization': getCookie('token')
-
-        }
-
-    })
-
-        .then(response => response.json())
-
-        .then(data => {
-
-            return {
-
-                totalCalories: data.total_calories,
-
-                totalQuantity: data.total_quantity
-
-            };
-
-        });
-
-}
-
-// Função para renderizar o menu na tela
-function renderMenu(menu) {
-
+const renderMeal = (meal) => {
     const yesMenu = document.getElementById('yesMenu');
+    if (!yesMenu) return console.error('Element with id "yesMenu" not found.');
 
-    yesMenu.innerHTML = '';
-
-    const h1 = document.createElement('h1');
-
-    h1.textContent = menu.menu_name;
-
-    yesMenu.appendChild(h1);
-
-}
-
-// Função para renderizar uma refeição e seus alimentos
-function renderMeal(meal) {
-
-    const yesMenu = document.getElementById('yesMenu');
-
-    if (!yesMenu) {
-
-        console.error('Element with id "yesMenu" not found.');
-
-        return;
-
+    let mealHeader = document.querySelector(`[data-meal-id="${meal.meal_id}"]`);
+    if (!mealHeader) {
+        mealHeader = renderElement('div', '', yesMenu, 'mealHeader');
+        mealHeader.setAttribute('data-meal-id', meal.meal_id);
+    } else {
+        mealHeader.innerHTML = '';
     }
 
-    const mealContainer = document.createElement('div');
+    renderElement('h2', meal.meal_name, mealHeader);
+    mealHeader.addEventListener('click', () => openMealPopup(meal.meal_id));
 
-    const mealHeader = document.createElement('div');
-
-    mealHeader.style.display = 'flex';
-
-    mealHeader.style.justifyContent = 'space-between';
-
-    const h2 = document.createElement('h2');
-
-    h2.textContent = meal.meal_name;
-
-    h2.style.width = 'auto';
-
-    h2.style.margin = '15px 0';
-
-    h2.style.display = 'flex';
-
-    h2.style.justifyContent = 'center';
-
-    h2.style.alignItems = 'center';
-
-    mealHeader.appendChild(h2);
-
-    const deleteButton = document.createElement('button');
-
-    deleteButton.title = 'Delete Meal';
-
-    deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-
-    deleteButton.className = 'deleteButton';
-
-    deleteButton.addEventListener('click', () => {
-
-        fetch('/deleteMeal/' + meal.meal_id, {
-
-            method: 'DELETE',
-
-            headers: {
-
-                'Content-Type': 'application/json',
-
-                'Authorization': getCookie('token')
-
-            }
-
-        })
-
-        .then(response => {
-
-            if (response.ok) {
-
-                console.log('Meal deleted successfully');
-
-                loadMenu();
-
-            } else {
-
-                console.error('Error deleting meal:', response.status);
-
-            }
-
-        })
-
-        .catch(error => console.error('Error deleting meal:', error));
-
+    const deleteButton = createIconButton('Delete Meal', 'fas fa-trash', async () => {
+        await deleteMeal(meal.meal_id, mealHeader);
     });
-
     mealHeader.appendChild(deleteButton);
+};
 
-    mealContainer.appendChild(mealHeader);
+const createIconButton = (title, iconClass, onClick) => {
+    const button = document.createElement('button');
+    button.title = title;
+    button.innerHTML = `<i class="${iconClass}"></i>`;
+    button.className = 'deleteButton';
+    button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        onClick();
+    });
+    return button;
+};
+
+const deleteMeal = async (mealId, mealElement) => {
+
+    const response = await fetchData(`/deleteMeal/${mealId}`, 'DELETE');
+
+    console.log('Response from deleteMeal:', response);
+
+    mealElement.remove();
+
+};
+
+const fetchMealFoods = async (mealId) => {
+
+    const data = await fetchData(`/listMealFoods/${mealId}`);
+
+    return data.foods || [];
+
+};
+
+const openMealPopup = async (mealId) => {
+    localStorage.setItem('meal_id', mealId);
+    openOverlay('popUpEditMeal');
+
+    const popUpContent = document.getElementById('popUpEditMeal');
+    if (!popUpContent) return console.error('Element with id "popUpEditMealContent" not found.');
+
+    popUpContent.innerHTML = '';
+    const foods = await fetchMealFoods(mealId);
+
+    if (foods.length === 0) {
+        renderElement('p', 'No foods available. Please add some food to your meal.', popUpContent, 'no-foods-warning');
+        popUpContent.appendChild(createAddFoodButton(mealId));
+        return;
+    }
 
     const table = createFoodTable();
+    foods.forEach(food => table.querySelector('tbody').appendChild(createFoodRow(food)));
+    popUpContent.appendChild(table);
+    popUpContent.appendChild(createAddFoodButton(mealId));
+};
 
-    mealContainer.appendChild(table);
-
-    fetchMealFoods(meal.meal_id)
-
-    .then(foods => {
-
-        foods.forEach(food => {
-
-            const row = createFoodRow(food);
-
-            table.querySelector('tbody').appendChild(row);
-
-        });
-
-    })
-
-    .catch(error => console.error('Error fetching foods:', error));
-
-    const btAddFood = createAddFoodButton(meal.meal_id);
-
-    mealContainer.appendChild(btAddFood);
-
-    fetchMealTotals(meal.meal_id)
-
-    .then(totals => {
-
-        const totalsDiv = document.createElement('div');
-
-        totalsDiv.innerHTML = `
-
-            <h3>Total Meal Calories: ${totals.totalCalories} kCal's</h3>
-
-            <h3>Total Meal Quantity: ${totals.totalQuantity} g's</h3>
-        `;
-
-        mealContainer.appendChild(totalsDiv);
-
-    })
-
-    .catch(error => console.error('Error fetching meal totals:', error));
-
-    mealContainer.style.borderTop = '5px solid #FF006F';
-
-
-
-    yesMenu.appendChild(mealContainer);
-
-}
-
-
-// Função para buscar alimentos de uma refeição
-function fetchMealFoods(mealId) {
-
-    return fetch(`/listMealFoods/${mealId}`, {
-
-        method: 'GET',
-
-        headers: {
-
-            'Content-Type': 'application/json',
-
-            'Authorization': getCookie('token')
-
-        }
-
-    })
-
-        .then(response => response.json())
-
-        .then(data => {
-
-            if (Array.isArray(data.foods)) {
-
-                return data.foods;
-
-            } else {
-
-                console.error("No foods found in the response for meal:", mealId);
-
-                return [];
-
-            }
-
-        });
-
-}
-
-// Função para criar a tabela de alimentos
-function createFoodTable() {
-
+const createFoodTable = () => {
     const table = document.createElement('table');
-
     table.setAttribute('border', '1');
+    const headers = ['Food', "kCal", "g"];
+    const thead = table.createTHead().insertRow();
 
-    const thead = document.createElement('thead');
-
-    const headerRow = document.createElement('tr');
-
-    ['Alimento', "Calorias ( kCal's )", "Quantidade ( g's )"].forEach(text => {
-
-        const th = document.createElement('th');
-
-        th.textContent = text;
-
-        headerRow.appendChild(th);
-
-    });
-
-    thead.appendChild(headerRow);
-
-    table.appendChild(thead);
-
-    const tbody = document.createElement('tbody');
-
-    table.appendChild(tbody);
-
+    headers.forEach(text => renderElement('th', text, thead));
+    table.createTBody();
     return table;
+};
 
-}
-
-// Função para criar uma linha na tabela de alimentos
-function createFoodRow(food) {
-
+const createFoodRow = (food) => {
     const row = document.createElement('tr');
+    const fields = [food.food_name, food.calories || 'N/A', food.quantity || 'N/A'];
 
-    const tdFoodName = document.createElement('td');
-
-    tdFoodName.textContent = food.food_name;
-
-    row.appendChild(tdFoodName);
-
-    const tdCalories = document.createElement('td');
-
-    tdCalories.textContent = food.calories || 'N/A';
-
-    row.appendChild(tdCalories);
-
-    const tdQuantity = document.createElement('td');
-
-    tdQuantity.textContent = food.quantity || 'N/A';
-
-    row.appendChild(tdQuantity);
-
-    // Adiciona um botão para deletar o alimento
-
-    const deleteButton = document.createElement('button');
-
-    deleteButton.title = 'Delete Food';
-
-    deleteButton.innerHTML = '<i class="fa-solid fa-eraser"></i>';
-
-    deleteButton.className = 'deleteButton';
-
-    deleteButton.addEventListener('click', () => {
-
-        fetch('/deleteFood/' + food.food_id, {
-
-            method: 'DELETE',
-
-            headers: {
-
-                'Content-Type': 'application/json',
-
-                'Authorization': getCookie('token')
-
-            }
-
-        })
-
-            .then(response => {
-
-                if (response.ok) {
-
-                    console.log('Food deleted successfully');
-
-                    loadMenu();
-
-                } else {
-
-                    console.error('Error deleting food:', response.status);
-
-                }
-
-            });
-
+    fields.forEach(field => renderElement('td', field, row));
+    const deleteButton = createIconButton('Delete Food', 'fa-solid fa-eraser', async () => {
+        await deleteFood(food.food_id);
+        loadMenu();
     });
-
     row.appendChild(deleteButton);
 
     return row;
+};
 
-}
+const deleteFood = async (foodId) => {
+    try {
+        const response = await fetchData(`/deleteFood/${foodId}`, 'DELETE');
+        if (response.ok) {
+            loadMenu();
+        } else {
+            console.error('Error deleting food:', response.status);
+        }
+    } catch (error) {
+        console.error('Error deleting food:', error);
+    }
+};
 
-// Função para criar o botão de adicionar alimentos
-function createAddFoodButton(mealId) {
-
-    const btAddFood = document.createElement('button');
-
-    btAddFood.textContent = '+ Add Food';
-
-    btAddFood.className = 'btAddFood';
-
-    btAddFood.addEventListener('click', function () {
-
+const createAddFoodButton = (mealId) => {
+    const button = renderElement('button', '+ Add Food', document.createElement('div'), 'btAddFood');
+    button.addEventListener('click', () => {
         localStorage.setItem('meal_id', mealId);
-
+        closeOverlay('popUpEditMeal');
         openOverlay('popUpCreateFood');
-
     });
+    return button;
+};
 
-    return btAddFood;
+const loadMenu = async () => {
 
-}
-
-// Função principal que carrega o menu, as refeições e calcula os totais
-function loadMenu() {
-
-    fetchMenu()
-
-        .then(menu => {
-
-            if (menu) {
-                
-                renderMenu(menu);
-
-                return fetchMenuMeals(menu.menu_id);
-
-            } else {
-
-                throw new Error("No menu data to load meals.");
-            }
-        })
-
-        .then(meals => {
-
-            if (meals && meals.length > 0) {
-
-                meals.forEach(meal => renderMeal(meal));
-
-                return fetchMenuTotals(localStorage.getItem('menu_id'));
-
-            } else {
-
-                console.warn("No meals to render");
-
-                document.getElementById('yesMenu').innerHTML += '<p>No meals found for this menu.</p>';
-
-                return null;
-
-            }
-
-        })
-
-        .then(totals => {
-
-            if (totals) {
-
-                displayMenuTotals(totals);
-
-            }
-
-        })
-
-        .catch(error => console.error('Error:', error));
-
-}
-
-// Função para exibir os totais do menu na página
-function displayMenuTotals(totals) {
-
-    const yesMenu = document.getElementById('yesMenu');
-
-    const totalsDiv = document.createElement('div');
-
-    totalsDiv.style.width = '70vw';
-
-    totalsDiv.style.display = 'flex';
-
-    totalsDiv.style.justifyContent = 'center';
-
-    totalsDiv.style.alignItems = 'center';
-
-    totalsDiv.style.flexDirection = 'column';
-
-    totalsDiv.style.color = 'white';
-
-    totalsDiv.style.backgroundColor = '#FF006F';
-
-    totalsDiv.style.borderRadius = '10px';
-    
-    totalsDiv.style.margin = '0';
-
-    totalsDiv.innerHTML = `
-
-        <h2>Menu Totals</h2>
-
-        <h3>Total Menu Calories: ${totals.totalCalories} kCal's</h3>
+    try {
         
-        <h3>Total Menu Quantity: ${totals.totalQuantity} g's</h3>
+        const menu = await fetchMenu();
 
-    `;
+        const yesMenu = document.getElementById('yesMenu');
+        yesMenu.innerHTML = '';
 
-    yesMenu.appendChild(totalsDiv);
+        renderElement('h3', menu.menu_name, yesMenu);
 
-}
+        const meals = await fetchMenuMeals(menu.menu_id);
+
+        if (meals.length === 0) {
+
+            renderElement('p', 'No meals available. Please add some food to your menu.', yesMenu, 'no-meals-warning');
+
+        } else {
+
+            meals.forEach(renderMeal);
+
+        }
+
+    } catch (error) {
+
+        console.error('Error loading menu:', error);
+
+    }
+
+};
+
 
 export { loadMenu };

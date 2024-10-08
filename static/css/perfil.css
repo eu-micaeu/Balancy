@@ -17,7 +17,7 @@ main {
 
 #divInfos{
 
-    width: 50%;
+    width: 100%;
 
 }
 
@@ -28,15 +28,15 @@ main {
 }
 
 #divInfos label {
-    color: #FF006F;
-    font-size: 16px;
+    color: #ffffff;
+    font-size: 18px;
     margin-bottom: 8px;
     display: block;
 }
 
 #divInfos input {
-    width: 100%;
-    padding: 10px;
+    width: 70vw;
+    padding: 10px 0;
     font-family: 'Karla', sans-serif;
     border: 2px solid #FF006F;
     border-radius: 5px;
