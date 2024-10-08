@@ -1,5 +1,4 @@
 import { createFood } from '../../functions/createFood.mjs';
-import { loadMenu } from '../../functions/loadMenu.mjs';
 import { closeOverlay } from '../../functions/closeOverlay.mjs';
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -45,51 +44,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.body.appendChild(popUpCreateFood);
 
-    document.getElementById('btCreateFoodConfirm').addEventListener('click', function () {
-
+    document.getElementById('btCreateFoodConfirm').addEventListener('click', function (event) {
+        event.preventDefault(); // Impede o envio padrão do formulário
+    
         const foodNameInput = document.getElementById('foodName');
-
         const caloriesInput = document.getElementById('calories');
-
         const quantityInput = document.getElementById('quantity');
-
+    
         if (foodNameInput && caloriesInput && quantityInput) {
-
             const foodName = foodNameInput.value;
-
             const calories = caloriesInput.value;
-
             const quantity = quantityInput.value;
-
             const mealId = localStorage.getItem('meal_id');
-
+    
             if (mealId) {
-
                 createFood(foodName, calories, quantity, mealId).then(() => {
-
-                    loadMenu();
-
                     closeOverlay('popUpCreateFood');
-
                     foodNameInput.value = '';
-
                     caloriesInput.value = '';
-
                     quantityInput.value = '';
-
                 });
-
             } else {
-
                 console.error('meal_id não encontrado no localStorage');
             }
-
         } else {
-
             console.error('Um ou mais campos de entrada estão ausentes.');
-
         }
-
-    });
+    });    
 
 });

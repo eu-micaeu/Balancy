@@ -1,5 +1,4 @@
 import { getCookie } from './getCookie.mjs';
-import { closeOverlay } from './closeOverlay.mjs';
 
 // Função para criar um alimento
 function createFood(foodName, calories, quantity, mealId) {
@@ -31,20 +30,6 @@ function createFood(foodName, calories, quantity, mealId) {
     })
 
     .then(response => response.json())
-
-    .then(data => {
-
-        if (data.status === 'success') {
-
-            closeOverlay('popUpCreateFood'); 
-
-        } else {
-
-            console.error('Erro ao criar alimento:', data);
-
-        }
-
-    })
 
     .catch(error => console.error('Erro ao criar alimento:', error));
 
