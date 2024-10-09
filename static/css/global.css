@@ -60,7 +60,7 @@ body {
 
 header {
 
-    width: 70vw;
+    width: 90vw;
     color: #fff;
     text-align: center;
     display: flex;
@@ -120,7 +120,7 @@ button {
     font-size: 16 px;
     height: 50px;
     border: 2px solid #FF006F;
-    width: 150px;
+    width: 125px;
     font-weight: bold;
 
 }

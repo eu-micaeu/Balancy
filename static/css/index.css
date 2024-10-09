@@ -121,3 +121,43 @@ form a:hover{
     cursor: pointer;
 
 }
+
+@media (max-width: 800px){
+
+    body{
+
+        height: auto;
+
+    }
+
+    main{
+
+        flex-direction: column;
+
+    }
+
+    #divLogo{
+
+        width: 100%;
+
+    }
+
+    form{
+
+        width: 100%;
+
+    }
+
+    form a{
+
+        width: 100%;
+
+    }
+
+    footer{
+
+        font-size: 6px;
+
+    }
+
+}
