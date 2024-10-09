@@ -209,3 +209,35 @@ main{
     background-color: transparent;
 
 }
+
+
+@media screen and (max-width: 800px){
+
+    .mealHeader{
+
+        width: 90vw;
+
+    }
+
+    .mealHeader h2{
+
+        font-size: 14px;
+
+    }
+
+    .deleteButton{
+
+        width: 40px;
+        height: 40px;
+
+    }
+
+    .popUps form {
+
+        width: 140%;
+        height: 100%;
+        border-radius: 8px;
+        
+    }
+    
+}
