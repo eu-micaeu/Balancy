@@ -145,6 +145,7 @@ main{
     align-items: center;
     flex-direction: column;
     color: #ffffff;
+    width: 100%;
 
 }
 
@@ -152,12 +153,12 @@ main{
 
     display: flex;
     justify-content: space-between;
-    width: 90vw;
     color: #FF006F;
     background-color: #ffffff;
     border-radius: 5px;
     margin-bottom: 20px;
     transition:  ease 0.8s;
+    width: 100%;
 
 }
 
