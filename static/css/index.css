@@ -3,36 +3,9 @@
 main {
     display: flex;
     align-items: center;
-    flex-direction: row;
-    justify-content: center;
+    flex-direction: column;
     width: 100%;
     height: 80vh;
-}
-
-#divLogo{
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 400px;
-    flex-direction: column;
-
-}
-
-#divLogo #logo{
-
-    padding: 50px;
-    background-color: white;
-    border-radius: 50px;
-
-}
-
-#divLogo h1{
-
-    font-size: 30px;
-    color: #FF006F;
-    font-family: 'Karla', sans-serif;
-
 }
 
 form{
@@ -45,7 +18,7 @@ form{
     padding: 20px;
     color: #ffffff;
     user-select: none;
-    width: 400px;
+    width: 300px;
 
 }
 
