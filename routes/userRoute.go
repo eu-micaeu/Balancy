@@ -20,4 +20,8 @@ func UserRoutes(r *gin.Engine, db *sql.DB) {
 
 	r.DELETE("/delete", userHandler.Deletar(db))
 
+	r.POST(("/calculateIMC"), userHandler.CalcularIMC(db))
+	
+	r.POST(("/calculateTDEE"), userHandler.CalcularTDEE(db))
+
 }

@@ -9,6 +9,7 @@ body{
 main{
 
     display: none;
+    margin: 10px;
 
 }
 
@@ -54,78 +55,200 @@ main{
 }
 
 .popUps h1 {
+
     text-align: center;
     font-size: 1.75rem;
     margin-bottom: 1.5rem;
     color: #FF006F;
+
 }
 
 .popUps .form-group {
+
     margin-bottom: 1.5rem;
+
 }
 
 .popUps form label {
+
     display: block;
     font-size: 1rem;
     margin-bottom: 0.5rem;
     color: #FF006F;
+
 }
 
 .popUps form input[type="text"],
 .popUps form input[type="number"] {
+
     width: 100%;
     padding: 0.75rem;
     font-size: 1rem;
     border: 1px solid #ced4da;
     border-radius: 4px;
     box-sizing: border-box;
+
 }
 
 .popUps form input[type="text"]:focus,
 .popUps form input[type="number"]:focus {
+
     border-color: #FF006F;
     outline: none;
+
 }
 
 .popUps form .form-actions {
+
     text-align: center;
     margin-top: 1.5rem;
+
 }
 
 .popUps form .form-note {
+
     text-align: center;
     font-size: 0.9rem;
     color: #6c757d;
+
 }
 
 .popUps table {
+
     width: 100%;
     font-size: 20px;
     border-collapse: collapse; 
     margin-top: 20px;
     table-layout: fixed; 
+
 }
 
 .popUps table th, 
 .popUps table td {
+
     border: 2px solid #FF006F;
     padding: 10px;
     text-align: center;
     width: 33.33%; 
     color: #FF006F;
+
 }
 
 .popUps table th {
-    background-color: #ffe5f1; /* Leve cor de fundo para destacar o cabeçalho */
+
+    background-color: #ffe5f1;
     font-weight: bold;
     color: #FF006F;
+
 }
 
 .popUps table td {
-    background-color: #fff; /* Fundo branco para contrastar com o texto */
+
+    background-color: #fff; 
+
 }
 
-/* #noMenu */
+#divIMC{
+
+    background-color: #f9f9f9; 
+    border-radius: 5px; 
+    width: 90vw;
+    margin: 25px 0 0 0;
+
+}
+
+#divIMC #textIMC {
+
+    font-size: 1.5em; 
+    color: #FF006F; 
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+
+}
+
+#divIMC #textAboutIMC {
+
+    color: #444; 
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse; 
+    margin-top: 20px; 
+    font-family: 'Arial', sans-serif; 
+
+}
+
+.table th,
+.table td {
+
+    padding: 10px;
+    text-align: center; 
+    border: 1px solid #ddd;
+    font-family: 'Karla', sans-serif;
+
+}
+
+.table th {
+
+    background-color: #FF006F; 
+    color: #fff; 
+    font-size: 1.2em;
+    width: 50%;
+
+}
+
+.table td {
+
+    font-size: 1.1em; 
+    color: #444; 
+    
+}
+
+.table tr:nth-child(even) {
+
+    background-color: #f9f9f9; 
+
+}
+
+.table strong {
+
+    color: #FF006F; 
+
+}
+
+#divTDEE{
+
+    background-color: #f9f9f9; 
+    border-radius: 5px; 
+    width: 90vw;
+    margin: 25px 0 0 0;
+
+}
+
+#divTDEE #textTDEE {
+
+    font-size: 1.5em; 
+    color: #FF006F; 
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+
+}
+
+#divTDEE #textAboutTDEE {
+
+    color: #444; 
+    margin-bottom: 20px;
+    width: 100%;
+    text-align: center;
+
+}
 
 #noMenu {
 
@@ -137,12 +260,9 @@ main{
 
 }
 
-/* #yesMenu */
-
 #yesMenu {
 
     display: flex;
-    align-items: center;
     flex-direction: column;
     color: #ffffff;
     width: 100%;
@@ -193,7 +313,6 @@ main{
 .deleteButton {
 
     background-color: transparent;
-    color: #ff0000;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -209,7 +328,7 @@ main{
 
 .deleteButton:hover {
 
-    color: #770034;
+    color: #000000;
     background-color: transparent;
 
 }

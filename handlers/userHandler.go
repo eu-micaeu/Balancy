@@ -215,3 +215,89 @@ func (u *User) Deletar(db *sql.DB) gin.HandlerFunc {
 	}
 
 }
+
+// Função para calcular o IMC
+func (u *User) CalcularIMC(db *sql.DB) gin.HandlerFunc {
+
+    return func(c *gin.Context) {
+		
+        var input struct {
+            Weight float64 `json:"weight"` 
+            Height float64 `json:"height"`
+        }
+
+        if err := c.ShouldBindJSON(&input); err != nil {
+            c.JSON(400, gin.H{"error": "Dados inválidos"})
+            return
+        }
+
+        weight := input.Weight
+        height := input.Height
+
+        imc := weight / (height * height)
+
+        c.JSON(200, gin.H{"message": "IMC calculado com sucesso!", "imc": imc})
+    }
+}
+
+// Função para calcular o TDEE
+func (u *User) CalcularTDEE(db *sql.DB) gin.HandlerFunc {
+	
+	return func(c *gin.Context) {
+
+		var input struct {
+			Weight        float64 `json:"weight"`      
+			Height        float64 `json:"height"`       
+			Age           int     `json:"age"`          
+			Gender        string  `json:"gender"`        
+			ActivityLevel string  `json:"activity_level"`
+		}
+
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(400, gin.H{"error": "Dados inválidos"})
+			return
+		}
+
+		weight := input.Weight
+		height := input.Height * 100
+		age := input.Age
+		gender := input.Gender
+		activityLevel := input.ActivityLevel
+
+		var tmb float64
+
+		if gender == "M" {
+			tmb = 10*weight + 6.25*height - 5*float64(age) + 5 
+		} else if gender == "F" {
+			tmb = 10*weight + 6.25*height - 5*float64(age) - 161 
+		} else {
+			c.JSON(400, gin.H{"error": "Gênero inválido"})
+			return
+		}
+
+		var activityMultiplier float64
+
+		switch activityLevel {
+		case "sedentary":
+			activityMultiplier = 1.2 
+		case "light":
+			activityMultiplier = 1.375 
+		case "moderate":
+			activityMultiplier = 1.55 
+		case "active":
+			activityMultiplier = 1.725 
+		case "very_active":
+			activityMultiplier = 1.9 
+		default:
+			c.JSON(400, gin.H{"error": "Nível de atividade inválido"})
+			return
+		}
+
+		tdee := tmb * activityMultiplier
+
+		c.JSON(200, gin.H{
+			"message": "TDEE calculado com sucesso!",
+			"tdee":    tdee,
+		})
+	}
+}
