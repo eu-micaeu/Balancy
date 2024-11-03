@@ -122,6 +122,7 @@ button {
     height: 50px;
     border: 2px solid #FF006F;
     width: 125px;
+    margin: 10px;
     font-weight: bold;
 
 }

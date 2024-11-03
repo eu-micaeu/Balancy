@@ -10,6 +10,7 @@ import (
 
 type Claims struct {
 	User_ID int `json:"id_usuario"`
+	Username string `json:"username"`
 	jwt.StandardClaims
 }
 
@@ -53,6 +54,7 @@ func GerarOToken(user User) (string, error) {
 
 	claims := &Claims{
 		User_ID: user.User_ID,
+		Username: user.Username,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},

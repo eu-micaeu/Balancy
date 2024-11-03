@@ -6,6 +6,54 @@ import { btLogout } from './functions/btLogout.mjs';
 
 document.addEventListener("DOMContentLoaded", function () {
 
+    loadMenu();
+
+    fetch('calculateMenuCaloriesAndQuantity/' + localStorage.getItem('menu_id'), {
+
+        method: 'GET',
+
+        headers: {
+
+            'Content-Type': 'application/json'
+
+        }
+
+    }).then(response => {
+
+        if (response.status === 200) {
+
+            return response.json();
+
+        } else {
+
+            throw new Error('Erro ao calcular')
+
+        }
+
+    }).then(data => {
+
+        var divTotalQuantityCalories = document.getElementById('divTotalQuantityCalories');
+
+        var textCalories = document.getElementById('textCalories');
+
+        var textQuantity = document.getElementById('textQuantity');
+
+        var calories = data.total_calories;
+
+        var quantity = data.total_quantity;
+
+        textCalories.innerHTML = `Calorias: ${calories}`;
+
+        textQuantity.innerHTML = `Quantidade: ${quantity}`;
+
+        divTotalQuantityCalories.appendChild(textCalories);
+
+    }).catch(error => {
+
+        console.log(error);
+
+    })
+
     fetch('/getUser', {
 
         method: 'GET',
@@ -131,8 +179,6 @@ document.addEventListener("DOMContentLoaded", function () {
     btCreate();
 
     btLogout();
-
-    loadMenu();
 
     var spin = document.getElementById('spin');
 
