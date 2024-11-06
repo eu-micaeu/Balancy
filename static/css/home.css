@@ -361,6 +361,152 @@ h3{
 
 }
 
+/* Estilo para o popUp de edição de alimento */
+#popUpEditFood {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 50vw;
+    height: 80vh; /* Ajuste a altura conforme necessário */
+    padding: 30px 50px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    border-radius: 10px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    overflow-y: auto; /* Permite rolagem caso o conteúdo seja maior */
+}
+
+/* Título da janela pop-up */
+#popUpEditFood h1 {
+    text-align: center;
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+    color: #FF006F;
+}
+
+/* Estilo do formulário de edição de alimento */
+#popUpEditFood form {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilo do grupo de campos no formulário */
+#popUpEditFood .form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Labels dos campos do formulário */
+#popUpEditFood form label {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #FF006F;
+}
+
+/* Campos de texto e número */
+#popUpEditFood form input[type="text"],
+#popUpEditFood form input[type="number"] {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Foco nos campos de entrada */
+#popUpEditFood form input[type="text"]:focus,
+#popUpEditFood form input[type="number"]:focus {
+    border-color: #FF006F;
+    outline: none;
+}
+
+/* Botões de ação no formulário */
+#popUpEditFood form .form-actions {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+/* Nota do formulário */
+#popUpEditFood form .form-note {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Estilo da tabela para listagem dos alimentos */
+#popUpEditFood table {
+    width: 100%;
+    font-size: 1.1rem;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed;
+}
+
+#popUpEditFood table th,
+#popUpEditFood table td {
+    border: 2px solid #FF006F;
+    padding: 10px;
+    text-align: center;
+    width: 33.33%;
+    color: #FF006F;
+}
+
+#popUpEditFood table th {
+    background-color: #ffe5f1;
+    font-weight: bold;
+}
+
+#popUpEditFood table td {
+    background-color: #fff;
+}
+
+/* Botões de cancelar e salvar */
+#popUpEditFood .form-actions button {
+    background-color: #FF006F;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#popUpEditFood .form-actions button:hover {
+    background-color: #e6005c;
+}
+
+@media screen and (max-width: 800px) {
+    #popUpEditFood {
+        width: 90vw;
+        padding: 20px;
+    }
+
+    #popUpEditFood h1 {
+        font-size: 1.5rem;
+    }
+
+    #popUpEditFood form input[type="text"],
+    #popUpEditFood form input[type="number"] {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+    }
+
+    #popUpEditFood .form-actions button {
+        padding: 0.6rem 1.2rem;
+    }
+}
+
+
 @media screen and (max-width: 800px){
 
     .mealHeader{

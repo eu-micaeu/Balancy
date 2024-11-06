@@ -4,7 +4,7 @@ import { closeOverlay } from './closeOverlay.mjs';
 import { fetchMenu } from './fetchMenu.mjs';
 
 const fetchData = async (url, method = 'GET', body = null) => {
-    
+
     const headers = {
 
         'Content-Type': 'application/json',
@@ -62,6 +62,55 @@ const fetchMenuMeals = async (menuId) => {
     return data.meals || [];
 
 };
+
+const openEditFoodPopup = async (foodId) => {
+    // Exemplo de como abrir o pop-up para editar o alimento
+    const popUpContent = document.getElementById('popUpEditFood'); // Crie um pop-up com id "popUpEditFood"
+
+    if (!popUpContent) return console.error('Pop-up element not found.');
+
+    // Limpa o conteúdo do pop-up
+    popUpContent.innerHTML = '';
+
+    // Obtenha as informações do alimento com o ID fornecido
+    const foodData = await fetchData(`/listFood/${foodId}`);
+    console.log(foodData); // Verifique se o retorno está correto
+
+    // Crie campos de entrada para edição
+    const foodNameInput = renderElement('input', '', popUpContent);
+    foodNameInput.value = foodData.food.food_name;
+
+    const caloriesInput = renderElement('input', '', popUpContent);
+    caloriesInput.value = foodData.food.calories;
+
+    const quantityInput = renderElement('input', '', popUpContent);
+    quantityInput.value = foodData.food.quantity;
+
+    const saveButton = renderElement('button', 'Save Changes', popUpContent);
+    saveButton.addEventListener('click', async () => {
+        const updatedFood = {
+            food_name: foodNameInput.value,
+            calories: parseInt(caloriesInput.value),
+            quantity: parseInt(quantityInput.value),
+        };
+        await updateFood(foodId, updatedFood);
+        closeOverlay('popUpEditFood');
+    });
+
+    openOverlay('popUpEditFood');  // Abre o pop-up de edição
+};
+
+const updateFood = async (foodId, updatedFood) => {
+    try {
+        const response = await fetchData(`/updateFood/${foodId}`, 'PUT', updatedFood);
+
+        console.log('Response from updateFood:', response);
+        
+    } catch (error) {
+        console.error('Error updating food:', error);
+    }
+};
+
 
 const renderMeal = (meal) => {
 
@@ -191,25 +240,26 @@ const createFoodTable = () => {
 };
 
 const createFoodRow = (food) => {
-
     const row = document.createElement('tr');
 
     const fields = [food.food_name, food.calories || 'N/A', food.quantity || 'N/A'];
-
     fields.forEach(field => renderElement('td', field, row));
 
     const deleteButton = createIconButton('Delete Food', 'fa-solid fa-eraser', async () => {
-
         await deleteFood(food.food_id);
-
         row.remove();
-
     });
 
     row.appendChild(deleteButton);
 
-    return row;
+    // Adicionar o botão de "Atualizar"
+    const updateButton = createIconButton('Update Food', 'fa-solid fa-edit', async () => {
+        await openEditFoodPopup(food.food_id);  // Abrir pop-up para edição
+    });
 
+    row.appendChild(updateButton);
+
+    return row;
 };
 
 const deleteFood = async (foodId) => {
@@ -223,7 +273,7 @@ const deleteFood = async (foodId) => {
             closeOverlay('popUpEditMeal');
 
         } else {
-            
+
             console.error('Error deleting food:', response.status);
 
         }
@@ -249,7 +299,7 @@ const createAddFoodButton = (mealId) => {
 const loadMenu = async () => {
 
     try {
-        
+
         const menu = await fetchMenu();
 
         const yesMenu = document.getElementById('yesMenu');
