@@ -323,6 +323,7 @@ main{
     justify-content: center;
     align-items: center;
     transition:  ease 0.3s;
+    color: red;
     
 }
 

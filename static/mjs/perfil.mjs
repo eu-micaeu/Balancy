@@ -27,17 +27,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (data.activity_level === 'sedentary') {
 
-                document.getElementById('activityLevel').value = ' ' + 'Sedentário';
-
+                document.getElementById('activityLevel').value = ' ' + 'Sedentary';
+            
             } else if (data.activity_level === 'lightly_active') {
-
-                document.getElementById('activityLevel').value = ' ' + 'Levemente Ativo';
-
+            
+                document.getElementById('activityLevel').value = ' ' + 'Lightly Active';
+            
             } else if (data.activity_level === 'moderately_active') {
-
-                document.getElementById('activityLevel').value = ' ' + 'Moderadamente Ativo';
-
-            } 
+            
+                document.getElementById('activityLevel').value = ' ' + 'Moderately Active';
+            
+            }            
 
 
         })

@@ -42,9 +42,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         var quantity = data.total_quantity;
 
-        textCalories.innerHTML = `Calorias: ${calories} kCals`;
+        textCalories.innerHTML = `Calories: ${calories} kCals`;
 
-        textQuantity.innerHTML = `Quantidade: ${quantity} g`;
+        textQuantity.innerHTML = `Quantity: ${quantity} g`;
 
         divTotalQuantityCalories.appendChild(textCalories);
 

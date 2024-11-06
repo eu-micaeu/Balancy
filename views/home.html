@@ -27,16 +27,16 @@
     <script src="../static/mjs/components/header.mjs" type="module"></script> <!-- Header -->
 
     <script src="../static/mjs/components/popUps/popUpCreateMenu.mjs" type="module"></script>
-    <!-- Pop-Up para a criação do menu -->
+    <!-- Pop-up for creating a menu -->
 
     <script src="../static/mjs/components/popUps/popUpCreateMeal.mjs" type="module"></script>
-    <!-- Pop-Up para a criação de uma refeição -->
+    <!-- Pop-up for creating a meal -->
 
     <script src="../static/mjs/components/popUps/popUpCreateFood.mjs" type="module"></script>
-    <!-- Pop-Up para a criação de um alimento -->
+    <!-- Pop-up for creating a food item -->
 
     <script src="../static/mjs/components/popUps/popUpEditMeal.mjs" type="module"></script>
-    <!-- Pop-Up para edit uma refeição -->
+    <!-- Pop-up for editing a meal -->
 
     <div id="spin"></div>
 
@@ -46,9 +46,7 @@
 
             <p id="textIMC"></p>
 
-            <p id="textAboutIMC">* O IMC (Índice de Massa Corporal) é uma medida usada para avaliar se uma pessoa está
-                no peso ideal em
-                relação à altura. As faixas de classificação do IMC são as seguintes:</p>
+            <p id="textAboutIMC">* BMI (Body Mass Index) is a measure used to assess if a person is at a healthy weight relative to their height. The BMI classification ranges are as follows:</p>
 
             <table class="table">
 
@@ -56,9 +54,9 @@
 
                     <tr>
 
-                        <th>IMC</th>
+                        <th>BMI</th>
 
-                        <th>Classificação</th>
+                        <th>Classification</th>
 
                     </tr>
 
@@ -68,48 +66,48 @@
 
                     <tr>
 
-                        <td>IMC &lt; 18.5</td>
+                        <td>BMI &lt; 18.5</td>
 
-                        <td><strong>Abaixo do peso</strong></td>
+                        <td><strong>Underweight</strong></td>
 
                     </tr>
                     <tr>
 
-                        <td>18.5 &le; IMC &lt; 24.9</td>
+                        <td>18.5 &le; BMI &lt; 24.9</td>
 
-                        <td><strong>Peso normal</strong></td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td>25 &le; IMC &lt; 29.9</td>
-
-                        <td><strong>Sobrepeso</strong></td>
+                        <td><strong>Normal weight</strong></td>
 
                     </tr>
 
                     <tr>
 
-                        <td>30 &le; IMC &lt; 34.9</td>
+                        <td>25 &le; BMI &lt; 29.9</td>
 
-                        <td><strong>Obesidade grau 1</strong></td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td>35 &le; IMC &lt; 39.9</td>
-
-                        <td><strong>Obesidade grau 2</strong></td>
+                        <td><strong>Overweight</strong></td>
 
                     </tr>
 
                     <tr>
 
-                        <td>IMC &ge; 40</td>
+                        <td>30 &le; BMI &lt; 34.9</td>
 
-                        <td><strong>Obesidade grau 3 (mórbida)</strong></td>
+                        <td><strong>Obesity Class 1</strong></td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>35 &le; BMI &lt; 39.9</td>
+
+                        <td><strong>Obesity Class 2</strong></td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>BMI &ge; 40</td>
+
+                        <td><strong>Obesity Class 3 (morbid obesity)</strong></td>
 
                     </tr>
 
@@ -123,27 +121,26 @@
 
             <p id="textTDEE"></p>
 
-            <p id="textAboutTDEE">* O TDEE é a Taxa Diária Total de Energia, que representa a quantidade total de
-                calorias que o corpo queima em um dia, considerando o metabolismo basal e a atividade física.</p>
+            <p id="textAboutTDEE">* TDEE (Total Daily Energy Expenditure) represents the total amount of calories the body burns in a day, considering basal metabolism and physical activity.</p>
 
             <table border="1" cellspacing="0" cellpadding="10" class="table">
                 <thead>
                     <tr>
-                        <th>Objetivo</th>
-                        <th>Calorias Diárias</th>
+                        <th>Goal</th>
+                        <th>Daily Calories</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Emagrecer</td>
+                        <td>Lose Weight</td>
                         <td>TDEE - 500 kcal</td>
                     </tr>
                     <tr>
-                        <td>Manter Peso</td>
+                        <td>Maintain Weight</td>
                         <td>TDEE</td>
                     </tr>
                     <tr>
-                        <td>Ganhar Peso</td>
+                        <td>Gain Weight</td>
                         <td>TDEE + 500 kcal</td>
                     </tr>
                 </tbody>
@@ -157,9 +154,7 @@
 
             <p>Click on the button below to create a new menu</p>
 
-            <p>First, create a menu, within the menu, you will have t he meals, and within the meals, you will be able
-                to
-                add the food with your information!</p>
+            <p>First, create a menu. Within the menu, you will have meals, and within the meals, you will be able to add food with its details!</p>
 
             <button id="btCreate" type="button">+ Create Menu</button>
 
@@ -171,7 +166,7 @@
 
         <button id="btAddMeal">+ Add Meal</button>
 
-        <h3>Quantidade total das calorias e a gramas do seu Menu.</h3>
+        <h3>Total calories and grams of your menu.</h3>
 
         <div id="divTotalQuantityCalories">
 
