@@ -14,9 +14,7 @@ func MenuRoutes(r *gin.Engine, db *sql.DB) {
 
 	r.POST("/createMenu", menuHandler.CriarMenu(db))
 
-	r.GET("/menu/:menu_id", middlewares.AuthMiddleware(), menuHandler.CarregarMenu(db))
-
-	r.GET("/menu", middlewares.AuthMiddleware(), menuHandler.ResgatarMenu(db))
+	r.GET("/menu/:menu_id", middlewares.AuthMiddleware(), menuHandler.LerMenu(db))
 
 	r.GET("/calculateMenuCaloriesAndQuantity/:menu_id", middlewares.AuthMiddleware(), menuHandler.CalcularTotalDeCaloriasEQuantidadeDoMenu(db))
 

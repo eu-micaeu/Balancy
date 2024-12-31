@@ -2,18 +2,16 @@ import React, { useEffect, useState } from "react";
 import './Main.css';
 
 function Main() {
-  const [menuItems, setMenuItems] = useState([]); // Estado para armazenar os itens do menu
-  const [error, setError] = useState(null); // Estado para capturar erros
+  const [menuItems, setMenuItems] = useState([]); 
+  const [error, setError] = useState(null); 
 
   const getCookie = (name) => {
-    // Função para obter o valor de um cookie pelo nome
     const cookies = document.cookie.split("; ");
     const cookie = cookies.find((c) => c.startsWith(`${name}=`));
     return cookie ? cookie.split("=")[1] : null;
   };
 
   useEffect(() => {
-    // Função para buscar os dados da rota GET /menu
     const fetchMenu = async () => {
       try {
         const token = getCookie("authToken"); // Substitua "authToken" pelo nome correto do cookie
@@ -29,12 +27,12 @@ function Main() {
           },
         });
 
-        if (!response.ok) {
-          throw new Error("Erro ao buscar o menu");
-        }
-
         const data = await response.json();
+
+        console.log(data);
+
         setMenuItems(data);
+
       } catch (err) {
         setError(err.message);
       }

@@ -43,62 +43,36 @@ func (m *Menu) CriarMenu(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
-// Função para resgatar o único menu do usuário.
-func (m *Menu) ResgatarMenu(db *sql.DB) gin.HandlerFunc {
+// Função para carregar um menu.
+func (m *Menu) LerMenu(db *sql.DB) gin.HandlerFunc {
+
 	return func(c *gin.Context) {
+
 		// Validação do token
 		token := c.Request.Header.Get("Authorization")
-		userID, err := ValidarOToken(token)
-		if err != nil {
-			c.JSON(401, gin.H{"message": "Token inválido"})
-			return
-		}
 
-		var menu Menu
-		err = db.QueryRow("SELECT menu_id, user_id, menu_name, created_at FROM menus WHERE user_id = $1", userID).
-			Scan(&menu.Menu_ID, &menu.User_ID, &menu.MenuName, &menu.CreatedAt)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				c.JSON(404, gin.H{"message": "Menu não encontrado"})
-			} else {
-				c.JSON(400, gin.H{"message": "Erro ao buscar menu"})
-				fmt.Println(err)
-			}
-			return
-		}
+		fmt.Println(token)
 
-		c.JSON(200, gin.H{"menu": menu})
-	}
-}
-
-// Função para carregar um menu que seja de um usuário.
-func (m *Menu) CarregarMenu(db *sql.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// Validação do token
-		token, err := c.Cookie("token")
-		if err != nil {
-			c.JSON(401, gin.H{"message": "Token inválido"})
-			return
-		}
-
-		userID, err := ValidarOToken(token)
+		_, err := ValidarOToken(token)
 		if err != nil {
 			c.JSON(401, gin.H{"message": "Token inválido"})
 			return
 		}
 
 		menuID := c.Param("menu_id")
-		var menu Menu
 
-		row := db.QueryRow("SELECT menu_id, user_id, menu_name, created_at FROM menus WHERE menu_id = $1 AND user_id = $2", menuID, userID)
-		err = row.Scan(&menu.Menu_ID, &menu.User_ID, &menu.MenuName, &menu.CreatedAt)
+		var menu Menu
+		err = db.QueryRow("SELECT menu_id, user_id, menu_name, created_at FROM menus WHERE menu_id = $1", menuID).
+			Scan(&menu.Menu_ID, &menu.User_ID, &menu.MenuName, &menu.CreatedAt)
 		if err != nil {
 			c.JSON(400, gin.H{"message": "Erro ao carregar menu"})
+			fmt.Println(err)
 			return
 		}
 
-		c.HTML(200, "menu.html", gin.H{"menu": menu})
+		c.JSON(200, gin.H{"menu": menu})
 	}
+
 }
 
 // Função para calcular as calorias e quantidade de um menu.
