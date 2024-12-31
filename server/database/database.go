@@ -24,6 +24,10 @@ func NewDB() (*sql.DB, error) {
 	dbPort := os.Getenv("DB_PORT")
 	dbName := os.Getenv("DB_NAME")
 
+	log.Printf("DB_USER: %s, DB_PASSWORD: %s, DB_HOST: %s, DB_PORT: %s, DB_NAME: %s",
+    dbUser, dbPassword, dbHost, dbPort, dbName)
+
+
 	if dbUser == "" || dbPassword == "" || dbHost == "" || dbPort == "" || dbName == "" {
 		return nil, fmt.Errorf("uma ou mais variáveis de ambiente não estão definidas")
 	}

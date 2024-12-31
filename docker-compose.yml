@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  server:
+    image: golang:1.23.4
+    working_dir: /cmd
+    volumes:
+      - ./server:/cmd
+    command: go run ./main.go
+    ports:
+      - "8080:8080" 
+    depends_on:
+      - client
+
+  client:
+    image: node:18 
+    working_dir: /src
+    volumes:
+      - ./client:/src
+    command: npm run start
+    ports:
+      - "3000:3000" 

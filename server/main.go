@@ -4,11 +4,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/eu-micaeu/kCal0/database"
+	"github.com/eu-micaeu/kCal0/server/database"
 
-	"github.com/eu-micaeu/kCal0/middlewares"
+	"github.com/eu-micaeu/kCal0/server/middlewares"
 
-	"github.com/eu-micaeu/kCal0/routes"
+	"github.com/eu-micaeu/kCal0/server/routes"
 
 )
 

@@ -4,20 +4,20 @@ import (
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
-	"github.com/eu-micaeu/kCal0/handlers"
+	"github.com/eu-micaeu/kCal0/server/handlers"
+	"github.com/eu-micaeu/kCal0/server/middlewares" 
 )
 
-// Função para criar as rotas de menu
 func MenuRoutes(r *gin.Engine, db *sql.DB) {
-	
+
 	menuHandler := handlers.Menu{}
 
 	r.POST("/createMenu", menuHandler.CriarMenu(db))
 
-	r.GET("/menu/:menu_id", menuHandler.CarregarMenu(db))
+	r.GET("/menu/:menu_id", middlewares.AuthMiddleware(), menuHandler.CarregarMenu(db))
 
-	r.GET("/menu", menuHandler.ResgatarMenu(db))
+	r.GET("/menu", middlewares.AuthMiddleware(), menuHandler.ResgatarMenu(db))
 
-	r.GET("/calculateMenuCaloriesAndQuantity/:menu_id", menuHandler.CalcularTotalDeCaloriasEQuantidadeDoMenu(db))
+	r.GET("/calculateMenuCaloriesAndQuantity/:menu_id", middlewares.AuthMiddleware(), menuHandler.CalcularTotalDeCaloriasEQuantidadeDoMenu(db))
 
 }

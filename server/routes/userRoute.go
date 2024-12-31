@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
-	"github.com/eu-micaeu/kCal0/handlers"
+	"github.com/eu-micaeu/kCal0/server/handlers"
 )
 
 // Função para criar as rotas de usuário
