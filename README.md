@@ -1,6 +1,6 @@
-# kCal
+# Balancy
 
-**kCal** is a web application designed to help users organize their daily meal plans and assist them in achieving specific dietary goals. The platform allows users to track their meals, foods, and nutritional information efficiently.
+**Balancy** is a web application designed to help users organize their daily meal plans and assist them in achieving specific dietary goals. The platform allows users to track their meals, foods, and nutritional information efficiently.
 
 ## Features
 
