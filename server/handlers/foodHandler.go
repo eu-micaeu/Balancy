@@ -3,239 +3,114 @@ package handlers
 import (
 	"database/sql"
 	"fmt"
-
-	"time"
-
+	"github.com/eu-micaeu/Balancy/server/models"
 	"github.com/gin-gonic/gin"
 )
 
-type Food struct {
+type Food models.Food
 
-	Food_ID int `json:"food_id"`
-
-	Meal_ID int `json:"meal_id"`
-
-	FoodName string `json:"food_name"`
-
-	Calories int `json:"calories"`
-
-	Quantity int `json:"quantity"`
-
-	CreatedAt time.Time `json:"created_at"`
-	
-}
-
-// Função para criar um novo alimento
-func (f *Food) CriarAlimento(db *sql.DB) gin.HandlerFunc {
-
+// Create
+func (f *Food) Create(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// Recupera o userId do contexto (extraído do token JWT)
+		userID, exists := c.Get("userID")
+		if !exists {
+			c.JSON(401, gin.H{"error": "User not authorized"})
+			return
+		}
 
-		token := c.Request.Header.Get("Authorization")
+		// Faz o bind dos dados do corpo da requisição para o struct Food
+		if err := c.ShouldBindJSON(&f); err != nil {
+			c.JSON(400, gin.H{"error": "Invalid request body"})
+			return
+		}
 
-		_, err := ValidarOToken(token)
-
+		// Valida se o meal_id pertence ao menu do usuário autenticado
+		queryValidateMeal := `
+			SELECT meal_id 
+			FROM meals
+			JOIN menus ON menus.menu_id = meals.menu_id
+			WHERE menus.user_id = $1 AND meals.meal_id = $2
+		`
+		var mealID int
+		err := db.QueryRow(queryValidateMeal, userID, f.MealId).Scan(&mealID)
 		if err != nil {
-
-			c.JSON(401, gin.H{"message": "Token inválido"})
-
+			c.JSON(404, gin.H{"error": "Meal not found or unauthorized"})
 			return
-
 		}
 
-		var food Food
-
-		if err := c.BindJSON(&food); err != nil {
-
-			c.JSON(400, gin.H{"message": "Erro ao criar alimento"})
-
-			fmt.Println(err)
-
-			return
-
-		}
-
-		_, err = db.Exec("INSERT INTO foods (meal_id, food_name, calories, quantity, created_at) VALUES ($1, $2, $3, $4, $5)", food.Meal_ID, food.FoodName, food.Calories, food.Quantity, time.Now())
-
+		// Insere os dados da comida na tabela foods
+		queryInsert := `
+			INSERT INTO foods (meal_id, food_name, calories, quantity) 
+			VALUES ($1, $2, $3, $4)
+		`
+		_, err = db.Exec(queryInsert, mealID, f.FoodName, f.Calories, f.Quantity)
 		if err != nil {
-
-			c.JSON(400, gin.H{"message": "Erro ao criar alimento"})
-
-			fmt.Println(err)
-
+			c.JSON(500, gin.H{"error": "Failed to create food entry"})
 			return
-
 		}
 
-		c.JSON(200, gin.H{"message": "Alimento criado com sucesso"})
-
+		// Retorna uma mensagem de sucesso
+		c.JSON(201, gin.H{"message": "Food entry created successfully"})
 	}
-
 }
 
-// Função para listar todos os alimentos de uma refeição
-func (f *Food) ListarAlimentosDeUmaRefeicao(db *sql.DB) gin.HandlerFunc {
-
+// Read
+func (f *Food) Read(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-
-		token := c.Request.Header.Get("Authorization")
-
-		_, err := ValidarOToken(token)
-
-		if err != nil {
-
-			c.JSON(401, gin.H{"message": "Token inválido"})
-
+		// Recupera o userId do contexto
+		userID, exists := c.Get("userID")
+		if !exists {
+			c.JSON(401, gin.H{"error": "User not authorized"})
 			return
-
 		}
 
+		// Prepara a query para buscar os alimentos associados ao usuário autenticado
+		query := `
+			SELECT 
+				foods.food_id, 
+				foods.meal_id, 
+				foods.food_name, 
+				foods.calories, 
+				foods.quantity 
+			FROM foods
+			JOIN meals ON foods.meal_id = meals.meal_id
+			JOIN menus ON meals.menu_id = menus.menu_id
+			WHERE menus.user_id = $1
+		`
+
+		// Executa a query
+		rows, err := db.Query(query, userID)
+		if err != nil {
+			c.JSON(500, gin.H{"error": "Failed to retrieve food entries"})
+			fmt.Println("Erro ao executar query:", err) // Log para depuração
+			return
+		}
+		defer rows.Close()
+
+		// Define uma lista para armazenar os resultados
 		var foods []Food
-
-		rows, err := db.Query("SELECT * FROM foods WHERE meal_id = $1", c.Param("meal_id"))
-
-		if err != nil {
-
-			c.JSON(400, gin.H{"message": "Erro ao listar alimentos"})
-
-			fmt.Println(err)
-
-			return
-
-		}
-
 		for rows.Next() {
-
 			var food Food
-
-			rows.Scan(&food.Food_ID, &food.Meal_ID, &food.FoodName, &food.Calories, &food.Quantity, &food.CreatedAt)
-
+			// Verifica e armazena os dados retornados
+			if err := rows.Scan(&food.FoodId, &food.MealId, &food.FoodName, &food.Calories, &food.Quantity); err != nil {
+				c.JSON(500, gin.H{"error": "Failed to parse food entries"})
+				fmt.Println("Erro ao fazer scan das rows:", err) // Log para depuração
+				return
+			}
 			foods = append(foods, food)
-
 		}
 
-		c.JSON(200, gin.H{"foods": foods})
+		// Verifica se houve erros durante a iteração das linhas
+		if err := rows.Err(); err != nil {
+			c.JSON(500, gin.H{"error": "Failed during food entries iteration"})
+			fmt.Println("Erro ao iterar rows:", err) // Log para depuração
+			return
+		}
 
+		// Retorna os alimentos encontrados
+		c.JSON(200, gin.H{
+			"foods": foods,
+		})
 	}
-
-}
-
-// Função para listar um alimento
-func (f *Food) ListarAlimento(db *sql.DB) gin.HandlerFunc {
-
-	return func(c *gin.Context) {
-
-		token := c.Request.Header.Get("Authorization")
-
-		_, err := ValidarOToken(token)
-
-		if err != nil {
-
-			c.JSON(401, gin.H{"message": "Token inválido"})
-
-			return
-
-		}
-
-		var food Food
-
-		row := db.QueryRow("SELECT * FROM foods WHERE food_id = $1", c.Param("id"))
-
-		err = row.Scan(&food.Food_ID, &food.Meal_ID, &food.FoodName, &food.Calories, &food.Quantity, &food.CreatedAt)
-
-		if err != nil {
-
-			c.JSON(400, gin.H{"message": "Erro ao listar alimento"})
-
-			fmt.Println(err)
-
-			return
-
-		}
-
-		c.JSON(200, gin.H{"food": food})
-
-	}
-
-}
-
-// Função para atualizar um alimento
-func (f *Food) AtualizarAlimento(db *sql.DB) gin.HandlerFunc {
-
-	return func(c *gin.Context) {
-
-		token := c.Request.Header.Get("Authorization")
-
-		_, err := ValidarOToken(token)
-
-		if err != nil {
-
-			c.JSON(401, gin.H{"message": "Token inválido"})
-
-			return
-
-		}
-
-		var food Food
-
-		if err := c.BindJSON(&food); err != nil {
-
-			c.JSON(400, gin.H{"message": "Erro ao atualizar alimento"})
-
-			fmt.Println(err)
-
-			return
-
-		}
-
-		_, err = db.Exec("UPDATE foods SET food_name = $1, calories = $2, quantity = $3 WHERE food_id = $4", food.FoodName, food.Calories, food.Quantity, c.Param("food_id"))
-
-		if err != nil {
-
-			c.JSON(400, gin.H{"message": "Erro ao atualizar alimento"})
-
-			fmt.Println(err)
-
-			return
-
-		}
-
-		c.JSON(200, gin.H{"message": "Alimento atualizado com sucesso"})
-
-	}
-
-}
-
-// Função para deletar um alimento
-func (f *Food) DeletarAlimento(db *sql.DB) gin.HandlerFunc {
-
-	return func(c *gin.Context) {
-
-		token := c.Request.Header.Get("Authorization")
-
-		_, err := ValidarOToken(token)
-
-		if err != nil {
-
-			c.JSON(401, gin.H{"message": "Token inválido"})
-
-			return
-
-		}
-
-		_, err = db.Exec("DELETE FROM foods WHERE food_id = $1", c.Param("food_id"))
-
-		if err != nil {
-
-			c.JSON(400, gin.H{"message": "Erro ao deletar alimento"})
-
-			fmt.Println(err)
-
-			return
-
-		}
-
-		c.JSON(200, gin.H{"message": "Alimento deletado com sucesso"})
-
-	}
-
 }

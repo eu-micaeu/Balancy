@@ -3,23 +3,18 @@ package routes
 import (
 	"database/sql"
 
+	"github.com/eu-micaeu/Balancy/server/handlers"
+	"github.com/eu-micaeu/Balancy/server/middlewares"
 	"github.com/gin-gonic/gin"
-	"github.com/eu-micaeu/kCal0/server/handlers"
 )
 
-// Função para criar as rotas de refeição
+// Função para criar as rotas de usuário
 func FoodRoutes(r *gin.Engine, db *sql.DB) {
-	
+
 	foodHandler := handlers.Food{}
 
-	r.POST("/createFood", foodHandler.CriarAlimento(db))
+	r.POST("/createFood", middlewares.AuthMiddleware(), foodHandler.Create(db))
 
-	r.GET("/listMealFoods/:meal_id", foodHandler.ListarAlimentosDeUmaRefeicao(db))
-
-	r.GET("/listFood/:id", foodHandler.ListarAlimento(db))
-
-	r.PUT("/updateFood/:food_id", foodHandler.AtualizarAlimento(db))
-
-	r.DELETE("/deleteFood/:food_id", foodHandler.DeletarAlimento(db))
+	r.GET("/readFoods", middlewares.AuthMiddleware(), foodHandler.Read(db))
 
 }

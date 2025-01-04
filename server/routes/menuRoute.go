@@ -3,19 +3,18 @@ package routes
 import (
 	"database/sql"
 
+	"github.com/eu-micaeu/Balancy/server/handlers"
+	"github.com/eu-micaeu/Balancy/server/middlewares"
 	"github.com/gin-gonic/gin"
-	"github.com/eu-micaeu/kCal0/server/handlers"
-	"github.com/eu-micaeu/kCal0/server/middlewares" 
 )
 
+// Função para criar as rotas de usuário
 func MenuRoutes(r *gin.Engine, db *sql.DB) {
 
 	menuHandler := handlers.Menu{}
 
-	r.POST("/createMenu", menuHandler.CriarMenu(db))
+	r.POST("/createMenu", middlewares.AuthMiddleware(), menuHandler.Create(db))
 
-	r.GET("/menu/:menu_id", middlewares.AuthMiddleware(), menuHandler.LerMenu(db))
-
-	r.GET("/calculateMenuCaloriesAndQuantity/:menu_id", middlewares.AuthMiddleware(), menuHandler.CalcularTotalDeCaloriasEQuantidadeDoMenu(db))
+	r.GET("/readMenu", middlewares.AuthMiddleware(), menuHandler.Read(db))
 
 }

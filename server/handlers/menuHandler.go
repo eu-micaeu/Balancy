@@ -2,136 +2,135 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
+	"github.com/eu-micaeu/Balancy/server/models"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
-	"time"
 )
 
-type Menu struct {
-	Menu_ID   int       `json:"menu_id"`
-	User_ID   int       `json:"user_id"`
-	MenuName  string    `json:"menu_name"`
-	CreatedAt time.Time `json:"created_at"`
-}
+type Menu models.Menu
 
-// Função com finalidade de criar um menu.
-func (m *Menu) CriarMenu(db *sql.DB) gin.HandlerFunc {
+// Create
+func (m *Menu) Create(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Validação do token
-		token := c.Request.Header.Get("Authorization")
-		userID, err := ValidarOToken(token)
-		if err != nil {
-			c.JSON(401, gin.H{"message": "Token inválido"})
+		// Recupere o userID do contexto
+		userID, exists := c.Get("userID")
+		if !exists {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
 			return
 		}
 
 		var menu Menu
-		if err := c.BindJSON(&menu); err != nil {
-			c.JSON(400, gin.H{"message": "Erro ao criar menu"})
-			fmt.Println(err)
+
+		// Faz o bind do JSON recebido (sem o campo UserId)
+		if err := c.ShouldBindJSON(&menu); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Payload inválido: " + err.Error()})
 			return
 		}
 
-		_, err = db.Exec("INSERT INTO menus (user_id, menu_name, created_at) VALUES ($1, $2, $3)", userID, menu.MenuName, time.Now())
+		// Query com cláusula RETURNING para retornar o ID do menu criado
+		query := "INSERT INTO menus (menu_name, user_id) VALUES ($1, $2) RETURNING menu_id"
+		var id int
+		err := db.QueryRow(query, menu.MenuName, userID).Scan(&id)
 		if err != nil {
-			c.JSON(400, gin.H{"message": "Erro ao criar menu"})
-			fmt.Println(err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao inserir no banco de dados: " + err.Error()})
 			return
 		}
 
-		c.JSON(200, gin.H{"message": "Menu criado com sucesso"})
+		// Adiciona o ID ao objeto Menu
+		menu.MenuId = id
+
+		c.JSON(http.StatusOK, gin.H{
+			"message":   "Menu criado com sucesso!",
+			"menu_name": menu.MenuName,
+		})
 	}
 }
 
-// Função para carregar um menu.
-func (m *Menu) LerMenu(db *sql.DB) gin.HandlerFunc {
-
+// Read
+func (m *Menu) Read(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-
-		// Validação do token
-		token := c.Request.Header.Get("Authorization")
-
-		fmt.Println(token)
-
-		_, err := ValidarOToken(token)
-		if err != nil {
-			c.JSON(401, gin.H{"message": "Token inválido"})
+		// Recuperar o userID do contexto
+		userID, exists := c.Get("userID")
+		if !exists {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
 			return
 		}
 
-		menuID := c.Param("menu_id")
-
+		// Consultar o banco de dados para obter apenas um menu relacionado ao user_id
+		queryMenu := "SELECT menu_id, menu_name FROM menus WHERE user_id = $1 LIMIT 1"
 		var menu Menu
-		err = db.QueryRow("SELECT menu_id, user_id, menu_name, created_at FROM menus WHERE menu_id = $1", menuID).
-			Scan(&menu.Menu_ID, &menu.User_ID, &menu.MenuName, &menu.CreatedAt)
+		err := db.QueryRow(queryMenu, userID).Scan(&menu.MenuId, &menu.MenuName)
 		if err != nil {
-			c.JSON(400, gin.H{"message": "Erro ao carregar menu"})
-			fmt.Println(err)
+			if err == sql.ErrNoRows {
+				// Nenhum menu foi encontrado
+				c.JSON(http.StatusNotFound, gin.H{"message": "Nenhum menu encontrado para o usuário autenticado"})
+			} else {
+				// Erro inesperado no banco de dados
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao buscar o menu no banco de dados: " + err.Error()})
+			}
 			return
 		}
 
-		c.JSON(200, gin.H{"menu": menu})
-	}
-
-}
-
-// Função para calcular as calorias e quantidade de um menu.
-func (m *Menu) CalcularTotalDeCaloriasEQuantidadeDoMenu(db *sql.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		// Validação do token
-		token, err := c.Cookie("token")
+		// Consultar as refeições (meals) relacionadas ao menu
+		queryMeals := "SELECT meal_id, meal_name FROM meals WHERE menu_id = $1"
+		rowsMeals, err := db.Query(queryMeals, menu.MenuId)
 		if err != nil {
-			c.JSON(401, gin.H{"message": "Token inválido"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao buscar as refeições no banco de dados: " + err.Error()})
 			return
 		}
+		defer rowsMeals.Close()
 
-		_, err = ValidarOToken(token)
-		if err != nil {
-			c.JSON(401, gin.H{"message": "Token inválido"})
-			return
+		type Meal struct {
+			MealId   int      `json:"meal_id"`
+			MealName string   `json:"meal_name"`
+			Foods    []string `json:"foods"`
 		}
 
-		menuID := c.Param("menu_id")
-		var totalCalorias int
-		var quantidadeTotal int
+		var meals []Meal
 
-		rows, err := db.Query("SELECT meal_id FROM meals WHERE menu_id = $1", menuID)
-		if err != nil {
-			c.JSON(400, gin.H{"message": "Erro ao buscar refeições no menu"})
-			fmt.Println(err)
-			return
-		}
-		defer rows.Close()
-
-		for rows.Next() {
-			var mealID int
-			err := rows.Scan(&mealID)
+		for rowsMeals.Next() {
+			var meal Meal
+			err := rowsMeals.Scan(&meal.MealId, &meal.MealName)
 			if err != nil {
-				c.JSON(400, gin.H{"message": "Erro ao processar refeições"})
-				fmt.Println(err)
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao processar as refeições: " + err.Error()})
 				return
 			}
 
-			var mealCalories sql.NullInt64
-			var mealQuantity sql.NullInt64
-			err = db.QueryRow("SELECT COALESCE(SUM(calories), 0), COALESCE(SUM(quantity), 0) FROM foods WHERE meal_id = $1", mealID).
-				Scan(&mealCalories, &mealQuantity)
+			// Consultar os alimentos (foods) relacionados à refeição
+			queryFoods := "SELECT food_name FROM foods WHERE meal_id = $1"
+			rowsFoods, err := db.Query(queryFoods, meal.MealId)
 			if err != nil {
-				c.JSON(400, gin.H{"message": "Erro ao calcular calorias e quantidade da refeição"})
-				fmt.Println(err)
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao buscar os alimentos no banco de dados: " + err.Error()})
 				return
 			}
 
-			totalCalorias += int(mealCalories.Int64)
-			quantidadeTotal += int(mealQuantity.Int64)
+			defer rowsFoods.Close()
+
+			// Armazenar os alimentos em um slice
+			var foods []string
+			for rowsFoods.Next() {
+				var foodName string
+				err := rowsFoods.Scan(&foodName)
+				if err != nil {
+					c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao processar os alimentos: " + err.Error()})
+					return
+				}
+				foods = append(foods, foodName)
+			}
+
+			// Adicionar os alimentos à refeição
+			meal.Foods = foods
+			meals = append(meals, meal)
 		}
 
-		if err = rows.Err(); err != nil {
-			c.JSON(500, gin.H{"message": "Erro ao processar refeições no menu"})
-			fmt.Println(err)
-			return
-		}
-
-		c.JSON(200, gin.H{"total_calories": totalCalorias, "total_quantity": quantidadeTotal})
+		// Criar a resposta final
+		c.JSON(http.StatusOK, gin.H{
+			"menu": gin.H{
+				"menu_id":   menu.MenuId,
+				"menu_name": menu.MenuName,
+				"meals":     meals,
+			},
+		})
 	}
 }
