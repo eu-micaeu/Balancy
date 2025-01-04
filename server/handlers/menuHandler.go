@@ -29,9 +29,9 @@ func (m *Menu) Create(db *sql.DB) gin.HandlerFunc {
 		}
 
 		// Query com cláusula RETURNING para retornar o ID do menu criado
-		query := "INSERT INTO menus (menu_name, user_id) VALUES ($1, $2) RETURNING menu_id"
+		query := "INSERT INTO menus (user_id) VALUES ($1, $2) RETURNING menu_id"
 		var id int
-		err := db.QueryRow(query, menu.MenuName, userID).Scan(&id)
+		err := db.QueryRow(query, userID).Scan(&id)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao inserir no banco de dados: " + err.Error()})
 			return
@@ -41,10 +41,12 @@ func (m *Menu) Create(db *sql.DB) gin.HandlerFunc {
 		menu.MenuId = id
 
 		c.JSON(http.StatusOK, gin.H{
-			"message":   "Menu criado com sucesso!",
-			"menu_name": menu.MenuName,
+
+			"message": "Menu criado com sucesso!",
 		})
+
 	}
+
 }
 
 // Read
@@ -58,9 +60,9 @@ func (m *Menu) Read(db *sql.DB) gin.HandlerFunc {
 		}
 
 		// Consultar o banco de dados para obter apenas um menu relacionado ao user_id
-		queryMenu := "SELECT menu_id, menu_name FROM menus WHERE user_id = $1 LIMIT 1"
+		queryMenu := "SELECT menu_id FROM menus WHERE user_id = $1 LIMIT 1"
 		var menu Menu
-		err := db.QueryRow(queryMenu, userID).Scan(&menu.MenuId, &menu.MenuName)
+		err := db.QueryRow(queryMenu, userID).Scan(&menu.MenuId)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				// Nenhum menu foi encontrado
@@ -81,10 +83,16 @@ func (m *Menu) Read(db *sql.DB) gin.HandlerFunc {
 		}
 		defer rowsMeals.Close()
 
+		type Food struct {
+			FoodName string  `json:"food_name"`
+			Quantity float64 `json:"quantity"` // Quantidade do alimento
+			Calories float64 `json:"calories"` // Calorias do alimento
+		}
+
 		type Meal struct {
-			MealId   int      `json:"meal_id"`
-			MealName string   `json:"meal_name"`
-			Foods    []string `json:"foods"`
+			MealId   int    `json:"meal_id"`
+			MealName string `json:"meal_name"`
+			Foods    []Food `json:"foods"`
 		}
 
 		var meals []Meal
@@ -97,8 +105,8 @@ func (m *Menu) Read(db *sql.DB) gin.HandlerFunc {
 				return
 			}
 
-			// Consultar os alimentos (foods) relacionados à refeição
-			queryFoods := "SELECT food_name FROM foods WHERE meal_id = $1"
+			// Consultar os alimentos (foods) relacionados à refeição, incluindo quantidade e calorias
+			queryFoods := "SELECT food_name, quantity, calories FROM foods WHERE meal_id = $1"
 			rowsFoods, err := db.Query(queryFoods, meal.MealId)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao buscar os alimentos no banco de dados: " + err.Error()})
@@ -108,15 +116,15 @@ func (m *Menu) Read(db *sql.DB) gin.HandlerFunc {
 			defer rowsFoods.Close()
 
 			// Armazenar os alimentos em um slice
-			var foods []string
+			var foods []Food
 			for rowsFoods.Next() {
-				var foodName string
-				err := rowsFoods.Scan(&foodName)
+				var food Food
+				err := rowsFoods.Scan(&food.FoodName, &food.Quantity, &food.Calories)
 				if err != nil {
 					c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao processar os alimentos: " + err.Error()})
 					return
 				}
-				foods = append(foods, foodName)
+				foods = append(foods, food)
 			}
 
 			// Adicionar os alimentos à refeição
@@ -127,9 +135,8 @@ func (m *Menu) Read(db *sql.DB) gin.HandlerFunc {
 		// Criar a resposta final
 		c.JSON(http.StatusOK, gin.H{
 			"menu": gin.H{
-				"menu_id":   menu.MenuId,
-				"menu_name": menu.MenuName,
-				"meals":     meals,
+				"menu_id": menu.MenuId,
+				"meals":   meals,
 			},
 		})
 	}

@@ -1,71 +1,46 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { getAuthTokenFromCookies } from '../../utils/cookies';
 import './Main.css';
+import PopUpAdicionarAlimento from '../PopUps/PopUpAdicionarAlimento';
+import { Button } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 function Main() {
     const { isLoggedIn } = useContext(AuthContext);
-    const [menu, setMenu] = useState(null); // O menu completo com refeições e alimentos
+    const [menu, setMenu] = useState(null);
     const [error, setError] = useState(null);
+    const [open, setOpen] = useState(false);
 
-    const fetchOptions = {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getAuthTokenFromCookies()}`,
-        },
-    };
-
-    const fetchMenu = async () => {
+    const fetchMenu = useCallback(async () => {
+        const fetchOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAuthTokenFromCookies()}`,
+            },
+        };
         try {
             const response = await fetch('http://localhost:8080/readMenu', fetchOptions);
             if (!response.ok) {
                 throw new Error(`Erro da API: ${response.status}`);
             }
             const data = await response.json();
-            setMenu(data.menu); // Definir o menu completo na state
+            setMenu(data.menu);
         } catch (error) {
             console.error('Erro ao carregar o menu:', error);
             setError(error.message);
         }
-    };
+    }, []);
 
     useEffect(() => {
         if (isLoggedIn) {
             fetchMenu();
         }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, fetchMenu]);
 
-    const createFood = async (mealId, foodName, calories, quantity) => {
-        try {
-            const response = await fetch('http://localhost:8080/createFood', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getAuthTokenFromCookies()}`,
-                },
-                body: JSON.stringify({
-                    meal_id: parseInt(mealId),
-                    food_name: foodName,
-                    calories: parseInt(calories),
-                    quantity: parseInt(quantity),
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erro da API: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-            alert("Alimento adicionado com sucesso!");
-
-            // Atualiza o menu após adicionar alimento
-            await fetchMenu();
-        } catch (error) {
-            console.error("Erro ao criar alimento:", error);
-            alert("Erro ao adicionar o alimento. Tente novamente.");
-        }
-    };
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     return (
         <main className="main-container">
@@ -74,62 +49,71 @@ function Main() {
                     {menu ? (
                         <>
                             <div className="menu-header">
-                                <h2 className="menu-title">Menu Atual</h2>
-                                <p className="menu-name">{menu.menu_name}</p>
+                                <h2 className="menu-title">Seu Menu</h2>
                             </div>
                             {menu.meals && menu.meals.length > 0 ? (
                                 <div className="meals-container">
-                                    {menu.meals.map((meal) => (
-                                        <div className="meal-item" key={meal.meal_id}>
-                                            <h3>{meal.meal_name}</h3>
-                                            {meal.foods && meal.foods.length > 0 ? (
-                                                <ul className="food-list">
-                                                    {meal.foods.map((food, index) => (
-                                                        <li key={index}>{food}</li>
-                                                    ))}
-                                                </ul>
-                                            ) : (
-                                                <p>Nenhum alimento adicionado nesta refeição.</p>
-                                            )}
-                                        </div>
-                                    ))}
-                                    <div>
-                                        <h3>Adicionar Alimento</h3>
-                                        <form
-                                            onSubmit={(e) => {
-                                                e.preventDefault();
-                                                const mealId = e.target.mealId.value;
-                                                const foodName = e.target.foodName.value;
-                                                const calories = e.target.calories.value;
-                                                const quantity = e.target.quantity.value;
-
-                                                createFood(mealId, foodName, parseFloat(calories), parseInt(quantity));
+                                    <table className="menu-table">
+                                        <tbody>
+                                        {menu.meals.map((meal) => (
+                                            <React.Fragment key={meal.meal_id}>
+                                                <tr>
+                                                    <td colSpan="4" style={{ fontWeight: 'bold', backgroundColor: '#f4f4f4' }}>
+                                                        {meal.meal_name}
+                                                    </td>
+                                                </tr>
+                                                {meal.foods && meal.foods.length > 0 ? (
+                                                    <>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th>Nome do Alimento</th>
+                                                            <th>Quantidade (g/ml)</th>
+                                                            <th>Calorias (kcal)</th>
+                                                        </tr>
+                                                        {meal.foods.map((food, index) => (
+                                                            <tr key={`${meal.meal_id}-food-${index}`}>
+                                                                <td></td>
+                                                                <td>{food.food_name}</td>
+                                                                <td>{food.quantity}</td>
+                                                                <td>{food.calories}</td>
+                                                            </tr>
+                                                        ))}
+                                                    </>
+                                                ) : (
+                                                    <tr style={{ fontStyle: 'italic' }}>
+                                                        <td colSpan="4">Nenhum alimento adicionado nesta refeição.</td>
+                                                    </tr>
+                                                )}
+                                            </React.Fragment>
+                                        ))}
+                                        </tbody>
+                                    </table>
+                                    <div className="add-food-container">
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={handleOpen}
+                                            style={{
+                                                margin: '20px 0',
+                                                backgroundColor: 'transparent',
+                                                boxShadow: 'none',
+                                                color: '#e91e63'
                                             }}
                                         >
-                                            <label>
-                                                Refeição:
-                                                <select name="mealId" required>
-                                                    {menu.meals.map((meal) => (
-                                                        <option key={meal.meal_id} value={meal.meal_id}>
-                                                            {meal.meal_name}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </label>
-                                            <label>
-                                                Nome do Alimento:
-                                                <input type="text" name="foodName" required/>
-                                            </label>
-                                            <label>
-                                                Calorias:
-                                                <input type="number" name="calories" step="0.01" required/>
-                                            </label>
-                                            <label>
-                                                Quantidade:
-                                                <input type="number" name="quantity" min="1" required/>
-                                            </label>
-                                            <button type="submit">Adicionar Alimento</button>
-                                        </form>
+                                            <AddIcon
+                                                style={{
+                                                    width: '50px',
+                                                    color: '#e91e63',
+                                                }}
+                                            />
+                                            Adicionar Alimento
+                                        </Button>
+                                        <PopUpAdicionarAlimento
+                                            open={open}
+                                            handleClose={handleClose}
+                                            fetchMenu={fetchMenu}
+                                            meals={menu.meals}
+                                        />
                                     </div>
                                 </div>
                             ) : (
@@ -146,7 +130,7 @@ function Main() {
                 </div>
             ) : (
                 <div className="menu-guest">
-                    <h1 className="main-title">Bem-Vindo ao Balancy!</h1>
+                    <h1 className="main-title">Balancy</h1>
                     <p className="subtitle">
                         Torne sua alimentação mais saudável, eficiente e organizada. Descubra funcionalidades incríveis:
                     </p>
@@ -154,15 +138,7 @@ function Main() {
                         <div className="card">
                             <h3>Planeje Suas Refeições</h3>
                             <p>
-                                Organize o seu dia com uma visão completa das refeições e mantenha uma alimentação
-                                balanceada.
-                            </p>
-                        </div>
-                        <div className="card">
-                            <h3>Receitas Personalizadas</h3>
-                            <p>
-                                Descubra receitas ajustadas ao seu gosto e às suas restrições alimentares. Sabor e saúde
-                                juntos!
+                                Organize o seu dia com uma visão completa das refeições e mantenha uma alimentação balanceada.
                             </p>
                         </div>
                         <div className="card">
@@ -177,22 +153,13 @@ function Main() {
                         <div className="testimonial-cards">
                             <div className="testimonial-card">
                                 <p>
-                                    "O Balancy transformou minha rotina alimentar. Agora consigo me organizar e manter
-                                    uma dieta mais saudável!"
+                                    "O Balancy transformou minha rotina alimentar. Agora consigo me organizar e manter uma dieta mais saudável!"
                                 </p>
                                 <span>– Maria Silva</span>
                             </div>
                             <div className="testimonial-card">
                                 <p>
-                                    "As receitas personalizadas são incríveis! Tudo o que preciso para cozinhar está lá,
-                                    e ainda respeita minhas restrições."
-                                </p>
-                                <span>– João Oliveira</span>
-                            </div>
-                            <div className="testimonial-card">
-                                <p>
-                                    "Com o controle de calorias, alcancei meus objetivos em poucos meses. Recomendo a
-                                    todos!"
+                                    "Com o controle de calorias, alcancei meus objetivos em poucos meses. Recomendo a todos!"
                                 </p>
                                 <span>– Ana Costa</span>
                             </div>
