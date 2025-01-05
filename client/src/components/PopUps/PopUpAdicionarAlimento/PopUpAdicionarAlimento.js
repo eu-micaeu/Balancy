@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Box, TextField, MenuItem, Button } from '@mui/material';
 import './PopUpAdicionarAlimento.css';
-import { getAuthTokenFromCookies } from '../../utils/cookies';
+import { getAuthTokenFromCookies } from '../../../utils/cookies';
 
 export default function PopUpAdicionarAlimento({ open, handleClose, fetchMenu, meals }) {
     const [newFood, setNewFood] = useState({

@@ -15,6 +15,4 @@ func MealRoutes(r *gin.Engine, db *sql.DB) {
 
 	r.POST("/createMeal", middlewares.AuthMiddleware(), mealHandler.Create(db))
 
-	r.GET("/readMeals", middlewares.AuthMiddleware(), mealHandler.Read(db))
-
 }

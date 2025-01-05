@@ -84,6 +84,7 @@ func (m *Menu) Read(db *sql.DB) gin.HandlerFunc {
 		defer rowsMeals.Close()
 
 		type Food struct {
+			FoodId   int     `json:"food_id"`
 			FoodName string  `json:"food_name"`
 			Quantity float64 `json:"quantity"` // Quantidade do alimento
 			Calories float64 `json:"calories"` // Calorias do alimento
@@ -106,7 +107,7 @@ func (m *Menu) Read(db *sql.DB) gin.HandlerFunc {
 			}
 
 			// Consultar os alimentos (foods) relacionados à refeição, incluindo quantidade e calorias
-			queryFoods := "SELECT food_name, quantity, calories FROM foods WHERE meal_id = $1"
+			queryFoods := "SELECT food_id, food_name, quantity, calories FROM foods WHERE meal_id = $1"
 			rowsFoods, err := db.Query(queryFoods, meal.MealId)
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao buscar os alimentos no banco de dados: " + err.Error()})
@@ -119,7 +120,7 @@ func (m *Menu) Read(db *sql.DB) gin.HandlerFunc {
 			var foods []Food
 			for rowsFoods.Next() {
 				var food Food
-				err := rowsFoods.Scan(&food.FoodName, &food.Quantity, &food.Calories)
+				err := rowsFoods.Scan(&food.FoodId, &food.FoodName, &food.Quantity, &food.Calories)
 				if err != nil {
 					c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao processar os alimentos: " + err.Error()})
 					return

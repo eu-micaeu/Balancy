@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/eu-micaeu/Balancy/server/models"
 	"github.com/gin-gonic/gin"
 )
@@ -55,62 +54,48 @@ func (f *Food) Create(db *sql.DB) gin.HandlerFunc {
 	}
 }
 
-// Read
-func (f *Food) Read(db *sql.DB) gin.HandlerFunc {
+// Delete
+
+// Delete
+func (f *Food) Delete(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Recupera o userId do contexto
+		// Recupera o userId do contexto (extraído do token JWT)
 		userID, exists := c.Get("userID")
 		if !exists {
 			c.JSON(401, gin.H{"error": "User not authorized"})
 			return
 		}
 
-		// Prepara a query para buscar os alimentos associados ao usuário autenticado
-		query := `
-			SELECT 
-				foods.food_id, 
-				foods.meal_id, 
-				foods.food_name, 
-				foods.calories, 
-				foods.quantity 
+		// Recupera o food_id do parâmetro da URL
+		foodID := c.Param("food_id")
+
+		// Valida se o food_id pertence ao usuário autenticado
+		queryValidateFood := `
+			SELECT foods.food_id 
 			FROM foods
-			JOIN meals ON foods.meal_id = meals.meal_id
-			JOIN menus ON meals.menu_id = menus.menu_id
-			WHERE menus.user_id = $1
+			JOIN meals ON meals.meal_id = foods.meal_id
+			JOIN menus ON menus.menu_id = meals.menu_id
+			WHERE menus.user_id = $1 AND foods.food_id = $2
 		`
-
-		// Executa a query
-		rows, err := db.Query(query, userID)
+		var validFoodID int
+		err := db.QueryRow(queryValidateFood, userID, foodID).Scan(&validFoodID)
 		if err != nil {
-			c.JSON(500, gin.H{"error": "Failed to retrieve food entries"})
-			fmt.Println("Erro ao executar query:", err) // Log para depuração
-			return
-		}
-		defer rows.Close()
-
-		// Define uma lista para armazenar os resultados
-		var foods []Food
-		for rows.Next() {
-			var food Food
-			// Verifica e armazena os dados retornados
-			if err := rows.Scan(&food.FoodId, &food.MealId, &food.FoodName, &food.Calories, &food.Quantity); err != nil {
-				c.JSON(500, gin.H{"error": "Failed to parse food entries"})
-				fmt.Println("Erro ao fazer scan das rows:", err) // Log para depuração
-				return
-			}
-			foods = append(foods, food)
-		}
-
-		// Verifica se houve erros durante a iteração das linhas
-		if err := rows.Err(); err != nil {
-			c.JSON(500, gin.H{"error": "Failed during food entries iteration"})
-			fmt.Println("Erro ao iterar rows:", err) // Log para depuração
+			c.JSON(404, gin.H{"error": "Food not found or unauthorized"})
 			return
 		}
 
-		// Retorna os alimentos encontrados
-		c.JSON(200, gin.H{
-			"foods": foods,
-		})
+		// Deleta a comida da tabela foods
+		queryDelete := `
+			DELETE FROM foods
+			WHERE food_id = $1
+		`
+		_, err = db.Exec(queryDelete, validFoodID)
+		if err != nil {
+			c.JSON(500, gin.H{"error": "Failed to delete food entry"})
+			return
+		}
+
+		// Retorna uma mensagem de sucesso
+		c.JSON(200, gin.H{"message": "Food entry deleted successfully"})
 	}
 }

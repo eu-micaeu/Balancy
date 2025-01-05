@@ -82,12 +82,6 @@
     background-color: #fff;
 }
 
-.menu-table tbody tr:hover {
-    background-color: #ffd9e6;
-    transform: scale(1.01);
-    transition: all 0.3s ease-in-out;
-}
-
 /* Responsividade para tabela */
 @media (max-width: 768px) {
     .menu-table {

@@ -82,7 +82,7 @@ func GerarToken(userID int) (string, error) {
 	// Configurando as reivindicações do token
 	claims := jwt.MapClaims{
 		"userID": userID,
-		"exp":    time.Now().Add(time.Minute * 5).Unix(), // Expiração: 5 minutos
+		"exp":    time.Now().Add(time.Hour * 5).Unix(), // Expiração: 5 minutos
 		"iat":    time.Now().Unix(),
 	}
 
