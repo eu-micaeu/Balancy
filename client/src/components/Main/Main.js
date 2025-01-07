@@ -4,16 +4,14 @@ import { getAuthTokenFromCookies } from '../../utils/cookies';
 import './Main.css';
 import PopUpAdicionarAlimento from '../PopUps/PopUpAdicionarAlimento/PopUpAdicionarAlimento';
 import PopUpAdicionarRefeicao from '../PopUps/PopUpAdicionarRefeicao/PopUpAdicionarRefeicao';
-import { Button, IconButton } from '@mui/material';
+import { Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 
 function Main() {
     const { isLoggedIn } = useContext(AuthContext);
     const [menu, setMenu] = useState(null);
     const [error, setError] = useState(null);
-    const [open, setOpen] = useState(false);
 
     const fetchMenu = useCallback(async () => {
         const fetchOptions = {
@@ -81,62 +79,63 @@ function Main() {
     const handleCloseAlimento = () => setOpenAlimento(false);
 
     return (
-        <main className="main-container">
+
+        <main>
+
             {isLoggedIn ? (
+
                 <div className="menu-container">
+
                     {menu ? (
+
                         <>
-                            <div className="menu-header">
-                                <h2 className="menu-title">Seu Menu</h2>
-                            </div>
+
+                            <h2 className="menu-title">Seu Menu</h2>
+
                             {menu.meals && menu.meals.length > 0 ? (
+
                                 <div className="meals-container">
-                                    <table className="menu-table">
-                                        <tbody>
-                                        {menu.meals.map((meal) => (
-                                            <React.Fragment key={meal.meal_id}>
+
+                                    <table>
+
+                                        <tbody> {menu.meals.map((meal) => (<React.Fragment key={meal.meal_id}>
+
+                                            <tr>
+
+                                                <td colSpan="3" className="mealName">{meal.meal_name}</td>
+
+                                            </tr>
+
+                                            {meal.foods && meal.foods.length > 0 ? (<>
+
                                                 <tr>
-                                                    <td colSpan="5"
-                                                        style={{fontWeight: 'bold', backgroundColor: '#f4f4f4'}}>
-                                                        {meal.meal_name}
-                                                    </td>
+
+                                                    <th>Nome do Alimento</th>
+
+                                                    <th>Quantidade (g/ml)</th>
+
+                                                    <th>Calorias (kcal)</th>
+
                                                 </tr>
-                                                {meal.foods && meal.foods.length > 0 ? (
-                                                    <>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th>Nome do Alimento</th>
-                                                            <th>Quantidade (g/ml)</th>
-                                                            <th>Calorias (kcal)</th>
-                                                            <th></th>
-                                                        </tr>
-                                                        {meal.foods.map((food, index) => (
-                                                            <tr key={`${meal.meal_id}-food-${index}`}>
-                                                                <td></td>
-                                                                <td>{food.food_name}</td>
-                                                                <td>{food.quantity}</td>
-                                                                <td>{food.calories}</td>
-                                                                <td>
-                                                                    <IconButton
-                                                                        color="secondary"
-                                                                        size="small"
-                                                                        onClick={() => handleDeleteFood(food.food_id)}
-                                                                    >
-                                                                        <DeleteIcon/>
-                                                                    </IconButton>
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </>
-                                                ) : (
-                                                    <tr style={{fontStyle: 'italic'}}>
-                                                        <td colSpan="5">Nenhum alimento adicionado nesta refeição.</td>
-                                                    </tr>
-                                                )}
-                                            </React.Fragment>
-                                        ))}
-                                        </tbody>
+
+                                                {meal.foods.map((food, index) => (
+
+                                                    <tr key={`${meal.meal_id}-food-${index}`}>
+
+                                                        <td className="foodCaracs">{food.food_name}</td>
+
+                                                        <td className="foodCaracs">{food.quantity}</td>
+
+                                                        <td className="foodCaracs">{food.calories}</td>
+
+                                                    </tr>))} </>) : (<tr style={{fontStyle: 'italic'}}>
+
+                                                <td colSpan="3">Nenhum alimento adicionado nesta refeição.</td>
+
+                                            </tr>)} </React.Fragment>))} </tbody>
+
                                     </table>
+
                                     <div className="add-meal-container">
                                         <Button
                                             variant="contained"
@@ -198,8 +197,6 @@ function Main() {
                                 </div>
                             )}
                         </>
-                    ) : error ? (
-                        <p className="error-message">{error}</p>
                     ) : (
                         <p>Carregando menu...</p>
                     )}
@@ -236,16 +233,27 @@ function Main() {
                             </div>
                             <div className="testimonial-card">
                                 <p>
+
                                     "Com o controle de calorias, alcancei meus objetivos em poucos meses. Recomendo a todos!"
+
                                 </p>
+
                                 <span>– Ana Costa</span>
+
                             </div>
+
                         </div>
+
                     </section>
+
                 </div>
+
             )}
+
         </main>
+
     );
+
 }
 
 export default Main;

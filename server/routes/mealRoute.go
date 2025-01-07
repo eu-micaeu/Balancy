@@ -15,4 +15,6 @@ func MealRoutes(r *gin.Engine, db *sql.DB) {
 
 	r.POST("/createMeal", middlewares.AuthMiddleware(), mealHandler.Create(db))
 
+	r.DELETE("/deleteMeal/:meal_id", middlewares.AuthMiddleware(), mealHandler.Delete(db))
+
 }

@@ -57,3 +57,50 @@ func (m *Meal) Create(db *sql.DB) gin.HandlerFunc {
 		})
 	}
 }
+
+// Delete
+
+// Delete
+func (m *Meal) Delete(db *sql.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		userID, exists := c.Get("userID")
+		if !exists {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
+			return
+		}
+
+		// Obter meal_id do parâmetro da URL
+		mealID := c.Param("meal_id")
+		if mealID == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "meal_id is required"})
+			return
+		}
+
+		// Validar se a refeição pertence ao usuário
+		var menuID int
+		queryValidateMeal := `SELECT m.menu_id FROM meals AS m
+							  JOIN menus AS mn ON m.menu_id = mn.menu_id
+							  WHERE m.meal_id = $1 AND mn.user_id = $2 LIMIT 1`
+		err := db.QueryRow(queryValidateMeal, mealID, userID).Scan(&menuID)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(http.StatusNotFound, gin.H{"error": "Meal not found or does not belong to user"})
+				return
+			}
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to validate meal", "details": err.Error()})
+			return
+		}
+
+		// Deletar a refeição do banco de dados
+		queryDeleteMeal := `DELETE FROM meals WHERE meal_id = $1`
+		_, err = db.Exec(queryDeleteMeal, mealID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete meal", "details": err.Error()})
+			return
+		}
+
+		// Retornar resposta de sucesso
+		c.JSON(http.StatusOK, gin.H{"message": "Meal deleted successfully"})
+	}
+}
