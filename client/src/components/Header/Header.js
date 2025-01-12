@@ -175,6 +175,8 @@ function Header() {
 
                                 marginRight: '20px',
 
+                                fontFamily: 'Popins, sans-serif',
+
                             }}
 
                             onMouseEnter={(e) => (e.target.style.backgroundColor = '#D50062')}
@@ -204,6 +206,8 @@ function Header() {
                                 padding: '10px 20px',
 
                                 marginRight: '20px',
+
+                                fontFamily: 'Popins, sans-serif',
 
                             }}
 

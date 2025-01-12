@@ -55,8 +55,6 @@ func (f *Food) Create(db *sql.DB) gin.HandlerFunc {
 }
 
 // Delete
-
-// Delete
 func (f *Food) Delete(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Recupera o userId do contexto (extraído do token JWT)

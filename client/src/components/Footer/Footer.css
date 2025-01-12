@@ -1,16 +1,14 @@
 footer {
-    background-color: #ffd9e6; /* Cor leve como no Main */
+    background-color: #ffd9e6; 
     padding: 15px 0px;
     text-align: center;
-    position: relative;
-    bottom: 0;
     width: 100%;
     border-top: 2px solid #e91e63;
     font-family: 'Poppins', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #333;
+    color: #333;;
 }
 
 .footer-content {

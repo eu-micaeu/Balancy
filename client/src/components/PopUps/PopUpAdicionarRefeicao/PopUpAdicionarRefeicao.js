@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Box, TextField, Button } from '@mui/material';
-import './PopUpAdicionarRefeicao.css';
+import '../PopUps.css';
 import { getAuthTokenFromCookies } from '../../../utils/cookies';
 
 export default function PopUpAdicionarRefeicao({ open, handleClose, fetchMenu, meals }) {
@@ -41,6 +41,7 @@ export default function PopUpAdicionarRefeicao({ open, handleClose, fetchMenu, m
     };
 
     return (
+
         <Modal open={open} onClose={handleClose}>
 
             <Box className="popup-container">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Box, TextField, MenuItem, Button } from '@mui/material';
-import './PopUpAdicionarAlimento.css';
+import '../PopUps.css';
 import { getAuthTokenFromCookies } from '../../../utils/cookies';
 
 export default function PopUpAdicionarAlimento({ open, handleClose, fetchMenu, meals }) {
@@ -47,6 +47,7 @@ export default function PopUpAdicionarAlimento({ open, handleClose, fetchMenu, m
     };
 
     return (
+
         <Modal open={open} onClose={handleClose}>
 
             <Box className="popup-container">

@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Index.css';
 
 // Componentes
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
+
+// Contexto de autenticação
+import { AuthContext } from '../../contexts/AuthContext';
 
 const Card = ({ title, description }) => (
     <div className="card">
@@ -24,37 +28,34 @@ const FEATURES = [
 ];
 
 function Index() {
+    const { isLoggedIn, loading } = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!loading && isLoggedIn) {
+            navigate('/home', { replace: true });
+        }
+    }, [isLoggedIn, loading, navigate]);
+
+    if (loading) {
+        return <div>Carregando...</div>; // Exibe um loader enquanto verifica o status de login
+    }
 
     return (
-
         <>
-
             <Header />
-
             <main>
-
                 <h1>Balancy</h1>
-
                 <p>Torne sua alimentação mais saudável, eficiente e organizada. Descubra funcionalidades incríveis:</p>
-
                 <div className="cards-container">
-
                     {FEATURES.map((feature, index) => (
-
                         <Card key={index} title={feature.title} description={feature.description} />
-
                     ))}
-
                 </div>
-
             </main>
-
             <Footer />
-
         </>
-
     );
-
 }
 
 export default Index;
