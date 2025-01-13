@@ -3,12 +3,12 @@ version: '3.8'
 services:
   app:
     build:
-      context: .
+      context: .  # Diretório de contexto para o Dockerfile
     ports:
-      - "3000:80"   # Porta do React para o host
-      - "8080:8080" # Porta do Go server para o host
+      - "3000:3000"   # Mapeia a porta 3000 do contêiner para a 3000 no host (React)
+      - "8080:8080"   # Mapeia a porta 8080 do contêiner para a 8080 no host (Go server)
     env_file:
-      - ./server/.env # Monta o arquivo .env no container
+      - ./server/.env # Monta o arquivo .env no contêiner
     networks:
       - app-network
 
