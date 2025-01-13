@@ -40,7 +40,7 @@ COPY --from=build /app/build /usr/share/nginx/html
 COPY --from=go-build /app/main /usr/local/bin/main
 
 # Expõe as portas para o React e o Go
-EXPOSE 3000
+EXPOSE 80
 EXPOSE 8080
 
 # Inicia o nginx para servir o React e o servidor Go
