@@ -1,47 +1,43 @@
-# Etapa 1: Construção da aplicação React (Node.js)
-FROM node:18-alpine AS build
 
-# Define o diretório de trabalho para o Node.js
+################
+
+# Etapa 1: Build do React
+FROM node:18-alpine AS react-build
+
 WORKDIR /app
 
-# Copia os arquivos de dependências e instala as dependências
+# Copia os arquivos necessários para o build do React
 COPY client/package*.json ./
 RUN npm install
-
-# Copia o restante dos arquivos e cria a build do React
 COPY client . 
 RUN npm run build
 
-# Etapa 2: Construção da aplicação Go
+# Etapa 2: Build do backend em Go
 FROM golang:1.23.4-alpine3.21 AS go-build
 
-# Define o diretório de trabalho para o Go
 WORKDIR /app
 
-# Copia os arquivos necessários para o Go Modules
+# Copia os arquivos necessários para o build do Go
 COPY server/go.mod server/go.sum ./
-
-# Baixa as dependências do módulo
 RUN go mod tidy
-
-# Copia o restante dos arquivos do código Go
 COPY server . 
 
-# Compila o código Go
+# Compila o servidor Go
 RUN go build -o main .
 
-# Etapa final: Configuração do nginx com o React e execução do Go
-FROM nginx:alpine
+# Etapa Final: Combinação de React e Go
+FROM alpine:3.21
 
-# Copia os arquivos de build do React para o nginx
-COPY --from=build /app/build /usr/share/nginx/html
+WORKDIR /app
 
-# Copia o binário compilado do Go para a imagem final
-COPY --from=go-build /app/main /usr/local/bin/main
+# Copia os arquivos estáticos do React
+COPY --from=react-build /app/build ./client/build
 
-# Expõe as portas para o React e o Go
-EXPOSE 80
+# Copia o binário do servidor Go
+COPY --from=go-build /app/main .
+
+# Define a porta exposta pelo servidor
 EXPOSE 8080
 
-# Inicia o nginx para servir o React e o servidor Go
-CMD ["sh", "-c", "nginx -g 'daemon off;' & /usr/local/bin/main"]
+# Comando para iniciar o servidor
+CMD ["./main"]
