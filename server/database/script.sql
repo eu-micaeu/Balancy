@@ -32,7 +32,6 @@ CREATE TABLE menus (
 
     menu_id SERIAL PRIMARY KEY,
     user_id INT NOT NULL UNIQUE, -- UNIQUE para garantir que cada usuário tenha apenas um menu
-    menu_name VARCHAR(100) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 
 );
