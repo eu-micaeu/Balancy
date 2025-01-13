@@ -1,19 +1,14 @@
 version: '3.8'
 
 services:
-  client:
+  app:
     build:
-      context: ./client
+      context: .
     ports:
-      - "3000:80" # Porta do React para o host
-    networks:
-      - app-network
-
-  server:
-    build:
-      context: ./server
-    ports:
+      - "3000:80"   # Porta do React para o host
       - "8080:8080" # Porta do Go server para o host
+    env_file:
+      - ./server/.env # Monta o arquivo .env no container
     networks:
       - app-network
 
