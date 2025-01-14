@@ -32,14 +32,6 @@ func main() {
 	// Rota para validação de token
 	r.GET("/validateToken", middlewares.ValidarTokenHandler)
 
-	// Serve arquivos estáticos do React (build)
-	r.Static("/static", "./client/build/static")
-
-	// Serve o index.html para rotas desconhecidas (SPA)
-	r.NoRoute(func(c *gin.Context) {
-		c.File("./client/build/index.html")
-	})
-
 	// Executa o servidor
 	err = r.Run()
 	if err != nil {

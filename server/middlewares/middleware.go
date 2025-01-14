@@ -15,10 +15,13 @@ func CorsMiddleware() gin.HandlerFunc {
 	config := cors.DefaultConfig()
 
 	// Permitir origens específicas (alterar para domínios confiáveis em produção)
-	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowOrigins = []string{"*"}
 
-	// Permitir cabeçalhos adicionais, como "Authorization"
-	config.AllowHeaders = append(config.AllowHeaders, "Authorization")
+	// Permitir métodos específicos
+	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}
+
+	// Permitir cabeçalhos específicos
+	config.AllowHeaders = []string{"Authorization", "Content-Type", "Origin"}
 
 	return cors.New(config)
 }
