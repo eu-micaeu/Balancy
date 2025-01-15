@@ -14,6 +14,16 @@ func main() {
     r.Use(middlewares.CorsMiddleware())
     r.Use(middlewares.CacheCleanerMiddleware())
 
+    // Servir arquivos estáticos do React
+    r.Static("/static", "./build/static")
+    r.StaticFile("/favicon.ico", "./build/favicon.ico")
+    r.StaticFile("/manifest.json", "./build/manifest.json")
+
+    // Configurar a rota base para o React
+    r.NoRoute(func(c *gin.Context) {
+        c.File("./build/index.html")
+    })
+
     // Conecta ao banco de dados
     db, err := database.NewDB()
     if err != nil {
