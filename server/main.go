@@ -1,21 +1,12 @@
 package main
 
 import (
-    "log"
     "net/http"
     "github.com/eu-micaeu/Balancy/server/database"
     "github.com/eu-micaeu/Balancy/server/middlewares"
     "github.com/eu-micaeu/Balancy/server/routes"
     "github.com/gin-gonic/gin"
-    "github.com/joho/godotenv"
 )
-
-func init() {
-    err := godotenv.Load()
-    if err != nil {
-        log.Fatalf("Erro ao carregar o arquivo .env: %v", err)
-    }
-}
 
 func main() {
     r := gin.Default()
