@@ -42,6 +42,8 @@ import PopUpAdicionarRefeicao from '../../components/PopUps/PopUpAdicionarRefeic
 
 function Home() {
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     const { isLoggedIn } = useContext(AuthContext);
 
     const [menu, setMenu] = useState(null);
@@ -66,7 +68,7 @@ function Home() {
 
         try {
 
-            const response = await fetch('http://localhost:8080/readMenu', fetchOptions);
+            const response = await fetch(`${apiUrl}/readMenu`, fetchOptions);
 
             if (!response.ok) {
 
@@ -118,7 +120,7 @@ function Home() {
 
         try {
 
-            const response = await fetch(`http://localhost:8080/deleteFood/${foodId}`, fetchOptions);
+            const response = await fetch(`${apiUrl}/deleteFood/${foodId}`, fetchOptions);
 
             if (!response.ok) {
 
@@ -145,7 +147,7 @@ function Home() {
             },
         };
         try {
-            const response = await fetch(`http://localhost:8080/deleteMeal/${mealId}`, fetchOptions);
+            const response = await fetch(`${apiUrl}/deleteMeal/${mealId}`, fetchOptions);
             if (!response.ok) {
                 throw new Error('Erro ao excluir a refeição.');
             }
