@@ -29,6 +29,13 @@ func main() {
 	// Rota para validação de token
 	r.GET("/validateToken", middlewares.ValidarTokenHandler)
 
+	// Rota para servir todo o React (Front-End)
+	r.StaticFile("/", "../client/build/index.html")
+	r.Static("/static", "../client/build/static")
+
+	// Logo
+	r.StaticFile("/logoPrincipal.png", "../client/build/logoPrincipal.png")
+
 	// Inicia o servidor
 	err = r.Run()
 	if err != nil {
