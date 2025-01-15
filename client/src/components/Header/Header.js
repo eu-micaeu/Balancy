@@ -291,6 +291,20 @@ function Header() {
 
                             <TextField
 
+                                label="Email"
+
+                                fullWidth
+
+                                type="email"
+
+                                value={email}
+
+                                onChange={(e) => setEmail(e.target.value)}
+
+                                style={{marginBottom: 20}} />
+
+                            <TextField
+
                                 label="Full Name"
 
                                 fullWidth
