@@ -29,16 +29,6 @@ func main() {
 	// Rota para validação de token
 	r.GET("/validateToken", middlewares.ValidarTokenHandler)
 
-	// Servir arquivos estáticos do React
-	r.Static("/static", "./build/static")
-	r.StaticFile("/favicon.ico", "./build/favicon.ico")
-	r.StaticFile("/manifest.json", "./build/manifest.json")
-
-	// Configurar a rota base para o React
-	r.NoRoute(func(c *gin.Context) {
-		c.File("./build/index.html")
-	})
-
 	// Inicia o servidor
 	err = r.Run()
 	if err != nil {
