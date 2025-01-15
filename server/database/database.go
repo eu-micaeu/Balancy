@@ -13,7 +13,7 @@ import (
 func NewDB() (*sql.DB, error) {
 
 	// Carregar variáveis de ambiente do arquivo .env
-	err := godotenv.Load("../.env")
+	err := godotenv.Load()
 
 	if err != nil {
 
