@@ -18,6 +18,8 @@ import { RadioGroup, FormControlLabel, Radio, FormLabel, FormControl } from '@mu
 import { useNavigate } from 'react-router-dom'; // Importe o useNavigate
 
 function Header() {
+
+    const apiUrl = process.env.API_URL;
     
     const [open, setOpen] = useState(false);
     const [isRegister, setIsRegister] = useState(false);
@@ -53,7 +55,7 @@ function Header() {
 
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://localhost:8080/login', {
+            const response = await fetch('${apiUrl}/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
