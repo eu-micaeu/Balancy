@@ -5,6 +5,8 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
 
+    const apiUrl = process.env.REACT_APP_API_URL;
+
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const [loading, setLoading] = useState(true);
@@ -17,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
             try {
 
-                const response = await fetch('http://localhost:8080/validateToken', {
+                const response = await fetch(`${apiUrl}/validateToken`, {
 
                     method: 'GET',
 
