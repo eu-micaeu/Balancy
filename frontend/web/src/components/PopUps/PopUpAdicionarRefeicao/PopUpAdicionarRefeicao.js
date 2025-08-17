@@ -46,7 +46,6 @@ export default function PopUpAdicionarRefeicao({ open, handleClose, fetchMenu, m
         <Modal open={open} onClose={handleClose}>
 
             <Box className="popup-container">
-                <h2>Adicionar Refeição</h2>
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();

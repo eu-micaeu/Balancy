@@ -267,63 +267,7 @@ function Home() {
                     ) : ( // tem menu
                         <>
                             {/* Calorias summary */}
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '12px', alignItems: 'center' }}>
-                                {user ? (
-                                    (() => {
-                                        // Calcular TMB (Mifflin-St Jeor) e TMR com base em activity_level
-                                        const age = Number(user.age) || 0;
-                                        const weight = Number(user.weight) || 0; // kg
-                                        const height = Number(user.height) || 0; // cm
-                                        const gender = (user.gender || '').toLowerCase();
 
-                                        // Mifflin-St Jeor
-                                        let tmb = 0;
-                                        if (gender === 'male' || gender === 'masculino' || gender === 'm') {
-                                            tmb = 10 * weight + 6.25 * height - 5 * age + 5;
-                                        } else {
-                                            tmb = 10 * weight + 6.25 * height - 5 * age - 161;
-                                        }
-
-                                        // activity level factor
-                                        const activity = (user.activity_level || '').toLowerCase();
-                                        let factor = 1.2;
-                                        if (activity.includes('sedent') || activity === 'sedentary') factor = 1.2;
-                                        else if (activity.includes('light')) factor = 1.375;
-                                        else if (activity.includes('moderate')) factor = 1.55;
-                                        else if (activity.includes('active') || activity.includes('very')) factor = 1.725;
-
-                                        const tmr = Math.round(tmb * factor);
-
-                                        // soma calorias consumidas no menu
-                                        let consumed = 0;
-                                        if (menu && menu.meals) {
-                                            menu.meals.forEach((m) => {
-                                                if (m.foods && m.foods.length > 0) {
-                                                    m.foods.forEach((f) => {
-                                                        consumed += Number(f.calories) || 0;
-                                                    });
-                                                }
-                                            });
-                                        }
-
-                                        const deficit = tmr - consumed;
-
-                                        return (
-                                            <>
-                                                <div style={{ textAlign: 'center' }}>
-                                                    <div style={{ marginBottom: 4 }}>Calorias permitidas hoje (TMR): <strong>{tmr} kcal</strong></div>
-                                                    <div>Você consumiu: <strong>{consumed} kcal</strong></div>
-                                                </div>
-                                                <div className="calories-badge" title={deficit >= 0 ? `Deficit de ${deficit} kcal` : `Excedeu em ${-deficit} kcal`}>
-                                                    {deficit >= 500 ? 'Déficit ≥ 500 kcal' : deficit > 0 ? `Déficit ${deficit} kcal` : `Excedeu ${-deficit} kcal`}
-                                                </div>
-                                            </>
-                                        );
-                                    })()
-                                ) : (
-                                    <div>Carregando dados do usuário...</div>
-                                )}
-                            </div>
                             {menu.meals && menu.meals.length > 0 ? (
                                 <div className="meals-container">
                                     <TableContainer component={Paper}>
@@ -420,7 +364,106 @@ function Home() {
                                         <Button variant="contained" color="primary" onClick={handleOpenRefeicao} startIcon={<AddIcon />}>Adicionar Refeição</Button>
                                     </div>
 
-                                    {/* Popups moved outside so they exist even when no meals are present */}
+                                    <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', margin: '50px', alignItems: 'center' }}>
+                                        {user ? (
+                                            (() => {
+                                                const age = Number(user.age) || 0;
+                                                const weight = Number(user.weight) || 0; // kg
+                                                const height = Number(user.height) || 0; // cm
+                                                const gender = (user.gender || '').toLowerCase();
+
+                                                // Mifflin-St Jeor para TMB (Taxa Metabólica Basal)
+                                                let tmb = 0;
+                                                if (gender === 'male' || gender === 'masculino' || gender === 'm') {
+                                                    tmb = 10 * weight + 6.25 * height - 5 * age + 5;
+                                                } else {
+                                                    tmb = 10 * weight + 6.25 * height - 5 * age - 161;
+                                                }
+
+                                                // Fator de atividade física para calcular TDEE
+                                                const activity = (user.activity_level || '').toLowerCase();
+                                                let activityFactor = 1.2;
+                                                if (activity.includes('sedent') || activity === 'sedentary') activityFactor = 1.2;
+                                                else if (activity.includes('light')) activityFactor = 1.375;
+                                                else if (activity.includes('moderate')) activityFactor = 1.55;
+                                                else if (activity.includes('active') || activity.includes('very')) activityFactor = 1.725;
+                                                else if (activity.includes('extra')) activityFactor = 1.9;
+
+                                                // TDEE (Total Daily Energy Expenditure) = TMB × Fator de Atividade
+                                                const tdee = Math.round(tmb * activityFactor);
+
+                                                // soma calorias consumidas no menu
+                                                let consumed = 0;
+                                                if (menu && menu.meals) {
+                                                    menu.meals.forEach((m) => {
+                                                        if (m.foods && m.foods.length > 0) {
+                                                            m.foods.forEach((f) => {
+                                                                consumed += Number(f.calories) || 0;
+                                                            });
+                                                        }
+                                                    });
+                                                }
+
+                                                const deficit = tdee - consumed;
+
+                                                // Determina o status baseado no déficit
+                                                let status = '';
+                                                let statusColor = '#43cea2'; // verde padrão
+
+                                                if (deficit >= 500) {
+                                                    status = 'Déficit Agressivo (≥500 kcal)';
+                                                    statusColor = '#e74c3c'; // vermelho
+                                                } else if (deficit >= 300) {
+                                                    status = `Déficit Moderado (${deficit} kcal)`;
+                                                    statusColor = '#f39c12'; // laranja
+                                                } else if (deficit > 50) {
+                                                    status = `Déficit Leve (${deficit} kcal)`;
+                                                    statusColor = '#27ae60'; // verde
+                                                } else if (deficit >= -50) {
+                                                    status = 'Manutenção';
+                                                    statusColor = '#3498db'; // azul
+                                                } else {
+                                                    status = `Excedeu ${-deficit} kcal`;
+                                                    statusColor = '#e74c3c'; // vermelho
+                                                }
+
+                                                return (
+                                                    <div style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        flexDirection: 'column',
+                                                        margin: '10px',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <div style={{ textAlign: 'center' }}>
+                                                            <div style={{ marginBottom: 4 }}>
+                                                                <strong>TDEE (Gasto Calórico Diário):</strong> {tdee} kcal
+                                                            </div>
+                                                            <div style={{ marginBottom: 4 }}>
+                                                                <strong>Consumido:</strong> {consumed} kcal
+                                                            </div>
+                                                            <div style={{ fontSize: '0.9em', color: '#666' }}>
+                                                                TMB: {Math.round(tmb)} kcal | Fator atividade: {activityFactor}x
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            className="calories-badge"
+                                                            style={{ backgroundColor: statusColor }}
+                                                            title={
+                                                                deficit >= 0
+                                                                    ? `Déficit de ${deficit} kcal para manutenção`
+                                                                    : `Excedeu em ${-deficit} kcal`
+                                                            }
+                                                        >
+                                                            {status}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })()
+                                        ) : (
+                                            <div>Carregando dados do usuário...</div>
+                                        )}
+                                    </div>
                                 </div>
                             ) : (
                                 <div style={{ textAlign: 'center' }}>

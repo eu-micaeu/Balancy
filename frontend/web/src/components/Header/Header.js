@@ -7,6 +7,8 @@ import {
     TextField,
     DialogTitle,
     IconButton,
+    ThemeProvider as MuiThemeProvider,
+    createTheme,
 } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
 import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
@@ -38,6 +40,144 @@ function Header() {
     const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
     const { theme, toggleTheme } = useContext(ThemeContext);
     const navigate = useNavigate();
+
+    // Criar tema personalizado do Material-UI baseado no tema atual
+    const muiTheme = createTheme({
+        palette: {
+            mode: theme,
+            primary: {
+                main: '#B00020',
+                dark: '#8A0018',
+            },
+            background: {
+                paper: theme === 'dark' ? '#1a1a1a' : '#ffffff',
+                default: theme === 'dark' ? '#121212' : '#ffffff',
+            },
+            text: {
+                primary: theme === 'dark' ? '#ffffff' : '#000000',
+                secondary: theme === 'dark' ? '#cccccc' : '#666666',
+            },
+            divider: theme === 'dark' ? '#333333' : '#e0e0e0',
+        },
+        components: {
+            MuiTextField: {
+                styleOverrides: {
+                    root: {
+                        '& .MuiOutlinedInput-root': {
+                            backgroundColor: theme === 'dark' ? '#2a2a2a' : '#ffffff',
+                            '& fieldset': {
+                                borderColor: theme === 'dark' ? '#555555' : '#cccccc',
+                            },
+                            '&:hover fieldset': {
+                                borderColor: '#B00020',
+                            },
+                            '&.Mui-focused fieldset': {
+                                borderColor: '#B00020',
+                            },
+                        },
+                        '& .MuiInputLabel-root': {
+                            color: theme === 'dark' ? '#cccccc' : '#666666',
+                            '&.Mui-focused': {
+                                color: '#B00020',
+                            },
+                        },
+                        '& .MuiOutlinedInput-input': {
+                            color: theme === 'dark' ? '#ffffff' : '#000000',
+                        },
+                    },
+                },
+            },
+            MuiDialog: {
+                styleOverrides: {
+                    paper: {
+                        backgroundColor: theme === 'dark' ? '#1a1a1a' : '#ffffff',
+                        color: theme === 'dark' ? '#ffffff' : '#000000',
+                        boxShadow: theme === 'dark'
+                            ? '0 8px 32px rgba(0,0,0,0.6)'
+                            : '0 8px 32px rgba(44,62,80,0.18)',
+                    },
+                },
+            },
+            MuiDialogTitle: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: theme === 'dark' ? '#1a1a1a' : '#ffffff',
+                        color: theme === 'dark' ? '#ffffff' : '#000000',
+                        borderBottom: theme === 'dark' ? '1px solid #333' : '1px solid #eee',
+                    },
+                },
+            },
+            MuiDialogContent: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: theme === 'dark' ? '#1a1a1a' : '#ffffff',
+                        color: theme === 'dark' ? '#ffffff' : '#000000',
+                    },
+                },
+            },
+            MuiDialogActions: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: theme === 'dark' ? '#1a1a1a' : '#ffffff',
+                        borderTop: theme === 'dark' ? '1px solid #333' : '1px solid #eee',
+                    },
+                },
+            },
+            MuiFormLabel: {
+                styleOverrides: {
+                    root: {
+                        color: theme === 'dark' ? '#ffffff' : '#000000',
+                        '&.Mui-focused': {
+                            color: '#B00020',
+                        },
+                    },
+                },
+            },
+            MuiRadio: {
+                styleOverrides: {
+                    root: {
+                        color: theme === 'dark' ? '#cccccc' : '#666666',
+                        '&.Mui-checked': {
+                            color: '#B00020',
+                        },
+                        '&:hover': {
+                            backgroundColor: theme === 'dark'
+                                ? 'rgba(176, 0, 32, 0.1)'
+                                : 'rgba(176, 0, 32, 0.04)',
+                        },
+                    },
+                },
+            },
+            MuiFormControlLabel: {
+                styleOverrides: {
+                    label: {
+                        color: theme === 'dark' ? '#ffffff' : '#000000',
+                    },
+                },
+            },
+            MuiButton: {
+                styleOverrides: {
+                    root: {
+                        '&.MuiButton-text': {
+                            color: theme === 'dark' ? '#ffffff' : '#000000',
+                        },
+                    },
+                },
+            },
+            MuiIconButton: {
+                styleOverrides: {
+                    root: {
+                        color: theme === 'dark' ? '#ffffff' : '#000000',
+                        '&:hover': {
+                            backgroundColor: theme === 'dark'
+                                ? 'rgba(255, 255, 255, 0.1)'
+                                : 'rgba(0, 0, 0, 0.04)',
+                        },
+                    },
+                },
+            },
+        },
+    });
 
 
     const handleOpenLogin = () => {
@@ -249,435 +389,369 @@ function Header() {
 
             </header>
 
-            <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth PaperProps={{
-                style: {
-                    borderRadius: 18,
-                    boxShadow: '0 8px 32px rgba(44,62,80,0.18)',
-                    border: '2px solid var(--primary)',
-                    padding: 0,
-                    background: 'var(--surface)',
-                }
-            }}>
+            <MuiThemeProvider theme={muiTheme}>
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    maxWidth={false}
+                    fullWidth={false}
+                    PaperProps={{
+                        style: {
+                            borderRadius: 18,
+                            boxShadow: '0 8px 32px rgba(44,62,80,0.18)',
+                            border: '2px solid var(--primary)',
+                            padding: 0,
+                            background: theme === 'dark' ? '#1a1a1a' : '#ffffff',
+                            width: isRegister ? '70vw' : '400px',
+                            maxWidth: isRegister ? '70vw' : '400px',
+                            minWidth: '320px',
+                        }
+                    }}>
 
-                <DialogTitle
-                    style={{
-                        textAlign: 'center',
-                        color: 'var(--primary)',
-                        fontWeight: 'bold',
-                        fontSize: '1.6rem',
-                        letterSpacing: 1,
-                        borderBottom: '1px solid #eee',
-                        paddingBottom: 12,
-                        position: 'relative',
-                    }}
-                >
-                    {isRegister ? 'Registro' : 'Login'}
-                    <IconButton aria-label="close" onClick={handleClose} style={{ position: 'absolute', right: 8, top: 8, color: 'var(--primary)' }}>
-                        <span style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>×</span>
-                    </IconButton>
-                </DialogTitle>
-
-                <DialogContent
-                    style={{
-                        backgroundColor: 'var(--surface)',
-                        padding: '32px 24px 12px 24px',
-                        minWidth: 320,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 12,
-                    }}
-                >
-                    <TextField
-                        label="Usuário"
-                        fullWidth
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        autoFocus
+                    <DialogTitle
                         style={{
-                            marginBottom: 16,
-                            borderRadius: '8px',
-                            backgroundColor: 'var(--surface)',
-                            boxShadow: '0 2px 8px rgba(44,62,80,0.08)',
+                            textAlign: 'center',
+                            color: 'var(--primary)',
+                            fontWeight: 'bold',
+                            fontSize: '1.6rem',
+                            letterSpacing: 1,
+                            borderBottom: theme === 'dark' ? '1px solid #333' : '1px solid #eee',
+                            paddingBottom: 12,
+                            position: 'relative',
+                            backgroundColor: theme === 'dark' ? '#1a1a1a' : '#ffffff',
                         }}
-                    />
+                    >
+                        {isRegister ? 'Registro' : 'Login'}
+                        <IconButton aria-label="close" onClick={handleClose} style={{ position: 'absolute', right: 8, top: 8, color: 'var(--primary)' }}>
+                            <span style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>×</span>
+                        </IconButton>
+                    </DialogTitle>
 
-                    {isRegister && (
+                    <DialogContent
+                        style={{
+                            backgroundColor: theme === 'dark' ? '#1a1a1a' : '#ffffff',
+                            padding: '32px 24px 12px 24px',
+                            minWidth: 320,
+                            display: 'flex',
+                            flexDirection: isRegister ? 'row' : 'column',
+                            gap: isRegister ? 24 : 12,
+                            flexWrap: isRegister ? 'wrap' : 'nowrap',
+                        }}
+                    >
+                        {isRegister ? (
+                            <div style={{ display: 'flex', width: '100%', gap: '24px' }}>
+                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                    <TextField
+                                        label="Usuário"
+                                        fullWidth
+                                        type="text"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        autoFocus
+                                    />
 
-                        <>
+                                    <TextField
+                                        label="Email"
+                                        fullWidth
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
 
-                            <TextField
+                                    <TextField
+                                        label="Nome Completo"
+                                        fullWidth
+                                        value={full_name}
+                                        onChange={(e) => setFullName(e.target.value)}
+                                    />
 
-                                label="Email"
+                                    <FormControl component="fieldset">
+                                        <FormLabel component="legend">Gênero</FormLabel>
+                                        <RadioGroup
+                                            value={gender}
+                                            onChange={(e) => setGender(e.target.value)}
+                                            row
+                                        >
+                                            <FormControlLabel value="masculino" control={<Radio />} label="Masculino" />
+                                            <FormControlLabel value="feminino" control={<Radio />} label="Feminino" />
+                                        </RadioGroup>
+                                    </FormControl>
+                                </div>
 
-                                fullWidth
+                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                    <TextField
+                                        label="Idade"
+                                        type="number"
+                                        fullWidth
+                                        value={age}
+                                        onChange={(e) => setAge(e.target.value)}
+                                    />
 
-                                type="email"
+                                    <TextField
+                                        label="Peso (kg)"
+                                        type="number"
+                                        fullWidth
+                                        value={weight}
+                                        onChange={(e) => setWeight(e.target.value)}
+                                    />
 
-                                value={email}
+                                    <TextField
+                                        label="Altura (cm)"
+                                        type="number"
+                                        fullWidth
+                                        value={height}
+                                        onChange={(e) => setHeight(e.target.value)}
+                                    />
 
-                                onChange={(e) => setEmail(e.target.value)}
+                                    <TextField
+                                        label="Senha"
+                                        fullWidth
+                                        type="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <TextField
+                                    label="Usuário"
+                                    fullWidth
+                                    type="text"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    autoFocus
+                                    style={{ marginBottom: 16 }}
+                                />
+                                <TextField
+                                    label="Senha"
+                                    fullWidth
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    style={{ marginBottom: 8 }}
+                                />
+                            </>
+                        )}
 
-                                style={{ marginBottom: 20 }} />
+                        {isRegister && (
+                            <div style={{ width: '100%', marginTop: '16px' }}>
+                                <FormControl component="fieldset" style={{ width: '100%' }}>
+                                    <FormLabel component="legend" style={{ marginBottom: 10 }}>
+                                        Nível de Atividade Física
+                                    </FormLabel>
+                                    <RadioGroup
+                                        value={activity_level}
+                                        onChange={(e) => setActivityLevel(e.target.value)}
+                                        style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
+                                    >
+                                        <FormControlLabel
+                                            value="sedentary"
+                                            control={<Radio />}
+                                            label={
+                                                <div>
+                                                    <strong style={{ color: theme === 'dark' ? '#ffffff' : '#000000' }}>Sedentário</strong>
+                                                    <p style={{
+                                                        margin: 0,
+                                                        fontSize: '0.9rem',
+                                                        color: theme === 'dark' ? '#cccccc' : '#666666'
+                                                    }}>
+                                                        Pouca ou nenhuma atividade física diária.
+                                                    </p>
+                                                </div>
+                                            }
+                                        />
+                                        <FormControlLabel
+                                            value="light"
+                                            control={<Radio />}
+                                            label={
+                                                <div>
+                                                    <strong style={{ color: theme === 'dark' ? '#ffffff' : '#000000' }}>Atividade Leve</strong>
+                                                    <p style={{
+                                                        margin: 0,
+                                                        fontSize: '0.9rem',
+                                                        color: theme === 'dark' ? '#cccccc' : '#666666'
+                                                    }}>
+                                                        Atividades leves, como caminhadas curtas (1-3 dias por semana).
+                                                    </p>
+                                                </div>
+                                            }
+                                        />
+                                        <FormControlLabel
+                                            value="moderate"
+                                            control={<Radio />}
+                                            label={
+                                                <div>
+                                                    <strong style={{ color: theme === 'dark' ? '#ffffff' : '#000000' }}>Moderado</strong>
+                                                    <p style={{
+                                                        margin: 0,
+                                                        fontSize: '0.9rem',
+                                                        color: theme === 'dark' ? '#cccccc' : '#666666'
+                                                    }}>
+                                                        Exercícios moderados ou atividades físicas regulares (3-5 dias por semana).
+                                                    </p>
+                                                </div>
+                                            }
+                                        />
+                                        <FormControlLabel
+                                            value="active"
+                                            control={<Radio />}
+                                            label={
+                                                <div>
+                                                    <strong style={{ color: theme === 'dark' ? '#ffffff' : '#000000' }}>Ativo</strong>
+                                                    <p style={{
+                                                        margin: 0,
+                                                        fontSize: '0.9rem',
+                                                        color: theme === 'dark' ? '#cccccc' : '#666666'
+                                                    }}>
+                                                        Exercícios intensos ou atividades físicas frequentes (6-7 dias por semana).
+                                                    </p>
+                                                </div>
+                                            }
+                                        />
+                                        <FormControlLabel
+                                            value="very_active"
+                                            control={<Radio />}
+                                            label={
+                                                <div>
+                                                    <strong style={{ color: theme === 'dark' ? '#ffffff' : '#000000' }}>Muito Ativo</strong>
+                                                    <p style={{
+                                                        margin: 0,
+                                                        fontSize: '0.9rem',
+                                                        color: theme === 'dark' ? '#cccccc' : '#666666'
+                                                    }}>
+                                                        Atividade física extremamente intensa, como treinos profissionais ou trabalhos físicos exigentes.
+                                                    </p>
+                                                </div>
+                                            }
+                                        />
+                                    </RadioGroup>
+                                </FormControl>
+                            </div>
+                        )}
 
-                            <TextField
+                    </DialogContent>
 
-                                label="Full Name"
+                    <DialogActions
+                        style={{
+                            justifyContent: 'center',
+                            paddingBottom: 18,
+                            backgroundColor: theme === 'dark' ? '#1a1a1a' : '#ffffff',
+                            borderTop: theme === 'dark' ? '1px solid #333' : '1px solid #eee',
+                        }}
+                    >
 
-                                fullWidth
+                        {isRegister ? (
 
-                                value={full_name}
+                            <>
 
-                                onChange={(e) => setFullName(e.target.value)}
+                                <Button
 
-                                style={{ marginBottom: 20 }}
+                                    onClick={handleRegister}
 
-                            />
+                                    color="primary"
 
-                            <FormControl component="fieldset" style={{ marginBottom: 20 }}>
+                                    style={{
 
-                                <FormLabel component="legend">Gender</FormLabel>
+                                        backgroundColor: 'var(--primary)',
 
-                                <RadioGroup
+                                        color: theme === 'dark' ? '#ffffff' : '#ffffff',
 
-                                    value={gender}
+                                        fontWeight: 'bold',
 
-                                    onChange={(e) => setGender(e.target.value)}
+                                        padding: '10px 30px',
 
-                                    row
+                                        borderRadius: '5px',
+
+                                    }}
+
+                                    onMouseEnter={(e) =>
+
+                                        (e.target.style.backgroundColor = 'var(--primary-700)')
+
+                                    }
+
+                                    onMouseLeave={(e) =>
+
+                                        (e.target.style.backgroundColor = 'var(--primary)')
+
+                                    }
 
                                 >
-                                    <FormControlLabel value="masculino" control={<Radio />} label="Masculino" />
 
-                                    <FormControlLabel value="feminino" control={<Radio />} label="Feminino" />
+                                    Registrar
 
-                                </RadioGroup>
+                                </Button>
 
-                            </FormControl>
+                                <Button
 
-                            <TextField
+                                    onClick={handleOpenLogin}
 
-                                label="Age"
-
-                                type="number"
-
-                                fullWidth
-
-                                value={age}
-
-                                onChange={(e) => setAge(e.target.value)}
-
-                                style={{ marginBottom: 20 }}
-
-                            />
-
-                            <TextField
-
-                                label="Weight"
-
-                                type="number"
-
-                                fullWidth
-
-                                value={weight}
-
-                                onChange={(e) => setWeight(e.target.value)}
-
-                                style={{ marginBottom: 20 }}
-
-                            />
-
-                            <TextField
-
-                                label="Height"
-
-                                type="number"
-
-                                fullWidth
-
-                                value={height}
-
-                                onChange={(e) => setHeight(e.target.value)}
-
-                                style={{ marginBottom: 20 }}
-
-                            />
-
-                            <FormControl component="fieldset" style={{ marginBottom: 20 }}>
-
-                                <FormLabel component="legend" style={{ marginBottom: 10 }}>
-
-                                    Nível de Atividade Física
-
-                                </FormLabel>
-
-                                <RadioGroup
-
-                                    value={activity_level}
-
-                                    onChange={(e) => setActivityLevel(e.target.value)}
-
-                                    row
-
-                                    style={{ display: 'flex', flexDirection: 'column' }}
+                                    style={{ color: 'var(--primary)', fontWeight: 'bold' }}
 
                                 >
-                                    <FormControlLabel
 
-                                        value="sedentary"
+                                    Já tem uma conta? Login
 
-                                        control={<Radio />}
+                                </Button>
 
-                                        label={
+                            </>
 
-                                            <div>
+                        ) : (
 
-                                                <strong>Sedentário</strong>
+                            <>
 
-                                                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text)' }}>
+                                <Button
 
-                                                    Pouca ou nenhuma atividade física diária.
+                                    onClick={handleLogin}
 
-                                                </p>
+                                    style={{
 
-                                            </div>
+                                        backgroundColor: 'var(--primary)',
 
-                                        }
+                                        color: theme === 'dark' ? '#ffffff' : '#ffffff',
 
-                                    />
+                                        fontWeight: 'bold',
 
-                                    <FormControlLabel
+                                        padding: '10px 30px',
 
-                                        value="light"
+                                        borderRadius: '5px',
 
-                                        control={<Radio />}
+                                    }}
 
-                                        label={
+                                    onMouseEnter={(e) =>
+                                        (e.target.style.backgroundColor = 'var(--primary-700)')
+                                    }
+                                    onMouseLeave={(e) =>
+                                        (e.target.style.backgroundColor = 'var(--primary)')
+                                    }
 
-                                            <div>
+                                >
 
-                                                <strong>Atividade Leve</strong>
+                                    Entrar
 
-                                                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text)' }}>
+                                </Button>
 
-                                                    Atividades leves, como caminhadas curtas (1-3 dias por semana).
+                                <Button
 
-                                                </p>
+                                    onClick={handleOpenRegister}
 
-                                            </div>
+                                    style={{ color: 'var(--primary)', fontWeight: 'bold' }}
 
-                                        }
+                                >
 
-                                    />
+                                    Não tem conta? Registre-se
 
-                                    <FormControlLabel
+                                </Button>
 
-                                        value="moderate"
+                            </>
 
-                                        control={<Radio />}
+                        )}
 
-                                        label={
+                    </DialogActions>
 
-                                            <div>
-
-                                                <strong>Moderado</strong>
-
-                                                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text)' }}>
-
-                                                    Exercícios moderados ou atividades físicas regulares (3-5 dias por semana).
-
-                                                </p>
-
-                                            </div>
-
-                                        }
-
-                                    />
-
-                                    <FormControlLabel
-
-                                        value="active"
-
-                                        control={<Radio />}
-
-                                        label={
-
-                                            <div>
-
-                                                <strong>Ativo</strong>
-
-                                                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text)' }}>
-
-                                                    Exercícios intensos ou atividades físicas frequentes (6-7 dias por semana).
-
-                                                </p>
-
-                                            </div>
-
-                                        }
-
-                                    />
-
-                                    <FormControlLabel
-
-                                        value="very_active"
-
-                                        control={<Radio />}
-
-                                        label={
-
-                                            <div>
-
-                                                <strong>Muito Ativo</strong>
-
-                                                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text)' }}>
-
-                                                    Atividade física extremamente intensa, como treinos profissionais ou trabalhos físicos exigentes.
-
-                                                </p>
-
-                                            </div>
-
-                                        }
-
-                                    />
-
-                                </RadioGroup>
-
-                            </FormControl>
-
-                        </>
-
-                    )}
-
-                    <TextField
-                        label="Senha"
-                        fullWidth
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        style={{
-                            marginBottom: 8,
-                            borderRadius: '8px',
-                            backgroundColor: 'var(--surface)',
-                            boxShadow: '0 2px 8px rgba(44,62,80,0.08)',
-                        }}
-                    />
-
-                </DialogContent>
-
-                <DialogActions style={{ justifyContent: 'center', paddingBottom: 18 }}>
-
-                    {isRegister ? (
-
-                        <>
-
-                            <Button
-
-                                onClick={handleRegister}
-
-                                color="primary"
-
-                                style={{
-
-                                    backgroundColor: 'var(--primary)',
-
-                                    color: 'var(--surface)',
-
-                                    fontWeight: 'bold',
-
-                                    padding: '10px 30px',
-
-                                    borderRadius: '5px',
-
-                                }}
-
-                                onMouseEnter={(e) =>
-
-                                    (e.target.style.backgroundColor = 'var(--primary-700)')
-
-                                }
-
-                                onMouseLeave={(e) =>
-
-                                    (e.target.style.backgroundColor = 'var(--primary)')
-
-                                }
-
-                            >
-
-                                Registrar
-
-                            </Button>
-
-                            <Button
-
-                                onClick={handleOpenLogin}
-
-                                style={{ color: 'var(--primary)', fontWeight: 'bold' }}
-
-                            >
-
-                                Já tem uma conta? Login
-
-                            </Button>
-
-                        </>
-
-                    ) : (
-
-                        <>
-
-                            <Button
-
-                                onClick={handleLogin}
-
-                                style={{
-
-                                    backgroundColor: 'var(--primary)',
-
-                                    color: 'var(--surface)',
-
-                                    fontWeight: 'bold',
-
-                                    padding: '10px 30px',
-
-                                    borderRadius: '5px',
-
-                                }}
-
-                                onMouseEnter={(e) =>
-                                    (e.target.style.backgroundColor = 'var(--primary-700)')
-                                }
-                                onMouseLeave={(e) =>
-                                    (e.target.style.backgroundColor = 'var(--primary)')
-                                }
-
-                            >
-
-                                Entrar
-
-                            </Button>
-
-                            <Button
-
-                                onClick={handleOpenRegister}
-
-                                style={{ color: 'var(--primary)', fontWeight: 'bold' }}
-
-                            >
-
-                                Não tem conta? Registre-se
-
-                            </Button>
-
-                        </>
-
-                    )}
-
-                </DialogActions>
-
-            </Dialog>
+                </Dialog>
+            </MuiThemeProvider>
 
             <ToastContainer />
 

@@ -74,36 +74,12 @@ export default function PopUpAdicionarAlimento({ open, handleClose, fetchMenu, m
     return (
         <Modal open={open} onClose={handleClose}>
             <Box className="popup-container">
-                <h2>Adicionar Alimento</h2>
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
                         createFood();
                     }}
                 >
-                    {/* If a meal is preselected, hide the select and use that mealId */}
-                    {selectedMealId ? (
-                        <div style={{ marginBottom: 12 }}><strong>Refeição:</strong> {meals.find(m => m.meal_id === selectedMealId)?.meal_name || selectedMealId}</div>
-                    ) : (
-                        <TextField
-                            select
-                            label="Refeição"
-                            value={newFood.mealId}
-                            onChange={(e) =>
-                                setNewFood({ ...newFood, mealId: e.target.value })
-                            }
-                            fullWidth
-                            required
-                            style={{ marginBottom: 20 }}
-                        >
-                            {meals.map((meal) => (
-                                <MenuItem key={meal.meal_id} value={meal.meal_id}>
-                                    {meal.meal_name}
-                                </MenuItem>
-                            ))}
-                        </TextField>
-                    )}
-
                     {/* Campo para preenchimento manual do nome do alimento */}
                     <TextField
                         label="Nome do Alimento"
