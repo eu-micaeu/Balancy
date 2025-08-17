@@ -213,17 +213,35 @@ function Header() {
 
                 document.cookie = `authToken=${token}; path=/; max-age=3600; Secure; SameSite=Strict`;
 
-                toast.success('Login bem-sucedido');
-                setIsLoggedIn(true);
-                handleClose();
+                toast.success('🎉 Login realizado com sucesso!', {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
 
-                navigate('/home'); // Redirecione o usuário para a página /home
+                setIsLoggedIn(true);
+
+                // Adicionar delay para mostrar o toast antes de redirecionar
+                setTimeout(() => {
+                    navigate('/home');
+                }, 3000);
+
+
             } else {
-                toast.error('Credenciais inválidas');
+                toast.error('❌ Credenciais inválidas', {
+                    position: "top-right",
+                    autoClose: 3000,
+                });
             }
         } catch (error) {
             console.error(error);
-            toast.error('Erro ao conectar ao servidor');
+            toast.error('🔌 Erro ao conectar ao servidor', {
+                position: "top-right",
+                autoClose: 3000,
+            });
         }
     };
 
@@ -255,16 +273,29 @@ function Header() {
             });
 
             if (response.ok) {
-                toast.success('Registro bem-sucedido! Faça login.');
+                toast.success('🎉 Registro realizado com sucesso! Faça login.', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
                 setIsRegister(false);
                 handleClose();
             } else {
                 const errorData = await response.json();
-                toast.error(`Erro no registro: ${errorData.error}`);
+                toast.error(`❌ Erro no registro: ${errorData.error}`, {
+                    position: "top-right",
+                    autoClose: 4000,
+                });
             }
         } catch (error) {
             console.error(error);
-            toast.error('Erro ao conectar ao servidor');
+            toast.error('🔌 Erro ao conectar ao servidor', {
+                position: "top-right",
+                autoClose: 3000,
+            });
         }
     };
 
@@ -272,8 +303,19 @@ function Header() {
     const handleLogout = () => {
         removeAuthTokenFromCookies();
         setIsLoggedIn(false);
-        toast.success('Logout bem-sucedido');
-        navigate('/'); // Redirecione o usuário para a página /home
+        toast.success('👋 Logout realizado com sucesso!', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+        });
+
+        // Adicionar delay para mostrar o toast antes de redirecionar
+        setTimeout(() => {
+            navigate('/');
+        }, 2000);
     };
 
     return (
@@ -753,7 +795,22 @@ function Header() {
                 </Dialog>
             </MuiThemeProvider>
 
-            <ToastContainer />
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme={theme === 'dark' ? 'dark' : 'light'}
+                style={{
+                    fontSize: '14px',
+                    fontFamily: 'Poppins, sans-serif'
+                }}
+            />
 
         </>
 

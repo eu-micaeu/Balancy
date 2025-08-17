@@ -14,7 +14,6 @@
 .card {
     background: var(--surface);
     border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease-in-out;
     text-align: center;
     overflow: hidden;
@@ -22,6 +21,7 @@
     max-width: 400px;
     padding: 5px;
     border: 5px solid var(--primary);
+    cursor: pointer;
 }
 
 .card:hover {

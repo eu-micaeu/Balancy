@@ -15,3 +15,39 @@ header nav {
     margin-left: 10px;
 
 }
+
+/* Custom Toast Styles */
+.Toastify__toast--success {
+    border-left: 4px solid #27ae60;
+}
+
+.Toastify__toast--error {
+    border-left: 4px solid #e74c3c;
+}
+
+.Toastify__toast--info {
+    border-left: 4px solid #3498db;
+}
+
+.Toastify__toast {
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+}
+
+.Toastify__progress-bar--success {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.Toastify__progress-bar--error {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.Toastify__close-button {
+    color: white;
+    opacity: 0.8;
+}
+
+.Toastify__close-button:hover {
+    opacity: 1;
+}
