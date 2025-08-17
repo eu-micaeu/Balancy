@@ -11,7 +11,8 @@ export default function PopUpAdicionarRefeicao({ open, handleClose, fetchMenu, m
 
     const createMeal = async () => {
         try {
-            const response = await fetch('http://localhost:8080/createMeal', {
+            const baseApi = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+            const response = await fetch(`${baseApi}/createMeal`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

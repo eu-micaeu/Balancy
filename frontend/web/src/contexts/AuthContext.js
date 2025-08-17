@@ -7,9 +7,12 @@ export const AuthProvider = ({ children }) => {
 
     const apiUrl = process.env.REACT_APP_API_URL;
 
+
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const [loading, setLoading] = useState(true);
+
+    const [user, setUser] = useState(null);
 
     const checkAuth = async () => {
 
@@ -36,6 +39,23 @@ export const AuthProvider = ({ children }) => {
                 if (response.ok) {
 
                     setIsLoggedIn(true);
+
+                    // buscar perfil do usuário autenticado
+                    try {
+                        const profileRes = await fetch(`${apiUrl}/me`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`,
+                            },
+                        });
+                        if (profileRes.ok) {
+                            const profileData = await profileRes.json();
+                            setUser(profileData);
+                        }
+                    } catch (err) {
+                        console.error('Erro ao buscar perfil:', err);
+                    }
 
                 } else {
 
@@ -69,7 +89,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
 
-        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, loading }}>
+        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, loading, user, setUser }}>
 
             {children}
 

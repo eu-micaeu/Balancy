@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react';
 import '../Global.css';
+import './Home.css';
 import { AuthContext } from '../../contexts/AuthContext';
 import { getAuthTokenFromCookies } from '../../utils/cookies';
 import {
@@ -15,12 +16,12 @@ import {
 } from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 import 'react-swipeable-list/dist/styles.css';
 
 import Header from "../../components/Header/Header";
-
-import Footer from "../../components/Footer/Footer";
 
 import PopUpAdicionarAlimento from '../../components/PopUps/PopUpAdicionarAlimento/PopUpAdicionarAlimento';
 
@@ -31,6 +32,7 @@ function Home() {
     const apiUrl = process.env.REACT_APP_API_URL;
 
     const { isLoggedIn } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
 
     const [menu, setMenu] = useState(null);
 
@@ -107,6 +109,7 @@ function Home() {
     const [openRefeicao, setOpenRefeicao] = useState(false);
 
     const [openAlimento, setOpenAlimento] = useState(false);
+    const [selectedMealForFood, setSelectedMealForFood] = useState(null);
 
     const handleOpenRefeicao = () => {
         console.log('Abrir popup adicionar refeição');
@@ -115,8 +118,9 @@ function Home() {
 
     const handleCloseRefeicao = () => setOpenRefeicao(false);
 
-    const handleOpenAlimento = () => {
-        console.log('Abrir popup adicionar alimento');
+    const handleOpenAlimento = (mealId = null) => {
+        console.log('Abrir popup adicionar alimento', mealId);
+        setSelectedMealForFood(mealId);
         setOpenAlimento(true);
     };
 
@@ -177,6 +181,43 @@ function Home() {
         }
     };
 
+    // Edit meal name
+    const [editingMealId, setEditingMealId] = useState(null);
+    const [editingMealName, setEditingMealName] = useState('');
+
+    const startEditingMeal = (meal) => {
+        setEditingMealId(meal.meal_id);
+        setEditingMealName(meal.meal_name);
+    };
+
+    const cancelEditingMeal = () => {
+        setEditingMealId(null);
+        setEditingMealName('');
+    };
+
+    const saveEditingMeal = async (mealId) => {
+        const fetchOptions = {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAuthTokenFromCookies()}`,
+            },
+            body: JSON.stringify({ meal_name: editingMealName }),
+        };
+        try {
+            const response = await fetch(`${apiUrl}/updateMeal/${mealId}`, fetchOptions);
+            if (!response.ok) {
+                throw new Error('Erro ao atualizar a refeição.');
+            }
+            // Refresh menu and clear edit state
+            await fetchMenu();
+            cancelEditingMeal();
+        } catch (error) {
+            console.error(error.message);
+            alert('Erro ao atualizar a refeição. Tente novamente.');
+        }
+    };
+
 
     useEffect(() => {
 
@@ -202,7 +243,6 @@ function Home() {
                         <p>Faça login para visualizar e gerenciar suas refeições.</p>
                     </div>
                 </main>
-                <Footer />
             </>
         );
     }
@@ -226,6 +266,64 @@ function Home() {
                         </div>
                     ) : ( // tem menu
                         <>
+                            {/* Calorias summary */}
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '12px', alignItems: 'center' }}>
+                                {user ? (
+                                    (() => {
+                                        // Calcular TMB (Mifflin-St Jeor) e TMR com base em activity_level
+                                        const age = Number(user.age) || 0;
+                                        const weight = Number(user.weight) || 0; // kg
+                                        const height = Number(user.height) || 0; // cm
+                                        const gender = (user.gender || '').toLowerCase();
+
+                                        // Mifflin-St Jeor
+                                        let tmb = 0;
+                                        if (gender === 'male' || gender === 'masculino' || gender === 'm') {
+                                            tmb = 10 * weight + 6.25 * height - 5 * age + 5;
+                                        } else {
+                                            tmb = 10 * weight + 6.25 * height - 5 * age - 161;
+                                        }
+
+                                        // activity level factor
+                                        const activity = (user.activity_level || '').toLowerCase();
+                                        let factor = 1.2;
+                                        if (activity.includes('sedent') || activity === 'sedentary') factor = 1.2;
+                                        else if (activity.includes('light')) factor = 1.375;
+                                        else if (activity.includes('moderate')) factor = 1.55;
+                                        else if (activity.includes('active') || activity.includes('very')) factor = 1.725;
+
+                                        const tmr = Math.round(tmb * factor);
+
+                                        // soma calorias consumidas no menu
+                                        let consumed = 0;
+                                        if (menu && menu.meals) {
+                                            menu.meals.forEach((m) => {
+                                                if (m.foods && m.foods.length > 0) {
+                                                    m.foods.forEach((f) => {
+                                                        consumed += Number(f.calories) || 0;
+                                                    });
+                                                }
+                                            });
+                                        }
+
+                                        const deficit = tmr - consumed;
+
+                                        return (
+                                            <>
+                                                <div style={{ textAlign: 'center' }}>
+                                                    <div style={{ marginBottom: 4 }}>Calorias permitidas hoje (TMR): <strong>{tmr} kcal</strong></div>
+                                                    <div>Você consumiu: <strong>{consumed} kcal</strong></div>
+                                                </div>
+                                                <div className="calories-badge" title={deficit >= 0 ? `Deficit de ${deficit} kcal` : `Excedeu em ${-deficit} kcal`}>
+                                                    {deficit >= 500 ? 'Déficit ≥ 500 kcal' : deficit > 0 ? `Déficit ${deficit} kcal` : `Excedeu ${-deficit} kcal`}
+                                                </div>
+                                            </>
+                                        );
+                                    })()
+                                ) : (
+                                    <div>Carregando dados do usuário...</div>
+                                )}
+                            </div>
                             {menu.meals && menu.meals.length > 0 ? (
                                 <div className="meals-container">
                                     <TableContainer component={Paper}>
@@ -242,9 +340,38 @@ function Home() {
                                             <TableBody>
                                                 {menu.meals.map((meal) => (
                                                     <React.Fragment key={meal.meal_id}>
-                                                        <TableRow onClick={() => deleteMeal(meal.meal_id)} sx={{ cursor: 'pointer', '&:hover': { backgroundColor: '#fce4ec' } }}>
-                                                            <TableCell colSpan={4} align="left" title='Clique para excluir a refeição' sx={{ backgroundColor: '#f5f5f5', fontWeight: 'bold', fontFamily: 'Poppins, sans-serif', '&:hover': { backgroundColor: '#ffcccc' } }}>
-                                                                {meal.meal_name}
+                                                        <TableRow>
+                                                            <TableCell colSpan={4} align="left" sx={{ backgroundColor: '#f5f5f5', fontWeight: 'bold', fontFamily: 'Poppins, sans-serif' }}>
+                                                                {editingMealId === meal.meal_id ? (
+                                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                                        <input
+                                                                            value={editingMealName}
+                                                                            onChange={(e) => setEditingMealName(e.target.value)}
+                                                                            style={{ flex: 1, padding: '6px', fontSize: '1rem' }}
+                                                                        />
+                                                                        <Button variant="contained" color="primary" size="small" onClick={() => saveEditingMeal(meal.meal_id)}>Salvar</Button>
+                                                                        <Button variant="outlined" color="secondary" size="small" onClick={cancelEditingMeal}>Cancelar</Button>
+                                                                    </div>
+                                                                ) : (
+                                                                    <>
+                                                                        <span title="Nome da refeição">{meal.meal_name}</span>
+                                                                        <DeleteIcon
+                                                                            style={{ color: '#c62828', cursor: 'pointer', float: 'right', marginLeft: 8 }}
+                                                                            titleAccess="Excluir refeição"
+                                                                            onClick={() => deleteMeal(meal.meal_id)}
+                                                                        />
+                                                                        <EditIcon
+                                                                            style={{ color: '#1976d2', cursor: 'pointer', float: 'right', marginLeft: 8 }}
+                                                                            titleAccess="Editar refeição"
+                                                                            onClick={() => startEditingMeal(meal)}
+                                                                        />
+                                                                        <AddIcon
+                                                                            style={{ color: '#43cea2', cursor: 'pointer', float: 'right', marginLeft: 8 }}
+                                                                            titleAccess="Adicionar alimento"
+                                                                            onClick={() => handleOpenAlimento(meal.meal_id)}
+                                                                        />
+                                                                    </>
+                                                                )}
                                                             </TableCell>
                                                         </TableRow>
 
@@ -262,10 +389,17 @@ function Home() {
                                                                     </TableCell>
                                                                 </TableRow>
                                                                 {meal.foods.map((food) => (
-                                                                    <TableRow key={food.food_id} title="Clique para excluir o alimento" onClick={() => deleteFood(food.food_id)} sx={{ cursor: 'pointer', '&:hover': { backgroundColor: '#ffcccc' } }}>
+                                                                    <TableRow key={food.food_id}>
                                                                         <TableCell sx={{ fontWeight: 'bold', fontFamily: 'Poppins, sans-serif', textAlign: 'center' }}>{food.food_name}</TableCell>
                                                                         <TableCell sx={{ fontWeight: 'bold', fontFamily: 'Poppins, sans-serif', textAlign: 'center' }}>{food.quantity}</TableCell>
                                                                         <TableCell sx={{ fontWeight: 'bold', fontFamily: 'Poppins, sans-serif', textAlign: 'center' }}>{food.calories}</TableCell>
+                                                                        <TableCell sx={{ textAlign: 'center' }}>
+                                                                            <DeleteIcon
+                                                                                style={{ color: '#c62828', cursor: 'pointer' }}
+                                                                                titleAccess="Excluir alimento"
+                                                                                onClick={() => deleteFood(food.food_id)}
+                                                                            />
+                                                                        </TableCell>
                                                                     </TableRow>
                                                                 ))}
                                                             </>
@@ -284,9 +418,6 @@ function Home() {
 
                                     <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '20px' }}>
                                         <Button variant="contained" color="primary" onClick={handleOpenRefeicao} startIcon={<AddIcon />}>Adicionar Refeição</Button>
-                                        {menu.meals && menu.meals.length > 0 && (
-                                            <Button variant="contained" color="secondary" onClick={handleOpenAlimento} startIcon={<AddIcon />}>Adicionar Alimento</Button>
-                                        )}
                                     </div>
 
                                     {/* Popups moved outside so they exist even when no meals are present */}
@@ -294,8 +425,8 @@ function Home() {
                             ) : (
                                 <div style={{ textAlign: 'center' }}>
                                     <Typography variant="body1" align="center" style={{ marginBottom: 12 }}>Nenhuma refeição disponível no momento.</Typography>
-                                    <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '20px' }}>
-                                        <Button variant="contained" color="primary" onClick={handleOpenRefeicao} startIcon={<AddIcon />}>Adicionar Refeição</Button>
+                                    <div style={{ marginTop: '20px' }}>
+                                        <Button variant="contained" color="secondary" onClick={handleOpenRefeicao} startIcon={<AddIcon />} fullWidth>Adicionar Refeição</Button>
                                     </div>
                                 </div>
                             )}
@@ -306,11 +437,10 @@ function Home() {
                 {hasMenu && (
                     <PopUpAdicionarRefeicao open={openRefeicao} handleClose={handleCloseRefeicao} fetchMenu={fetchMenu} meals={menu.meals} />
                 )}
-                {hasMenu && menu.meals && menu.meals.length > 0 && (
-                    <PopUpAdicionarAlimento open={openAlimento} handleClose={handleCloseAlimento} fetchMenu={fetchMenu} meals={menu.meals} />
+                {hasMenu && (
+                    <PopUpAdicionarAlimento open={openAlimento} handleClose={() => { handleCloseAlimento(); setSelectedMealForFood(null); }} fetchMenu={fetchMenu} meals={menu.meals} selectedMealId={selectedMealForFood} />
                 )}
             </main>
-            <Footer />
         </>
     );
 

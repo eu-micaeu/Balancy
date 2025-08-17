@@ -83,7 +83,8 @@ func (m *Menu) Read(db *sql.DB) gin.HandlerFunc {
 		}
 
 		// Consultar as refeições (meals) relacionadas ao menu
-		queryMeals := "SELECT meal_id, meal_name FROM meals WHERE menu_id = $1"
+		// Ordenar por meal_id (ordem de criação) para manter a ordem que foram criadas
+		queryMeals := "SELECT meal_id, meal_name FROM meals WHERE menu_id = $1 ORDER BY meal_id ASC"
 		rowsMeals, err := db.Query(queryMeals, menu.MenuId)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao buscar as refeições no banco de dados: " + err.Error()})
@@ -99,9 +100,10 @@ func (m *Menu) Read(db *sql.DB) gin.HandlerFunc {
 		}
 
 		type Meal struct {
-			MealId   int    `json:"meal_id"`
-			MealName string `json:"meal_name"`
-			Foods    []Food `json:"foods"`
+			MealId        int     `json:"meal_id"`
+			MealName      string  `json:"meal_name"`
+			Foods         []Food  `json:"foods"`
+			TotalCalories float64 `json:"total_calories"`
 		}
 
 		var meals []Meal
@@ -124,8 +126,9 @@ func (m *Menu) Read(db *sql.DB) gin.HandlerFunc {
 
 			defer rowsFoods.Close()
 
-			// Armazenar os alimentos em um slice
+			// Armazenar os alimentos em um slice e calcular total de calorias
 			var foods []Food
+			var totalCalories float64 = 0
 			for rowsFoods.Next() {
 				var food Food
 				err := rowsFoods.Scan(&food.FoodId, &food.FoodName, &food.Quantity, &food.Calories)
@@ -133,11 +136,14 @@ func (m *Menu) Read(db *sql.DB) gin.HandlerFunc {
 					c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao processar os alimentos: " + err.Error()})
 					return
 				}
+				// Somar as calorias do alimento ao total da refeição
+				totalCalories += food.Calories * food.Quantity
 				foods = append(foods, food)
 			}
 
-			// Adicionar os alimentos à refeição
+			// Adicionar os alimentos e o total de calorias à refeição
 			meal.Foods = foods
+			meal.TotalCalories = totalCalories
 			meals = append(meals, meal)
 		}
 

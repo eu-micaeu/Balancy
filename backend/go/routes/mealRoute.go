@@ -13,7 +13,11 @@ func MealRoutes(r *gin.Engine, db *sql.DB) {
 
 	mealHandler := handlers.Meal{}
 
+	r.GET("/meal/:meal_id", middlewares.AuthMiddleware(), mealHandler.Read(db))
 	r.POST("/createMeal", middlewares.AuthMiddleware(), mealHandler.Create(db))
+
+	// Rota para atualizar o nome da refeição
+	r.PATCH("/updateMeal/:meal_id", middlewares.AuthMiddleware(), mealHandler.Update(db))
 
 	r.DELETE("/deleteMeal/:meal_id", middlewares.AuthMiddleware(), mealHandler.Delete(db))
 

@@ -1,0 +1,78 @@
+/* Home.css - Estilo melhorado para página Home */
+
+.menu-container {
+    width: 60vw;
+    margin: 32px auto;
+    border-radius: 18px;
+}
+
+.menu-guest {
+    max-width: 500px;
+    margin: 64px auto;
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    padding: 32px 24px;
+    text-align: center;
+}
+
+.meals-container {
+    margin-top: 24px;
+}
+
+/* Tabela do menu */
+.MuiTableContainer-root {
+    box-shadow: 0 2px 12px rgba(44, 62, 80, 0.08);
+    border-radius: 12px;
+}
+
+.MuiTableCell-root {
+    font-family: 'Poppins', 'Roboto', sans-serif;
+    font-size: 1rem;
+    padding: 12px 8px;
+}
+
+.MuiTableHead-root .MuiTableCell-root {
+    background: rgba(176, 0, 32, 0.08);
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* Botões */
+.menu-container .MuiButton-root {
+    font-family: 'Poppins', 'Roboto', sans-serif;
+    font-weight: 500;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+    transition: background 0.2s;
+}
+
+.menu-container .MuiButton-root:hover {
+    background: var(--primary-700);
+    color: var(--surface);
+}
+
+/* Badge de calorias */
+.menu-container .calories-badge {
+    font-size: 1.05rem;
+    margin-left: 16px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    background: linear-gradient(90deg, rgba(176, 0, 32, 0.9) 0%, rgba(138, 0, 24, 0.9) 100%);
+    color: var(--surface);
+    box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+    .menu-container {
+        padding: 12px 4px;
+    }
+
+    .MuiTableCell-root {
+        font-size: 0.95rem;
+        padding: 8px 4px;
+    }
+}

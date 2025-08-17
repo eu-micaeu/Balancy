@@ -1,12 +1,13 @@
-header{
+header {
 
     display: flex;
-    justify-content: space-between;
-    border-bottom: 5px solid #FF006F;
+    justify-content: space-around;
+    border-bottom: 5px solid var(--primary);
+    padding: 20px;
 
 }
 
-header nav{
+header nav {
 
     display: flex;
     justify-content: space-between;

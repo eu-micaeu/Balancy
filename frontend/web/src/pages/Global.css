@@ -1,25 +1,62 @@
-main {
+/* Make the page use a column flex layout so header/main/footer align correctly
+   and footer is pushed to the bottom only when content is short. Avoid
+   using fixed 100vh on main which causes overlapping with footer on some screens. */
 
+:root {
+    /* Default light theme variables */
+    --bg-gradient-start: #ffffff;
+    --bg-gradient-end: #ffffff;
+    --primary: #B00020;
+    --primary-700: #8A0018;
+    --text: #000000;
+    --surface: #ffffff;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+    margin: 0;
+}
+
+:root {
+    /* fallback theme variables in case JS hasn't initialized ThemeContext yet */
+    --bg-gradient-start: #ffffff;
+    --bg-gradient-end: #ffffff;
+    --primary: #B00020;
+    --primary-700: #8A0018;
+    --text: #000000;
+    --surface: #ffffff;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    font-family: 'Poppins', sans-serif;
+    color: var(--text);
+}
+
+main {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background: linear-gradient(135deg, #ffd9e6, #fcecfd);
-    font-family: 'Poppins', sans-serif;
     animation: fade-in 0.5s ease-in-out;
-    height: 100vh;
-
+    flex: 1 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 60vh;
 }
 
-main h1{
-
-    color: #e91e63;
-
+main h1 {
+    color: var(--primary);
 }
 
 main p {
     font-size: 0.9rem;
-    color: #444;
+    color: var(--text);
     text-align: center;
     line-height: 1.8;
     margin-bottom: 30px;

@@ -1,43 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Box, TextField, MenuItem, Button } from '@mui/material';
 import '../PopUps.css';
 import { getAuthTokenFromCookies } from '../../../utils/cookies';
 
-export default function PopUpAdicionarAlimento({ open, handleClose, fetchMenu, meals }) {
+
+export default function PopUpAdicionarAlimento({ open, handleClose, fetchMenu, meals, selectedMealId = null }) {
     const [newFood, setNewFood] = useState({
-        mealId: '',
+        mealId: selectedMealId || '',
         foodName: '',
         calories: '',
-        quantity: ''
+        quantity: '100' // padrão 100g, editável pelo usuário
     });
 
+    // Quando o popup abrir ou o selectedMealId mudar, atualiza o estado do mealId
+    useEffect(() => {
+        if (selectedMealId) {
+            setNewFood((prev) => ({ ...prev, mealId: selectedMealId }));
+        } else {
+            setNewFood((prev) => ({ ...prev, mealId: '' }));
+        }
+    }, [selectedMealId, open]);
+
+    // Campos e criação de alimento manual
     const createFood = async () => {
         try {
-            const response = await fetch('http://localhost:8080/createFood', {
+            const baseApi = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+            const payload = {
+                meal_id: parseInt(newFood.mealId),
+                food_name: newFood.foodName,
+                calories: parseInt(newFood.calories),
+                quantity: parseInt(newFood.quantity),
+                source: 'manual',
+            };
+            console.log('createFood payload:', payload);
+            const token = getAuthTokenFromCookies();
+            if (!token) {
+                console.error('No auth token present');
+                alert('Usuário não autenticado. Faça login e tente novamente.');
+                return;
+            }
+
+            const response = await fetch(`${baseApi}/createFood`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${getAuthTokenFromCookies()}`
+                    'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    meal_id: parseInt(newFood.mealId),
-                    food_name: newFood.foodName,
-                    calories: parseInt(newFood.calories),
-                    quantity: parseInt(newFood.quantity),
-                }),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
-                throw new Error(`Erro da API: ${response.statusText}`);
+                // try to read response body for more details
+                let details = '';
+                try {
+                    const json = await response.json();
+                    details = JSON.stringify(json);
+                } catch (e) {
+                    details = await response.text();
+                }
+                throw new Error(`Erro da API: ${response.statusText} - ${details}`);
             }
 
-            // Limpando o popup
-
-            newFood.mealId = '';
-            newFood.foodName = '';
-            newFood.calories = '';
-            newFood.quantity = '';
-
+            // Limpa o popup
+            setNewFood({ mealId: '', foodName: '', calories: '', quantity: '100' });
             await fetchMenu();
             handleClose();
         } catch (error) {
@@ -47,9 +72,7 @@ export default function PopUpAdicionarAlimento({ open, handleClose, fetchMenu, m
     };
 
     return (
-
         <Modal open={open} onClose={handleClose}>
-
             <Box className="popup-container">
                 <h2>Adicionar Alimento</h2>
                 <form
@@ -58,80 +81,69 @@ export default function PopUpAdicionarAlimento({ open, handleClose, fetchMenu, m
                         createFood();
                     }}
                 >
+                    {/* If a meal is preselected, hide the select and use that mealId */}
+                    {selectedMealId ? (
+                        <div style={{ marginBottom: 12 }}><strong>Refeição:</strong> {meals.find(m => m.meal_id === selectedMealId)?.meal_name || selectedMealId}</div>
+                    ) : (
+                        <TextField
+                            select
+                            label="Refeição"
+                            value={newFood.mealId}
+                            onChange={(e) =>
+                                setNewFood({ ...newFood, mealId: e.target.value })
+                            }
+                            fullWidth
+                            required
+                            style={{ marginBottom: 20 }}
+                        >
+                            {meals.map((meal) => (
+                                <MenuItem key={meal.meal_id} value={meal.meal_id}>
+                                    {meal.meal_name}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    )}
+
+                    {/* Campo para preenchimento manual do nome do alimento */}
                     <TextField
-
-                        select
-                        label="Refeição"
-                        value={newFood.mealId}
-                        onChange={(e) =>
-                            setNewFood({ ...newFood, mealId: e.target.value })
-                        }
-                        fullWidth
-                        required
-                        style={{ marginBottom: 20 }}
-                    >
-                        {meals.map((meal) => (
-                            <MenuItem key={meal.meal_id} value={meal.meal_id}>
-                                {meal.meal_name}
-                            </MenuItem>
-                        ))}
-
-                    </TextField>
-
-
-                    <TextField
-
                         label="Nome do Alimento"
                         value={newFood.foodName}
-                        onChange={(e) =>
-                            setNewFood({ ...newFood, foodName: e.target.value })
-                        }
+                        onChange={(e) => setNewFood({ ...newFood, foodName: e.target.value })}
                         fullWidth
                         required
-                        style={{ marginBottom: 20 }}
-
+                        style={{ marginBottom: 12 }}
                     />
 
                     <TextField
-
                         type="number"
                         label="Quantidade (g/ml)"
                         value={newFood.quantity}
-                        onChange={(e) =>
-                            setNewFood({ ...newFood, quantity: e.target.value })
-                        }
+                        onChange={(e) => setNewFood({ ...newFood, quantity: e.target.value })}
                         fullWidth
                         required
                         style={{ marginBottom: 20 }}
-
                     />
 
                     <TextField
-
                         type="number"
                         label="Calorias (kcal)"
                         value={newFood.calories}
-                        onChange={(e) =>
-                            setNewFood({ ...newFood, calories: e.target.value })
-                        }
+                        onChange={(e) => setNewFood({ ...newFood, calories: e.target.value })}
                         fullWidth
                         required
                         style={{ marginBottom: 20 }}
-
                     />
 
-                    <Button type="submit" variant="contained" color="primary">
-
-                        Adicionar
-
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                    >
+                        Adicionar alimento
                     </Button>
-
                 </form>
-
             </Box>
-
         </Modal>
-
     );
 
 }

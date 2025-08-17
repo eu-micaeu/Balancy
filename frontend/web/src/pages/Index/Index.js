@@ -4,7 +4,6 @@ import './Index.css';
 
 // Componentes
 import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer";
 
 // Contexto de autenticação
 import { AuthContext } from '../../contexts/AuthContext';
@@ -53,7 +52,6 @@ function Index() {
                     ))}
                 </div>
             </main>
-            <Footer />
         </>
     );
 }

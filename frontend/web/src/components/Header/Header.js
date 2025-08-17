@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import {
     Dialog,
     DialogActions,
@@ -10,9 +10,12 @@ import {
 } from '@mui/material';
 import { toast, ToastContainer } from 'react-toastify';
 import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 import 'react-toastify/dist/ReactToastify.css';
 import './Header.css';
 import { AuthContext } from '../../contexts/AuthContext';
+import { ThemeContext } from '../../contexts/ThemeContext';
 import { removeAuthTokenFromCookies } from '../../utils/cookies';
 import { RadioGroup, FormControlLabel, Radio, FormLabel, FormControl } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // Importe o useNavigate
@@ -20,7 +23,7 @@ import { useNavigate } from 'react-router-dom'; // Importe o useNavigate
 function Header() {
 
     const apiUrl = process.env.REACT_APP_API_URL;
-    
+
     const [open, setOpen] = useState(false);
     const [isRegister, setIsRegister] = useState(false);
     const [username, setUsername] = useState('');
@@ -33,6 +36,7 @@ function Header() {
     const [height, setHeight] = useState('');
     const [activity_level, setActivityLevel] = useState('');
     const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+    const { theme, toggleTheme } = useContext(ThemeContext);
     const navigate = useNavigate();
 
 
@@ -142,22 +146,33 @@ function Header() {
 
                 <nav style={{ display: 'flex', alignItems: 'center' }}>
 
-                    {isLoggedIn && (
+                    {/* Theme toggle button */}
+                    <IconButton
+                        onClick={toggleTheme}
+                        style={{
+                            marginRight: 10,
+                            color: 'var(--primary)',
+                            border: '1px solid var(--primary)',
+                            background: 'transparent',
+                            borderRadius: '50%'
+                        }}
+                        title={theme === 'light' ? 'Alterar para modo escuro' : 'Alterar para modo claro'}
+                    >
+                        {theme === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+                    </IconButton>
 
-                        <IconButton
+                    <IconButton
 
-                            aria-label="menu"
+                        aria-label="menu"
 
-                            style={{ color: '#FF006F', marginRight: '10px' }}
+                        style={{ color: 'var(--primary)', marginRight: '10px' }}
 
-                            title="Menu"
+                        title="Menu"
 
-                        >
-                            <MiscellaneousServicesIcon />
+                    >
+                        <MiscellaneousServicesIcon />
 
-                        </IconButton>
-
-                    )}
+                    </IconButton>
 
                     {isLoggedIn ? (
 
@@ -167,9 +182,9 @@ function Header() {
 
                             style={{
 
-                                color: 'white',
+                                color: 'var(--surface)',
 
-                                backgroundColor: '#FF006F',
+                                backgroundColor: 'var(--primary)',
 
                                 fontWeight: 'bold',
 
@@ -181,9 +196,9 @@ function Header() {
 
                             }}
 
-                            onMouseEnter={(e) => (e.target.style.backgroundColor = '#D50062')}
+                            onMouseEnter={(e) => (e.target.style.backgroundColor = 'var(--primary-700)')}
 
-                            onMouseLeave={(e) => (e.target.style.backgroundColor = '#FF006F')}
+                            onMouseLeave={(e) => (e.target.style.backgroundColor = 'var(--primary)')}
 
                         >
 
@@ -199,9 +214,9 @@ function Header() {
 
                             style={{
 
-                                color: 'white',
+                                color: 'var(--surface)',
 
-                                backgroundColor: '#FF006F',
+                                backgroundColor: 'var(--primary)',
 
                                 fontWeight: 'bold',
 
@@ -213,9 +228,9 @@ function Header() {
 
                             }}
 
-                            onMouseEnter={(e) => (e.target.style.backgroundColor = '#D50062')}
+                            onMouseEnter={(e) => (e.target.style.backgroundColor = 'var(--primary-700)')}
 
-                            onMouseLeave={(e) => (e.target.style.backgroundColor = '#FF006F')}
+                            onMouseLeave={(e) => (e.target.style.backgroundColor = 'var(--primary)')}
 
                         >
 
@@ -229,60 +244,57 @@ function Header() {
 
             </header>
 
-            <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+            <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth PaperProps={{
+                style: {
+                    borderRadius: 18,
+                    boxShadow: '0 8px 32px rgba(44,62,80,0.18)',
+                    border: '2px solid var(--primary)',
+                    padding: 0,
+                    background: 'var(--surface)',
+                }
+            }}>
 
                 <DialogTitle
-
                     style={{
-
                         textAlign: 'center',
-
-                        color: '#FF006F',
-
+                        color: 'var(--primary)',
                         fontWeight: 'bold',
-
+                        fontSize: '1.6rem',
+                        letterSpacing: 1,
+                        borderBottom: '1px solid #eee',
+                        paddingBottom: 12,
+                        position: 'relative',
                     }}
-
                 >
                     {isRegister ? 'Registro' : 'Login'}
-
+                    <IconButton aria-label="close" onClick={handleClose} style={{ position: 'absolute', right: 8, top: 8, color: 'var(--primary)' }}>
+                        <span style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>×</span>
+                    </IconButton>
                 </DialogTitle>
 
                 <DialogContent
-
                     style={{
-
-                        backgroundColor: '#f9f9f9',
-
-                        padding: '30px',
-
+                        backgroundColor: 'var(--surface)',
+                        padding: '32px 24px 12px 24px',
+                        minWidth: 320,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 12,
                     }}
-
                 >
                     <TextField
-
-                        label="Username"
-
+                        label="Usuário"
                         fullWidth
-
                         type="text"
-
                         value={username}
-
                         onChange={(e) => setUsername(e.target.value)}
-
+                        autoFocus
                         style={{
-
-                            marginBottom: 20,
-
-                            borderRadius: '5px',
-
-                            backgroundColor: '#fff',
-
-                            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-
+                            marginBottom: 16,
+                            borderRadius: '8px',
+                            backgroundColor: 'var(--surface)',
+                            boxShadow: '0 2px 8px rgba(44,62,80,0.08)',
                         }}
-
                     />
 
                     {isRegister && (
@@ -301,7 +313,7 @@ function Header() {
 
                                 onChange={(e) => setEmail(e.target.value)}
 
-                                style={{marginBottom: 20}} />
+                                style={{ marginBottom: 20 }} />
 
                             <TextField
 
@@ -417,7 +429,7 @@ function Header() {
 
                                                 <strong>Sedentário</strong>
 
-                                                <p style={{ margin: 0, fontSize: '0.9rem', color: '#555' }}>
+                                                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text)' }}>
 
                                                     Pouca ou nenhuma atividade física diária.
 
@@ -441,7 +453,7 @@ function Header() {
 
                                                 <strong>Atividade Leve</strong>
 
-                                                <p style={{ margin: 0, fontSize: '0.9rem', color: '#555' }}>
+                                                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text)' }}>
 
                                                     Atividades leves, como caminhadas curtas (1-3 dias por semana).
 
@@ -465,7 +477,7 @@ function Header() {
 
                                                 <strong>Moderado</strong>
 
-                                                <p style={{ margin: 0, fontSize: '0.9rem', color: '#555' }}>
+                                                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text)' }}>
 
                                                     Exercícios moderados ou atividades físicas regulares (3-5 dias por semana).
 
@@ -489,7 +501,7 @@ function Header() {
 
                                                 <strong>Ativo</strong>
 
-                                                <p style={{ margin: 0, fontSize: '0.9rem', color: '#555' }}>
+                                                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text)' }}>
 
                                                     Exercícios intensos ou atividades físicas frequentes (6-7 dias por semana).
 
@@ -513,7 +525,7 @@ function Header() {
 
                                                 <strong>Muito Ativo</strong>
 
-                                                <p style={{ margin: 0, fontSize: '0.9rem', color: '#555' }}>
+                                                <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text)' }}>
 
                                                     Atividade física extremamente intensa, como treinos profissionais ou trabalhos físicos exigentes.
 
@@ -534,34 +546,22 @@ function Header() {
                     )}
 
                     <TextField
-
-                        label="Password"
-
+                        label="Senha"
                         fullWidth
-
                         type="password"
-
                         value={password}
-
                         onChange={(e) => setPassword(e.target.value)}
-
                         style={{
-
-                            marginBottom: 5,
-
-                            borderRadius: '5px',
-
-                            backgroundColor: '#fff',
-
-                            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-
+                            marginBottom: 8,
+                            borderRadius: '8px',
+                            backgroundColor: 'var(--surface)',
+                            boxShadow: '0 2px 8px rgba(44,62,80,0.08)',
                         }}
-
                     />
 
                 </DialogContent>
 
-                <DialogActions style={{ justifyContent: 'center' }}>
+                <DialogActions style={{ justifyContent: 'center', paddingBottom: 18 }}>
 
                     {isRegister ? (
 
@@ -575,9 +575,9 @@ function Header() {
 
                                 style={{
 
-                                    backgroundColor: '#FF006F',
+                                    backgroundColor: 'var(--primary)',
 
-                                    color: '#fff',
+                                    color: 'var(--surface)',
 
                                     fontWeight: 'bold',
 
@@ -589,13 +589,13 @@ function Header() {
 
                                 onMouseEnter={(e) =>
 
-                                    (e.target.style.backgroundColor = '#D50062')
+                                    (e.target.style.backgroundColor = 'var(--primary-700)')
 
                                 }
 
                                 onMouseLeave={(e) =>
 
-                                    (e.target.style.backgroundColor = '#FF006F')
+                                    (e.target.style.backgroundColor = 'var(--primary)')
 
                                 }
 
@@ -609,7 +609,7 @@ function Header() {
 
                                 onClick={handleOpenLogin}
 
-                                style={{ color: '#FF006F', fontWeight: 'bold' }}
+                                style={{ color: 'var(--primary)', fontWeight: 'bold' }}
 
                             >
 
@@ -627,13 +627,11 @@ function Header() {
 
                                 onClick={handleLogin}
 
-                                color="primary"
-
                                 style={{
 
-                                    backgroundColor: '#FF006F',
+                                    backgroundColor: 'var(--primary)',
 
-                                    color: '#fff',
+                                    color: 'var(--surface)',
 
                                     fontWeight: 'bold',
 
@@ -644,14 +642,10 @@ function Header() {
                                 }}
 
                                 onMouseEnter={(e) =>
-
-                                    (e.target.style.backgroundColor = '#D50062')
-
+                                    (e.target.style.backgroundColor = 'var(--primary-700)')
                                 }
                                 onMouseLeave={(e) =>
-
-                                    (e.target.style.backgroundColor = '#FF006F')
-
+                                    (e.target.style.backgroundColor = 'var(--primary)')
                                 }
 
                             >
@@ -664,7 +658,7 @@ function Header() {
 
                                 onClick={handleOpenRegister}
 
-                                style={{ color: '#FF006F', fontWeight: 'bold' }}
+                                style={{ color: 'var(--primary)', fontWeight: 'bold' }}
 
                             >
 

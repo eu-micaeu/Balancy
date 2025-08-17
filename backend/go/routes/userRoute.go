@@ -19,4 +19,7 @@ func UserRoutes(r *gin.Engine, db *sql.DB) {
 
 	r.PUT("/updateUser", middlewares.AuthMiddleware(), userHandler.Update(db))
 
+	// Rota para obter perfil do usuário autenticado
+	r.GET("/me", middlewares.AuthMiddleware(), userHandler.GetProfile(db))
+
 }

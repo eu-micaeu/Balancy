@@ -130,3 +130,29 @@ func (u *User) Update(db *sql.DB) gin.HandlerFunc {
 	}
 
 }
+
+// GetProfile retorna os dados do usuário autenticado (obtém userID do contexto)
+func (u *User) GetProfile(db *sql.DB) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Recuperar userID do contexto (definido pelo AuthMiddleware)
+		userID, exists := c.Get("userID")
+		if !exists {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
+			return
+		}
+
+		var user User
+		query := `SELECT user_id, username, email, full_name, gender, age, weight, height, activity_level, created_at FROM users WHERE user_id = $1`
+		err := db.QueryRow(query, userID).Scan(&user.UserId, &user.Username, &user.Email, &user.FullName, &user.Gender, &user.Age, &user.Weight, &user.Height, &user.ActivityLevel, &user.CreatedAt)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(http.StatusNotFound, gin.H{"error": "Usuário não encontrado"})
+				return
+			}
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusOK, user)
+	}
+}

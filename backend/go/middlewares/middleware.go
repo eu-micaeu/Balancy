@@ -3,6 +3,7 @@ package middlewares
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -17,11 +18,11 @@ func CorsMiddleware() gin.HandlerFunc {
 	// Permitir origens específicas (alterar para domínios confiáveis em produção)
 	config.AllowOrigins = []string{"*"}
 
-	// Permitir métodos específicos
-	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE"}
+	// Permitir métodos específicos (inclui OPTIONS e PATCH para preflight e atualizações parciais)
+	config.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
 
-	// Permitir cabeçalhos específicos
-	config.AllowHeaders = []string{"Authorization", "Content-Type", "Origin"}
+	// Permitir cabeçalhos específicos (inclui Cache-Control usado pelo frontend)
+	config.AllowHeaders = []string{"Authorization", "Content-Type", "Origin", "Cache-Control"}
 
 	return cors.New(config)
 }
@@ -78,7 +79,17 @@ func AuthMiddleware() gin.HandlerFunc {
 }
 
 // Chave secreta usada para assinar os tokens (mantenha-a segura)
-var jwtSecret = []byte("sua-chave-secreta")
+// Agora carregada a partir da variável de ambiente JWT_KEY, com fallback
+var jwtSecret []byte
+
+func init() {
+	key := os.Getenv("JWT_KEY")
+	if key == "" {
+		// fallback para compatibilidade durante desenvolvimento
+		key = "sua-chave-secreta"
+	}
+	jwtSecret = []byte(key)
+}
 
 // GerarToken cria um JWT com o ID do usuário
 func GerarToken(userID int) (string, error) {

@@ -10,7 +10,7 @@
 }
 
 .card {
-    background: #fff;
+    background: var(--surface);
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
     padding: 20px 30px;
@@ -26,7 +26,7 @@
 }
 
 .card h3 {
-    color: #e91e63;
+    color: var(--primary);
     font-size: 1.6rem;
     margin-bottom: 10px;
     text-transform: uppercase;
@@ -34,6 +34,6 @@
 
 .card p {
     font-size: 1rem;
-    color: #555;
+    color: var(--text);
     line-height: 1.5;
 }
