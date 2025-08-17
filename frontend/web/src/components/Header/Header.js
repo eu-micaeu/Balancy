@@ -161,50 +161,55 @@ function Header() {
                         {theme === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
                     </IconButton>
 
-                    <IconButton
-
-                        aria-label="menu"
-
-                        style={{ color: 'var(--primary)', marginRight: '10px' }}
-
-                        title="Menu"
-
-                    >
-                        <MiscellaneousServicesIcon />
-
-                    </IconButton>
-
                     {isLoggedIn ? (
 
-                        <Button
+                        <>
 
-                            onClick={handleLogout}
+                            <IconButton
 
-                            style={{
+                                aria-label="menu"
 
-                                color: 'var(--surface)',
+                                style={{ color: 'var(--primary)', marginRight: '10px' }}
 
-                                backgroundColor: 'var(--primary)',
+                                title="Menu"
 
-                                fontWeight: 'bold',
+                            >
+                                <MiscellaneousServicesIcon />
 
-                                padding: '10px 20px',
+                            </IconButton>
 
-                                marginRight: '20px',
+                            <Button
 
-                                fontFamily: 'Popins, sans-serif',
+                                onClick={handleLogout}
 
-                            }}
+                                style={{
 
-                            onMouseEnter={(e) => (e.target.style.backgroundColor = 'var(--primary-700)')}
+                                    color: 'var(--surface)',
 
-                            onMouseLeave={(e) => (e.target.style.backgroundColor = 'var(--primary)')}
+                                    backgroundColor: 'var(--primary)',
 
-                        >
+                                    fontWeight: 'bold',
 
-                            Logout
+                                    padding: '10px 20px',
 
-                        </Button>
+                                    marginRight: '20px',
+
+                                    fontFamily: 'Popins, sans-serif',
+
+                                }}
+
+                                onMouseEnter={(e) => (e.target.style.backgroundColor = 'var(--primary-700)')}
+
+                                onMouseLeave={(e) => (e.target.style.backgroundColor = 'var(--primary)')}
+
+                            >
+
+                                Logout
+
+                            </Button>
+
+                        </>
+
 
                     ) : (
 
