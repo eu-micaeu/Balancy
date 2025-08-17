@@ -75,4 +75,19 @@
         font-size: 0.95rem;
         padding: 8px 4px;
     }
+
+    /* Ajustes para o resumo calórico em mobile */
+    .menu-container .calories-summary {
+        padding: 16px !important;
+        margin: 10px !important;
+    }
+
+    .menu-container .calories-summary .grid-container {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .menu-container .calories-summary .remaining-calories {
+        grid-template-columns: 1fr !important;
+    }
 }

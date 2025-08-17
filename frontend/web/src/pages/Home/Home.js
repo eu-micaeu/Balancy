@@ -65,7 +65,6 @@ function Home() {
             }
 
             const data = await response.json();
-            console.log('fetchMenu response:', data);
             setMenu(data.menu);
             setShowCreateMenu(false);
 
@@ -364,7 +363,7 @@ function Home() {
                                         <Button variant="contained" color="primary" onClick={handleOpenRefeicao} startIcon={<AddIcon />}>Adicionar Refeição</Button>
                                     </div>
 
-                                    <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', margin: '50px', alignItems: 'center' }}>
+                                    <div style={{ margin: '20px 0' }}>
                                         {user ? (
                                             (() => {
                                                 const age = Number(user.age) || 0;
@@ -420,35 +419,89 @@ function Home() {
                                                     status = `Déficit Leve (${deficit} kcal)`;
                                                     statusColor = '#27ae60'; // verde
                                                 } else if (deficit >= -50) {
-                                                    status = 'Manutenção';
+                                                    status = `Manutenção (${deficit} kcal)`;
                                                     statusColor = '#3498db'; // azul
                                                 } else {
                                                     status = `Excedeu ${-deficit} kcal`;
                                                     statusColor = '#e74c3c'; // vermelho
                                                 }
 
+                                                // Calcula as calorias restantes para diferentes objetivos
+                                                const remainingForMaintenance = Math.max(0, tdee - consumed);
+                                                const remainingForModerateDeficit = Math.max(0, (tdee - 300) - consumed);
+                                                const remainingForAggressiveDeficit = Math.max(0, (tdee - 500) - consumed);
+
                                                 return (
-                                                    <div style={{
+                                                    <div className="calories-summary" style={{
                                                         display: 'flex',
-                                                        justifyContent: 'center',
                                                         flexDirection: 'column',
-                                                        margin: '10px',
-                                                        alignItems: 'center'
+                                                        alignItems: 'center',
+                                                        background: '#dadadaff',
+                                                        borderRadius: '16px',
+                                                        padding: '24px',
+                                                        margin: '20px auto',
+                                                        border: '1px solid rgba(255, 255, 255, 0.2)'
                                                     }}>
-                                                        <div style={{ textAlign: 'center' }}>
-                                                            <div style={{ marginBottom: 4 }}>
-                                                                <strong>TDEE (Gasto Calórico Diário):</strong> {tdee} kcal
+                                                        {/* Título Principal */}
+                                                        <Typography variant="h6" style={{
+                                                            fontWeight: 'bold',
+                                                            color: '#2c3e50',
+                                                            marginBottom: '16px',
+                                                            textAlign: 'center'
+                                                        }}>
+                                                            📊 Resumo Calórico Diário
+                                                        </Typography>
+
+                                                        {/* Informações Principais */}
+                                                        <div className="grid-container" style={{
+                                                            display: 'grid',
+                                                            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                                                            gap: '16px',
+                                                            width: '100%',
+                                                            marginBottom: '20px'
+                                                        }}>
+                                                            <div style={{
+                                                                background: 'white',
+                                                                padding: '16px',
+                                                                borderRadius: '12px',
+                                                                textAlign: 'center',
+                                                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
+                                                            }}>
+                                                                <div style={{ fontSize: '0.85em', color: '#666', marginBottom: '4px' }}>TDEE (Gasto Diário)</div>
+                                                                <div style={{ fontSize: '1.4em', fontWeight: 'bold', color: '#2c3e50' }}>{tdee} kcal</div>
+                                                                <div style={{ fontSize: '0.75em', color: '#888', marginTop: '4px' }}>
+                                                                    TMB: {Math.round(tmb)} × {activityFactor}
+                                                                </div>
                                                             </div>
-                                                            <div style={{ marginBottom: 4 }}>
-                                                                <strong>Consumido:</strong> {consumed} kcal
-                                                            </div>
-                                                            <div style={{ fontSize: '0.9em', color: '#666' }}>
-                                                                TMB: {Math.round(tmb)} kcal | Fator atividade: {activityFactor}x
+
+                                                            <div style={{
+                                                                background: 'white',
+                                                                padding: '16px',
+                                                                borderRadius: '12px',
+                                                                textAlign: 'center',
+                                                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
+                                                            }}>
+                                                                <div style={{ fontSize: '0.85em', color: '#666', marginBottom: '4px' }}>Consumido Hoje</div>
+                                                                <div style={{ fontSize: '1.4em', fontWeight: 'bold', color: '#e74c3c' }}>{consumed} kcal</div>
+                                                                <div style={{ fontSize: '0.75em', color: '#888', marginTop: '4px' }}>
+                                                                    {((consumed / tdee) * 100).toFixed(0)}% do TDEE
+                                                                </div>
                                                             </div>
                                                         </div>
+
+                                                        {/* Status Badge */}
                                                         <div
-                                                            className="calories-badge"
-                                                            style={{ backgroundColor: statusColor }}
+                                                            style={{
+                                                                backgroundColor: statusColor,
+                                                                color: 'white',
+                                                                padding: '12px 24px',
+                                                                borderRadius: '25px',
+                                                                fontSize: '1.1em',
+                                                                fontWeight: 'bold',
+                                                                marginBottom: '16px',
+                                                                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                                                                textAlign: 'center'
+                                                            }}
                                                             title={
                                                                 deficit >= 0
                                                                     ? `Déficit de ${deficit} kcal para manutenção`
@@ -456,6 +509,26 @@ function Home() {
                                                             }
                                                         >
                                                             {status}
+                                                        </div>
+
+                                                        {/* Dica útil */}
+                                                        <div style={{
+                                                            fontSize: '0.8em',
+                                                            color: '#7f8c8d',
+                                                            textAlign: 'center',
+                                                            marginTop: '12px',
+                                                            fontStyle: 'italic'
+                                                        }}>
+                                                            💡 Déficit de 300-500 kcal/dia = perda de ~0,3-0,5 kg/semana
+                                                        </div>
+                                                        <div style={{
+                                                            fontSize: '0.8em',
+                                                            color: '#7f8c8d',
+                                                            textAlign: 'center',
+                                                            marginTop: '12px',
+                                                            fontStyle: 'italic'
+                                                        }}>
+                                                            💡 Déficit de 500-1000 kcal/dia = perda de ~0,5-1 kg/semana
                                                         </div>
                                                     </div>
                                                 );
