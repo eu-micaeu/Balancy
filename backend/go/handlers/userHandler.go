@@ -103,6 +103,13 @@ func (u *User) Update(db *sql.DB) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
+		// Recuperar userID do contexto (definido pelo AuthMiddleware)
+		userID, exists := c.Get("userID")
+		if !exists {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
+			return
+		}
+
 		var user User
 
 		if err := c.ShouldBindJSON(&user); err != nil {
@@ -113,9 +120,10 @@ func (u *User) Update(db *sql.DB) gin.HandlerFunc {
 
 		}
 
+		// Usar o userID do contexto em vez do JSON
 		query := `UPDATE users SET username = $1, email = $2, password = $3, full_name = $4, gender = $5, age = $6, weight = $7, height = $8, activity_level = $9 WHERE user_id = $10`
 
-		_, err := db.Exec(query, user.Username, user.Email, user.Password, user.FullName, user.Gender, user.Age, user.Weight, user.Height, user.ActivityLevel, user.UserId)
+		_, err := db.Exec(query, user.Username, user.Email, user.Password, user.FullName, user.Gender, user.Age, user.Weight, user.Height, user.ActivityLevel, userID)
 
 		if err != nil {
 
@@ -124,6 +132,9 @@ func (u *User) Update(db *sql.DB) gin.HandlerFunc {
 			return
 
 		}
+
+		// Definir o user_id no objeto de resposta
+		user.UserId = userID.(int)
 
 		c.JSON(http.StatusOK, user)
 

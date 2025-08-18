@@ -39,6 +39,7 @@ export const AuthProvider = ({ children }) => {
                 if (response.ok) {
 
                     setIsLoggedIn(true);
+                    console.log('Token validado com sucesso');
 
                     // buscar perfil do usuário autenticado
                     try {
@@ -51,7 +52,10 @@ export const AuthProvider = ({ children }) => {
                         });
                         if (profileRes.ok) {
                             const profileData = await profileRes.json();
+                            console.log('Dados do perfil carregados:', profileData);
                             setUser(profileData);
+                        } else {
+                            console.error('Erro ao buscar perfil:', profileRes.status);
                         }
                     } catch (err) {
                         console.error('Erro ao buscar perfil:', err);
@@ -60,6 +64,8 @@ export const AuthProvider = ({ children }) => {
                 } else {
 
                     setIsLoggedIn(false);
+                    setUser(null);
+                    console.log('Token inválido');
 
                 }
 
@@ -74,6 +80,8 @@ export const AuthProvider = ({ children }) => {
         } else {
 
             setIsLoggedIn(false);
+            setUser(null);
+            console.log('Nenhum token encontrado');
 
         }
 
