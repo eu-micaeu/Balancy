@@ -228,6 +228,13 @@ function Home() {
 
     }, [isLoggedIn, fetchMenu]);
 
+    // Recarregar menu quando os dados do usuário mudarem (para garantir cálculos atualizados)
+    useEffect(() => {
+        if (isLoggedIn && user && !menu) {
+            fetchMenu();
+        }
+    }, [user, isLoggedIn, menu, fetchMenu]);
+
 
     const hasMenu = menu && Number(menu.menu_id) > 0;
 
@@ -426,11 +433,6 @@ function Home() {
                                                     statusColor = '#e74c3c'; // vermelho
                                                 }
 
-                                                // Calcula as calorias restantes para diferentes objetivos
-                                                const remainingForMaintenance = Math.max(0, tdee - consumed);
-                                                const remainingForModerateDeficit = Math.max(0, (tdee - 300) - consumed);
-                                                const remainingForAggressiveDeficit = Math.max(0, (tdee - 500) - consumed);
-
                                                 return (
                                                     <div className="calories-summary" style={{
                                                         display: 'flex',
@@ -566,16 +568,16 @@ function Home() {
 
                                             return (
                                                 <div style={{
-                                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                                    background: 'rgb(218, 218, 218)',
                                                     borderRadius: '16px',
                                                     padding: '24px',
                                                     margin: '20px auto',
-                                                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                                                    color: 'white'
+                                                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                                                    color: '#2c3e50'
                                                 }}>
                                                     <Typography variant="h6" style={{
                                                         fontWeight: 'bold',
-                                                        color: 'white',
+                                                        color: '#2c3e50',
                                                         marginBottom: '16px',
                                                         textAlign: 'center'
                                                     }}>
@@ -590,49 +592,49 @@ function Home() {
                                                         marginBottom: '20px'
                                                     }}>
                                                         <div style={{
-                                                            background: 'rgba(255, 255, 255, 0.1)',
+                                                            background: 'white',
                                                             padding: '16px',
                                                             borderRadius: '12px',
                                                             textAlign: 'center',
-                                                            backdropFilter: 'blur(10px)'
+                                                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
                                                         }}>
-                                                            <div style={{ fontSize: '0.85em', color: 'rgba(255, 255, 255, 0.8)', marginBottom: '4px' }}>Peso Atual → Objetivo</div>
-                                                            <div style={{ fontSize: '1.4em', fontWeight: 'bold' }}>
+                                                            <div style={{ fontSize: '0.85em', color: '#666', marginBottom: '4px' }}>Peso Atual → Objetivo</div>
+                                                            <div style={{ fontSize: '1.4em', fontWeight: 'bold', color: '#2c3e50' }}>
                                                                 {currentWeight}kg → {targetWeight}kg
                                                             </div>
-                                                            <div style={{ fontSize: '0.75em', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>
+                                                            <div style={{ fontSize: '0.75em', color: '#888', marginTop: '4px' }}>
                                                                 {weightToLose.toFixed(1)}kg para perder
                                                             </div>
                                                         </div>
 
                                                         <div style={{
-                                                            background: 'rgba(255, 255, 255, 0.1)',
+                                                            background: 'white',
                                                             padding: '16px',
                                                             borderRadius: '12px',
                                                             textAlign: 'center',
-                                                            backdropFilter: 'blur(10px)'
+                                                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
                                                         }}>
-                                                            <div style={{ fontSize: '0.85em', color: 'rgba(255, 255, 255, 0.8)', marginBottom: '4px' }}>Prazo Definido</div>
-                                                            <div style={{ fontSize: '1.4em', fontWeight: 'bold' }}>
+                                                            <div style={{ fontSize: '0.85em', color: '#666', marginBottom: '4px' }}>Prazo Definido</div>
+                                                            <div style={{ fontSize: '1.4em', fontWeight: 'bold', color: '#2c3e50' }}>
                                                                 {targetDays} dias
                                                             </div>
-                                                            <div style={{ fontSize: '0.75em', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>
+                                                            <div style={{ fontSize: '0.75em', color: '#888', marginTop: '4px' }}>
                                                                 {weeksToTarget} semanas | {monthsToTarget} mês{monthsToTarget > 1 ? 'es' : ''}
                                                             </div>
                                                         </div>
 
                                                         <div style={{
-                                                            background: 'rgba(255, 255, 255, 0.1)',
+                                                            background: 'white',
                                                             padding: '16px',
                                                             borderRadius: '12px',
                                                             textAlign: 'center',
-                                                            backdropFilter: 'blur(10px)'
+                                                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
                                                         }}>
-                                                            <div style={{ fontSize: '0.85em', color: 'rgba(255, 255, 255, 0.8)', marginBottom: '4px' }}>Déficit Necessário</div>
-                                                            <div style={{ fontSize: '1.4em', fontWeight: 'bold' }}>
+                                                            <div style={{ fontSize: '0.85em', color: '#666', marginBottom: '4px' }}>Déficit Necessário</div>
+                                                            <div style={{ fontSize: '1.4em', fontWeight: 'bold', color: '#e74c3c' }}>
                                                                 {Math.round(dailyCaloriesLost)} kcal/dia
                                                             </div>
-                                                            <div style={{ fontSize: '0.75em', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>
+                                                            <div style={{ fontSize: '0.75em', color: '#888', marginTop: '4px' }}>
                                                                 ~{weeklyWeightLoss.toFixed(2)}kg/semana
                                                             </div>
                                                         </div>
@@ -640,23 +642,14 @@ function Home() {
 
                                                     {/* Data objetivo */}
                                                     <div style={{
-                                                        background: 'rgba(255, 255, 255, 0.15)',
+                                                        background: 'white',
                                                         padding: '12px 20px',
                                                         borderRadius: '25px',
                                                         textAlign: 'center',
-                                                        marginBottom: '16px'
+                                                        marginBottom: '16px',
+                                                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
                                                     }}>
-                                                        <strong>📅 Data Prevista: {targetDateStr}</strong>
-                                                    </div>
-
-                                                    {/* Dicas motivacionais */}
-                                                    <div style={{
-                                                        fontSize: '0.8em',
-                                                        color: 'rgba(255, 255, 255, 0.8)',
-                                                        textAlign: 'center',
-                                                        fontStyle: 'italic'
-                                                    }}>
-                                                        💪 Você está {Math.round(((Date.now() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24)))} dias na jornada!
+                                                        <strong style={{ color: '#2c3e50' }}>📅 Data Prevista: {targetDateStr}</strong>
                                                     </div>
                                                 </div>
                                             );

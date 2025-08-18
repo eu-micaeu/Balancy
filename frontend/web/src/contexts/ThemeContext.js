@@ -22,7 +22,7 @@ const darkTheme = {
 };
 
 export const ThemeProvider = ({ children }) => {
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState('dark');
 
     useEffect(() => {
         const saved = localStorage.getItem('theme');

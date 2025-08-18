@@ -87,6 +87,8 @@ func (u *User) Login(db *sql.DB) gin.HandlerFunc {
 
 		err := db.QueryRow(query, user.Username, user.Password).Scan(&user.UserId, &user.Username, &user.Email, &user.FullName, &user.Gender, &user.Age, &user.Weight, &user.Height, &user.TargetWeight, &user.TargetTimeDays, &user.DailyCaloriesLost, &user.ActivityLevel, &user.CreatedAt)
 
+		fmt.Printf("Error querying user: %v\n", err)
+
 		if err != nil {
 
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
@@ -138,10 +140,20 @@ func (u *User) Update(db *sql.DB) gin.HandlerFunc {
 
 		}
 
-		// Usar o userID do contexto em vez do JSON
-		query := `UPDATE users SET username = $1, email = $2, password = $3, full_name = $4, gender = $5, age = $6, weight = $7, height = $8, target_weight = $9, target_time_days = $10, daily_calories_lost = $11, activity_level = $12 WHERE user_id = $13`
+		var query string
+		var args []interface{}
 
-		_, err = db.Exec(query, user.Username, user.Email, user.Password, user.FullName, user.Gender, user.Age, user.Weight, user.Height, user.TargetWeight, user.TargetTimeDays, user.DailyCaloriesLost, user.ActivityLevel, userID)
+		// Se a senha estiver vazia, não atualizar a senha (manter a atual)
+		if user.Password == "" {
+			query = `UPDATE users SET username = $1, email = $2, full_name = $3, gender = $4, age = $5, weight = $6, height = $7, target_weight = $8, target_time_days = $9, daily_calories_lost = $10, activity_level = $11 WHERE user_id = $12`
+			args = []interface{}{user.Username, user.Email, user.FullName, user.Gender, user.Age, user.Weight, user.Height, user.TargetWeight, user.TargetTimeDays, user.DailyCaloriesLost, user.ActivityLevel, userID}
+		} else {
+			// Se a senha foi fornecida, incluir na atualização
+			query = `UPDATE users SET username = $1, email = $2, password = $3, full_name = $4, gender = $5, age = $6, weight = $7, height = $8, target_weight = $9, target_time_days = $10, daily_calories_lost = $11, activity_level = $12 WHERE user_id = $13`
+			args = []interface{}{user.Username, user.Email, user.Password, user.FullName, user.Gender, user.Age, user.Weight, user.Height, user.TargetWeight, user.TargetTimeDays, user.DailyCaloriesLost, user.ActivityLevel, userID}
+		}
+
+		_, err = db.Exec(query, args...)
 
 		if err != nil {
 

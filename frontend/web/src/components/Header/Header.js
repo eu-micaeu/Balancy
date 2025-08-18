@@ -403,6 +403,28 @@ function Header() {
 
                 document.cookie = `authToken=${token}; path=/; max-age=3600; Secure; SameSite=Strict`;
 
+                // Buscar dados do usuário imediatamente após o login
+                try {
+                    const profileRes = await fetch(`${apiUrl}/me`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        },
+                    });
+                    if (profileRes.ok) {
+                        const profileData = await profileRes.json();
+                        setUser(profileData);
+                    } else {
+                        console.error('Erro ao buscar perfil após login:', profileRes.status);
+                    }
+                } catch (err) {
+                    console.error('Erro ao buscar perfil após login:', err);
+                }
+
+                // Definir como logado após carregar os dados
+                setIsLoggedIn(true);
+
                 toast.success('🎉 Login realizado com sucesso!', {
                     position: "top-right",
                     autoClose: 2000,
@@ -411,8 +433,6 @@ function Header() {
                     pauseOnHover: true,
                     draggable: true,
                 });
-
-                setIsLoggedIn(true);
 
                 // Adicionar delay para mostrar o toast antes de redirecionar
                 setTimeout(() => {
