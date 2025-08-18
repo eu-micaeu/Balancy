@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -12,6 +13,23 @@ import (
 )
 
 type User models.User
+
+// getUserIDFromContext extracts and converts userID from gin context
+// JWT claims convert numbers to float64, so this handles the conversion properly
+func getUserIDFromContext(c *gin.Context) (int, error) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		return 0, fmt.Errorf("user not authenticated")
+	}
+
+	if userIDFloat, ok := userID.(float64); ok {
+		return int(userIDFloat), nil
+	} else if userIDInt, ok := userID.(int); ok {
+		return userIDInt, nil
+	}
+
+	return 0, fmt.Errorf("invalid userID type")
+}
 
 // Create
 func (u *User) Register(db *sql.DB) gin.HandlerFunc {
@@ -104,9 +122,9 @@ func (u *User) Update(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		// Recuperar userID do contexto (definido pelo AuthMiddleware)
-		userID, exists := c.Get("userID")
-		if !exists {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
+		userID, err := getUserIDFromContext(c)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			return
 		}
 
@@ -123,7 +141,7 @@ func (u *User) Update(db *sql.DB) gin.HandlerFunc {
 		// Usar o userID do contexto em vez do JSON
 		query := `UPDATE users SET username = $1, email = $2, password = $3, full_name = $4, gender = $5, age = $6, weight = $7, height = $8, activity_level = $9 WHERE user_id = $10`
 
-		_, err := db.Exec(query, user.Username, user.Email, user.Password, user.FullName, user.Gender, user.Age, user.Weight, user.Height, user.ActivityLevel, userID)
+		_, err = db.Exec(query, user.Username, user.Email, user.Password, user.FullName, user.Gender, user.Age, user.Weight, user.Height, user.ActivityLevel, userID)
 
 		if err != nil {
 
@@ -134,7 +152,7 @@ func (u *User) Update(db *sql.DB) gin.HandlerFunc {
 		}
 
 		// Definir o user_id no objeto de resposta
-		user.UserId = userID.(int)
+		user.UserId = userID
 
 		c.JSON(http.StatusOK, user)
 
@@ -146,15 +164,15 @@ func (u *User) Update(db *sql.DB) gin.HandlerFunc {
 func (u *User) GetProfile(db *sql.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Recuperar userID do contexto (definido pelo AuthMiddleware)
-		userID, exists := c.Get("userID")
-		if !exists {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Usuário não autenticado"})
+		userID, err := getUserIDFromContext(c)
+		if err != nil {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			return
 		}
 
 		var user User
 		query := `SELECT user_id, username, email, full_name, gender, age, weight, height, activity_level, created_at FROM users WHERE user_id = $1`
-		err := db.QueryRow(query, userID).Scan(&user.UserId, &user.Username, &user.Email, &user.FullName, &user.Gender, &user.Age, &user.Weight, &user.Height, &user.ActivityLevel, &user.CreatedAt)
+		err = db.QueryRow(query, userID).Scan(&user.UserId, &user.Username, &user.Email, &user.FullName, &user.Gender, &user.Age, &user.Weight, &user.Height, &user.ActivityLevel, &user.CreatedAt)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				c.JSON(http.StatusNotFound, gin.H{"error": "Usuário não encontrado"})
