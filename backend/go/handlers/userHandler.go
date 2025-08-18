@@ -10,9 +10,22 @@ import (
 	"github.com/eu-micaeu/Balancy/server/models"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User models.User
+
+// hashPassword cria um hash bcrypt da senha
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes), err
+}
+
+// checkPasswordHash verifica se a senha corresponde ao hash
+func checkPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
 
 // getUserIDFromContext extracts and converts userID from gin context
 // JWT claims convert numbers to float64, so this handles the conversion properly
@@ -46,11 +59,18 @@ func (u *User) Register(db *sql.DB) gin.HandlerFunc {
 
 		}
 
+		// Criptografar a senha antes de salvar no banco
+		hashedPassword, err := hashPassword(user.Password)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao criptografar senha"})
+			return
+		}
+
 		query := `INSERT INTO users (username, email, password, full_name, gender, age, weight, height, target_weight, target_time_days, daily_calories_lost, activity_level, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING user_id`
 
 		var user_id int
 
-		err := db.QueryRow(query, user.Username, user.Email, user.Password, user.FullName, user.Gender, user.Age, user.Weight, user.Height, user.TargetWeight, user.TargetTimeDays, user.DailyCaloriesLost, user.ActivityLevel, time.Now()).Scan(&user_id)
+		err = db.QueryRow(query, user.Username, user.Email, hashedPassword, user.FullName, user.Gender, user.Age, user.Weight, user.Height, user.TargetWeight, user.TargetTimeDays, user.DailyCaloriesLost, user.ActivityLevel, time.Now()).Scan(&user_id)
 
 		if err != nil {
 
@@ -83,19 +103,43 @@ func (u *User) Login(db *sql.DB) gin.HandlerFunc {
 
 		}
 
-		query := `SELECT user_id, username, email, full_name, gender, age, weight, height, target_weight, target_time_days, daily_calories_lost, activity_level, created_at FROM users WHERE username = $1 AND password = $2`
+		// Primeiro buscar o usuário pelo username para pegar o hash da senha
+		var storedPassword string
+		query := `SELECT user_id, username, email, password, full_name, gender, age, weight, height, target_weight, target_time_days, daily_calories_lost, activity_level, created_at FROM users WHERE username = $1`
 
-		err := db.QueryRow(query, user.Username, user.Password).Scan(&user.UserId, &user.Username, &user.Email, &user.FullName, &user.Gender, &user.Age, &user.Weight, &user.Height, &user.TargetWeight, &user.TargetTimeDays, &user.DailyCaloriesLost, &user.ActivityLevel, &user.CreatedAt)
-
-		fmt.Printf("Error querying user: %v\n", err)
+		err := db.QueryRow(query, user.Username).Scan(&user.UserId, &user.Username, &user.Email, &storedPassword, &user.FullName, &user.Gender, &user.Age, &user.Weight, &user.Height, &user.TargetWeight, &user.TargetTimeDays, &user.DailyCaloriesLost, &user.ActivityLevel, &user.CreatedAt)
 
 		if err != nil {
-
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
-
 			return
-
 		}
+
+		// Verificar se a senha fornecida corresponde ao hash armazenado
+		// Primeiro tenta bcrypt, se falhar, verifica texto plano (compatibilidade)
+		isValidPassword := false
+
+		if checkPasswordHash(user.Password, storedPassword) {
+			// Senha bcrypt válida
+			isValidPassword = true
+		} else if user.Password == storedPassword {
+			// Senha em texto plano (compatibilidade com senhas antigas)
+			isValidPassword = true
+
+			// Opcional: Atualizar a senha para bcrypt automaticamente
+			hashedPassword, err := hashPassword(user.Password)
+			if err == nil {
+				updateQuery := `UPDATE users SET password = $1 WHERE user_id = $2`
+				db.Exec(updateQuery, hashedPassword, user.UserId)
+				fmt.Printf("Password upgraded to bcrypt for user: %s\n", user.Username)
+			}
+		}
+
+		if !isValidPassword {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+			return
+		}
+
+		fmt.Printf("User authenticated successfully: %s\n", user.Username)
 
 		token, err := middlewares.GerarToken(user.UserId)
 
@@ -148,9 +192,14 @@ func (u *User) Update(db *sql.DB) gin.HandlerFunc {
 			query = `UPDATE users SET username = $1, email = $2, full_name = $3, gender = $4, age = $5, weight = $6, height = $7, target_weight = $8, target_time_days = $9, daily_calories_lost = $10, activity_level = $11 WHERE user_id = $12`
 			args = []interface{}{user.Username, user.Email, user.FullName, user.Gender, user.Age, user.Weight, user.Height, user.TargetWeight, user.TargetTimeDays, user.DailyCaloriesLost, user.ActivityLevel, userID}
 		} else {
-			// Se a senha foi fornecida, incluir na atualização
+			// Se a senha foi fornecida, criptografar antes de atualizar
+			hashedPassword, err := hashPassword(user.Password)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao criptografar nova senha"})
+				return
+			}
 			query = `UPDATE users SET username = $1, email = $2, password = $3, full_name = $4, gender = $5, age = $6, weight = $7, height = $8, target_weight = $9, target_time_days = $10, daily_calories_lost = $11, activity_level = $12 WHERE user_id = $13`
-			args = []interface{}{user.Username, user.Email, user.Password, user.FullName, user.Gender, user.Age, user.Weight, user.Height, user.TargetWeight, user.TargetTimeDays, user.DailyCaloriesLost, user.ActivityLevel, userID}
+			args = []interface{}{user.Username, user.Email, hashedPassword, user.FullName, user.Gender, user.Age, user.Weight, user.Height, user.TargetWeight, user.TargetTimeDays, user.DailyCaloriesLost, user.ActivityLevel, userID}
 		}
 
 		_, err = db.Exec(query, args...)
