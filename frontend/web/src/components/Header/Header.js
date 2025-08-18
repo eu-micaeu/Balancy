@@ -40,6 +40,8 @@ function Header() {
     const [age, setAge] = useState('');
     const [weight, setWeight] = useState('');
     const [height, setHeight] = useState('');
+    const [target_weight, setTargetWeight] = useState('');
+    const [target_time_days, setTargetTimeDays] = useState('');
     const [activity_level, setActivityLevel] = useState('');
     const { isLoggedIn, setIsLoggedIn, user, setUser } = useContext(AuthContext);
     const { theme, toggleTheme } = useContext(ThemeContext);
@@ -213,6 +215,14 @@ function Header() {
         setUsername('');
         setPassword('');
         setEmail('');
+        setFullName('');
+        setGender('');
+        setAge('');
+        setWeight('');
+        setHeight('');
+        setTargetWeight('');
+        setTargetTimeDays('');
+        setActivityLevel('');
     };
 
     const handleOpenProfile = async () => {
@@ -226,6 +236,8 @@ function Header() {
             setAge(user.age?.toString() || '');
             setWeight(user.weight?.toString() || '');
             setHeight(user.height?.toString() || '');
+            setTargetWeight(user.target_weight?.toString() || '');
+            setTargetTimeDays(user.target_time_days?.toString() || '');
             setActivityLevel(user.activity_level || '');
             setProfileOpen(true);
         } else {
@@ -253,6 +265,8 @@ function Header() {
                     setAge(userData.age?.toString() || '');
                     setWeight(userData.weight?.toString() || '');
                     setHeight(userData.height?.toString() || '');
+                    setTargetWeight(userData.target_weight?.toString() || '');
+                    setTargetTimeDays(userData.target_time_days?.toString() || '');
                     setActivityLevel(userData.activity_level || '');
                     // Atualizar também o contexto
                     setUser(userData);
@@ -283,6 +297,8 @@ function Header() {
         setAge('');
         setWeight('');
         setHeight('');
+        setTargetWeight('');
+        setTargetTimeDays('');
         setActivityLevel('');
     };
 
@@ -301,8 +317,23 @@ function Header() {
                 age: parseInt(age),
                 weight: parseFloat(weight),
                 height: parseFloat(height),
+                target_weight: target_weight && target_weight.trim() !== '' ? parseFloat(target_weight) : null,
+                target_time_days: target_time_days && target_time_days.trim() !== '' ? parseInt(target_time_days) : null,
                 activity_level,
             };
+
+            // Calcular automaticamente as calorias perdidas se ambos os campos foram preenchidos
+            if (requestBody.target_weight && requestBody.target_time_days && requestBody.weight) {
+                const weightDifference = requestBody.weight - requestBody.target_weight;
+                if (weightDifference > 0) {
+                    const totalCaloriesNeeded = weightDifference * 7700;
+                    requestBody.daily_calories_lost = totalCaloriesNeeded / requestBody.target_time_days;
+                } else {
+                    requestBody.daily_calories_lost = 0;
+                }
+            } else {
+                requestBody.daily_calories_lost = 0;
+            }
 
             const response = await fetch(`${apiUrl}/updateUser`, {
                 method: 'PUT',
@@ -324,6 +355,9 @@ function Header() {
                     age: parseInt(age),
                     weight: parseFloat(weight),
                     height: parseFloat(height),
+                    target_weight: target_weight && target_weight.trim() !== '' ? parseFloat(target_weight) : null,
+                    target_time_days: target_time_days && target_time_days.trim() !== '' ? parseInt(target_time_days) : null,
+                    daily_calories_lost: requestBody.daily_calories_lost,
                     activity_level,
                 };
                 setUser(updatedUser);
@@ -413,12 +447,31 @@ function Header() {
                 age,
                 weight,
                 height,
+                target_weight,
+                target_time_days,
                 activity_level,
             };
 
             requestBody.age = parseInt(requestBody.age);
             requestBody.weight = parseFloat(requestBody.weight);
             requestBody.height = parseFloat(requestBody.height);
+
+            // Adicionar campos opcionais apenas se preenchidos
+            if (target_weight && target_weight.trim() !== '') {
+                requestBody.target_weight = parseFloat(requestBody.target_weight);
+            }
+            if (target_time_days && target_time_days.trim() !== '') {
+                requestBody.target_time_days = parseInt(requestBody.target_time_days);
+            }
+
+            // Calcular automaticamente as calorias perdidas se ambos os campos foram preenchidos
+            if (requestBody.target_weight && requestBody.target_time_days && requestBody.weight) {
+                const weightDifference = requestBody.weight - requestBody.target_weight;
+                if (weightDifference > 0) {
+                    const totalCaloriesNeeded = weightDifference * 7700;
+                    requestBody.daily_calories_lost = totalCaloriesNeeded / requestBody.target_time_days;
+                }
+            }
 
             const response = await fetch(`${apiUrl}/register`, {
                 method: 'POST',
@@ -713,6 +766,26 @@ function Header() {
                                         fullWidth
                                         value={height}
                                         onChange={(e) => setHeight(e.target.value)}
+                                    />
+
+                                    <TextField
+                                        label="Peso Objetivo (kg) - Opcional"
+                                        type="number"
+                                        fullWidth
+                                        value={target_weight}
+                                        onChange={(e) => setTargetWeight(e.target.value)}
+                                        placeholder="Ex: 70"
+                                        helperText="Peso que você deseja atingir"
+                                    />
+
+                                    <TextField
+                                        label="Tempo para Objetivo (dias) - Opcional"
+                                        type="number"
+                                        fullWidth
+                                        value={target_time_days}
+                                        onChange={(e) => setTargetTimeDays(e.target.value)}
+                                        placeholder="Ex: 90"
+                                        helperText="Quantos dias você quer levar para atingir o objetivo"
                                     />
 
                                     <TextField
@@ -1077,6 +1150,26 @@ function Header() {
                                     fullWidth
                                     value={height}
                                     onChange={(e) => setHeight(e.target.value)}
+                                />
+
+                                <TextField
+                                    label="Peso Objetivo (kg)"
+                                    type="number"
+                                    fullWidth
+                                    value={target_weight}
+                                    onChange={(e) => setTargetWeight(e.target.value)}
+                                    placeholder="Ex: 70"
+                                    helperText="Peso que você deseja atingir"
+                                />
+
+                                <TextField
+                                    label="Tempo para Objetivo (dias)"
+                                    type="number"
+                                    fullWidth
+                                    value={target_time_days}
+                                    onChange={(e) => setTargetTimeDays(e.target.value)}
+                                    placeholder="Ex: 90"
+                                    helperText="Quantos dias para atingir o objetivo"
                                 />
                             </div>
                         </div>

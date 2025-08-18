@@ -21,6 +21,9 @@ CREATE TABLE users (
     age INT NOT NULL,
     weight FLOAT NOT NULL,
     height FLOAT NOT NULL,
+    target_weight FLOAT DEFAULT NULL,
+    target_time_days INT DEFAULT NULL,
+    daily_calories_lost FLOAT DEFAULT 0,
     gender VARCHAR(50) NOT NULL,
     activity_level VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

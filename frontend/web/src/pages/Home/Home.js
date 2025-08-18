@@ -410,7 +410,7 @@ function Home() {
                                                 let statusColor = '#43cea2'; // verde padrão
 
                                                 if (deficit >= 500) {
-                                                    status = 'Déficit Agressivo (≥500 kcal)';
+                                                    status = `Déficit Agressivo (${deficit} kcal)`;
                                                     statusColor = '#e74c3c'; // vermelho
                                                 } else if (deficit >= 300) {
                                                     status = `Déficit Moderado (${deficit} kcal)`;
@@ -535,6 +535,176 @@ function Home() {
                                             })()
                                         ) : (
                                             <div>Carregando dados do usuário...</div>
+                                        )}
+
+                                        {user && (user.target_weight || user.target_time_days) && (() => {
+                                            const currentWeight = Number(user.weight) || 0;
+                                            const targetWeight = Number(user.target_weight) || 0;
+                                            const targetDays = Number(user.target_time_days) || 0;
+                                            let dailyCaloriesLost = Number(user.daily_calories_lost) || 0;
+
+                                            if (targetWeight <= 0 || targetDays <= 0) return null;
+
+                                            const weightToLose = currentWeight - targetWeight;
+
+                                            // Se o backend não calculou ou calculou errado, calcular aqui
+                                            if (dailyCaloriesLost <= 0 && weightToLose > 0 && targetDays > 0) {
+                                                const totalCaloriesNeeded = weightToLose * 7700; // 1kg = 7700 kcal
+                                                dailyCaloriesLost = totalCaloriesNeeded / targetDays;
+                                            }
+
+                                            const weeksToTarget = Math.ceil(targetDays / 7);
+                                            const monthsToTarget = Math.ceil(targetDays / 30);
+
+                                            // Calcular data aproximada do objetivo
+                                            const targetDate = new Date();
+                                            targetDate.setDate(targetDate.getDate() + targetDays);
+                                            const targetDateStr = targetDate.toLocaleDateString('pt-BR');
+
+                                            // Calcular progresso semanal esperado
+                                            const weeklyWeightLoss = weightToLose / (targetDays / 7);
+
+                                            return (
+                                                <div style={{
+                                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                                    borderRadius: '16px',
+                                                    padding: '24px',
+                                                    margin: '20px auto',
+                                                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                                                    color: 'white'
+                                                }}>
+                                                    <Typography variant="h6" style={{
+                                                        fontWeight: 'bold',
+                                                        color: 'white',
+                                                        marginBottom: '16px',
+                                                        textAlign: 'center'
+                                                    }}>
+                                                        🎯 Seu Objetivo de Peso
+                                                    </Typography>
+
+                                                    <div className="goal-info" style={{
+                                                        display: 'grid',
+                                                        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                                                        gap: '16px',
+                                                        width: '100%',
+                                                        marginBottom: '20px'
+                                                    }}>
+                                                        <div style={{
+                                                            background: 'rgba(255, 255, 255, 0.1)',
+                                                            padding: '16px',
+                                                            borderRadius: '12px',
+                                                            textAlign: 'center',
+                                                            backdropFilter: 'blur(10px)'
+                                                        }}>
+                                                            <div style={{ fontSize: '0.85em', color: 'rgba(255, 255, 255, 0.8)', marginBottom: '4px' }}>Peso Atual → Objetivo</div>
+                                                            <div style={{ fontSize: '1.4em', fontWeight: 'bold' }}>
+                                                                {currentWeight}kg → {targetWeight}kg
+                                                            </div>
+                                                            <div style={{ fontSize: '0.75em', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>
+                                                                {weightToLose.toFixed(1)}kg para perder
+                                                            </div>
+                                                        </div>
+
+                                                        <div style={{
+                                                            background: 'rgba(255, 255, 255, 0.1)',
+                                                            padding: '16px',
+                                                            borderRadius: '12px',
+                                                            textAlign: 'center',
+                                                            backdropFilter: 'blur(10px)'
+                                                        }}>
+                                                            <div style={{ fontSize: '0.85em', color: 'rgba(255, 255, 255, 0.8)', marginBottom: '4px' }}>Prazo Definido</div>
+                                                            <div style={{ fontSize: '1.4em', fontWeight: 'bold' }}>
+                                                                {targetDays} dias
+                                                            </div>
+                                                            <div style={{ fontSize: '0.75em', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>
+                                                                {weeksToTarget} semanas | {monthsToTarget} mês{monthsToTarget > 1 ? 'es' : ''}
+                                                            </div>
+                                                        </div>
+
+                                                        <div style={{
+                                                            background: 'rgba(255, 255, 255, 0.1)',
+                                                            padding: '16px',
+                                                            borderRadius: '12px',
+                                                            textAlign: 'center',
+                                                            backdropFilter: 'blur(10px)'
+                                                        }}>
+                                                            <div style={{ fontSize: '0.85em', color: 'rgba(255, 255, 255, 0.8)', marginBottom: '4px' }}>Déficit Necessário</div>
+                                                            <div style={{ fontSize: '1.4em', fontWeight: 'bold' }}>
+                                                                {Math.round(dailyCaloriesLost)} kcal/dia
+                                                            </div>
+                                                            <div style={{ fontSize: '0.75em', color: 'rgba(255, 255, 255, 0.7)', marginTop: '4px' }}>
+                                                                ~{weeklyWeightLoss.toFixed(2)}kg/semana
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Data objetivo */}
+                                                    <div style={{
+                                                        background: 'rgba(255, 255, 255, 0.15)',
+                                                        padding: '12px 20px',
+                                                        borderRadius: '25px',
+                                                        textAlign: 'center',
+                                                        marginBottom: '16px'
+                                                    }}>
+                                                        <strong>📅 Data Prevista: {targetDateStr}</strong>
+                                                    </div>
+
+                                                    {/* Dicas motivacionais */}
+                                                    <div style={{
+                                                        fontSize: '0.8em',
+                                                        color: 'rgba(255, 255, 255, 0.8)',
+                                                        textAlign: 'center',
+                                                        fontStyle: 'italic'
+                                                    }}>
+                                                        💪 Você está {Math.round(((Date.now() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24)))} dias na jornada!
+                                                    </div>
+                                                </div>
+                                            );
+                                        })()}
+
+                                        {/* Seção para quando não há objetivos definidos */}
+                                        {user && !user.target_weight && !user.target_time_days && (
+                                            <div style={{
+                                                background: 'linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%)',
+                                                borderRadius: '16px',
+                                                padding: '24px',
+                                                margin: '20px auto',
+                                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                                color: 'white',
+                                                textAlign: 'center'
+                                            }}>
+                                                <Typography variant="h6" style={{
+                                                    fontWeight: 'bold',
+                                                    color: 'white',
+                                                    marginBottom: '16px'
+                                                }}>
+                                                    🎯 Defina seu Objetivo de Peso
+                                                </Typography>
+
+                                                <p style={{ fontSize: '1.1em', marginBottom: '20px', lineHeight: '1.5' }}>
+                                                    Quer acompanhar seu progresso de emagrecimento? <br />
+                                                    Defina seu peso objetivo e prazo no seu perfil!
+                                                </p>
+
+                                                <div style={{
+                                                    fontSize: '0.9em',
+                                                    color: 'rgba(255, 255, 255, 0.9)',
+                                                    marginBottom: '20px'
+                                                }}>
+                                                    ✨ Com seus objetivos definidos, você verá:
+                                                    <br />• Déficit calórico necessário por dia
+                                                    <br />• Data prevista para atingir sua meta
+                                                    <br />• Progresso esperado por semana
+                                                </div>
+
+                                                <div style={{
+                                                    fontSize: '0.8em',
+                                                    color: 'rgba(255, 255, 255, 0.8)',
+                                                    fontStyle: 'italic'
+                                                }}>
+                                                    👆 Clique no seu nome no topo da página e edite seu perfil
+                                                </div>
+                                            </div>
                                         )}
                                     </div>
                                 </div>

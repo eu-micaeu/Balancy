@@ -22,4 +22,7 @@ func UserRoutes(r *gin.Engine, db *sql.DB) {
 	// Rota para obter perfil do usuário autenticado
 	r.GET("/me", middlewares.AuthMiddleware(), userHandler.GetProfile(db))
 
+	// Rota para calcular e definir objetivo de peso
+	r.POST("/set-weight-goal", middlewares.AuthMiddleware(), userHandler.CalculateWeightGoal(db))
+
 }
